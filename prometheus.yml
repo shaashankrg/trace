@@ -1,0 +1,4 @@
+global:
+  scrape_interval: 15s
+# Nothing to scrape yet; the assistant gets a /metrics target later.
+scrape_configs: []
