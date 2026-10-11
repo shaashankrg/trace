@@ -46,7 +46,8 @@ def chat(question: str, chunks: list[Chunk]) -> str:
         response = _get_client().messages.create(
             model=model,
             max_tokens=MAX_TOKENS,
-            temperature=TEMPERATURE,
+            # anthropic 1.x dropped the temperature kwarg; models that still accept it take it via extra_body.
+            extra_body={"temperature": TEMPERATURE},
             system=SYSTEM_PROMPT_V1,
             messages=[{"role": "user", "content": _render_user_message(question, chunks)}],
         )
