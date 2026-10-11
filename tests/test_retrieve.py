@@ -3,6 +3,7 @@ import psycopg
 import pytest
 
 from assistant import db
+from assistant.config import load_config
 from assistant.retrieve import retrieve
 
 
@@ -17,6 +18,7 @@ def conn():
 
 
 def test_refund_question_hits_refund_policy_v2(conn):
-    chunks = retrieve(conn, "How long do I have to return boots?")
+    cfg = load_config(conn)
+    chunks = retrieve(conn, "How long do I have to return boots?", cfg.top_k, cfg.similarity_threshold)
     assert chunks, "retrieval returned no chunks"
     assert chunks[0].chunk_id.startswith("refund-policy@v2")

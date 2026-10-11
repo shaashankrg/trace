@@ -1,5 +1,4 @@
 """pgvector top-k retrieval, traced as the `retrieve` span."""
-import os
 from dataclasses import dataclass
 from functools import lru_cache
 
@@ -7,9 +6,7 @@ import psycopg
 from opentelemetry import trace
 from sentence_transformers import SentenceTransformer
 
-EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
-TOP_K = int(os.environ.get("RETRIEVAL_TOP_K", "4"))
-THRESHOLD = float(os.environ.get("RETRIEVAL_THRESHOLD", "0.2"))
+DEFAULT_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
 tracer = trace.get_tracer("kestrel.assistant")
 
@@ -21,20 +18,21 @@ class Chunk:
     score: float
 
 
-@lru_cache(maxsize=1)
-def _model() -> SentenceTransformer:
-    return SentenceTransformer(EMBEDDING_MODEL)
+@lru_cache(maxsize=4)
+def _model(name: str) -> SentenceTransformer:
+    return SentenceTransformer(name)
 
 
-def embed(texts: list[str]):
-    return _model().encode(texts, normalize_embeddings=True)
+def embed(texts: list[str], model: str = DEFAULT_EMBEDDING_MODEL):
+    return _model(model).encode(texts, normalize_embeddings=True)
 
 
 def retrieve(
     conn: psycopg.Connection,
     question: str,
-    top_k: int = TOP_K,
-    threshold: float = THRESHOLD,
+    top_k: int,
+    threshold: float,
+    embedding_model: str = DEFAULT_EMBEDDING_MODEL,
     conversation_id: str | None = None,
 ) -> list[Chunk]:
     # start_as_current_span records exceptions and sets ERROR status by default.
@@ -43,9 +41,9 @@ def retrieve(
             span.set_attribute("kestrel.conversation_id", conversation_id)
         span.set_attribute("kestrel.retrieval.top_k", top_k)
         span.set_attribute("kestrel.retrieval.threshold", threshold)
-        span.set_attribute("kestrel.embedding.model", EMBEDDING_MODEL)
+        span.set_attribute("kestrel.embedding.model", embedding_model)
 
-        vec = embed([question])[0]
+        vec = embed([question], embedding_model)[0]
         # <=> is cosine distance; embeddings are normalized, so 1 - distance is cosine similarity.
         rows = conn.execute(
             """

@@ -8,16 +8,19 @@ from pydantic import BaseModel
 
 load_dotenv()
 
-from assistant import db, llm  # noqa: E402
-from assistant.retrieve import retrieve  # noqa: E402
+from assistant import db, pipeline  # noqa: E402
+from assistant.logs import setup_logging  # noqa: E402
 from assistant.telemetry import instrument_app, setup_tracing  # noqa: E402
 
 provider = setup_tracing()
+log_handler = setup_logging()
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     yield
+    if log_handler:
+        log_handler.close()  # flush queued logs
     provider.shutdown()  # flush pending spans
 
 
@@ -34,18 +37,17 @@ class ChatResponse(BaseModel):
     answer: str
     trace_id: str
     chunk_ids: list[str]
+    tools_called: list[str]
 
 
 @app.post("/chat", response_model=ChatResponse)
 def chat(req: ChatRequest) -> ChatResponse:
-    span = trace.get_current_span()
-    span.set_attribute("kestrel.conversation_id", req.conversation_id)
-    trace_id = format(span.get_span_context().trace_id, "032x")
-
+    trace_id = format(trace.get_current_span().get_span_context().trace_id, "032x")
     with db.connect() as conn:
-        chunks = retrieve(conn, req.question, conversation_id=req.conversation_id)
-    answer = llm.chat(req.question, chunks)
-
+        result = pipeline.run(conn, req.conversation_id, req.question)
     return ChatResponse(
-        answer=answer, trace_id=trace_id, chunk_ids=[c.chunk_id for c in chunks]
+        answer=result.answer,
+        trace_id=trace_id,
+        chunk_ids=result.chunk_ids,
+        tools_called=result.tools_called,
     )

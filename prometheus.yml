@@ -1,4 +1,9 @@
 global:
   scrape_interval: 15s
-# Nothing to scrape yet; the assistant gets a /metrics target later.
-scrape_configs: []
+
+scrape_configs:
+  # Canary runs are batch jobs that push here.
+  - job_name: pushgateway
+    honor_labels: true
+    static_configs:
+      - targets: ["pushgateway:9091"]

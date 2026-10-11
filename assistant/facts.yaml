@@ -1,0 +1,95 @@
+# Single source of truth for policy numbers.
+# eval/render_docs.py renders assistant/doc_templates/ into assistant/docs/,
+# and eval/make_canary.py builds the canary answers from the same values.
+# EVAL-ONLY: the app and the investigator's tools must never read this file.
+
+# Refunds and returns
+refund_window_days: 14
+refund_window_days_v1: 30
+refund_processing_days: 5
+return_label_cost_v1: "$7.95"
+exchange_window_days: 30
+exchange_window_days_v1: 21
+holiday_purchase_start: "November 1"
+holiday_purchase_end: "December 24"
+holiday_return_deadline: "January 15"
+final_sale_discount_pct: 50
+damaged_report_days: 7
+
+# Shipping
+free_shipping_threshold: "$75"
+free_shipping_threshold_v1: "$50"
+standard_shipping_fee: "$6.95"
+standard_shipping_days: "3 to 7 business days"
+express_shipping_price: "$19.95"
+express_shipping_price_v1: "$24.95"
+express_shipping_days: 2
+overnight_shipping_price: "$39.95"
+same_day_cutoff: "1 p.m. Mountain Time"
+international_flat_rate: "$29.95"
+international_shipping_days: "7 to 14 business days"
+international_countries: "Canada, Mexico, the United Kingdom and Australia"
+tracking_email_hours: 24
+lost_package_wait_days: 5
+lost_package_claim_days: 30
+
+# Orders
+cancellation_window_hours: 2
+backorder_cancel_days: 60
+preorder_deposit_pct: 0
+personalization_lead_days: 5
+corporate_min_units: 25
+corporate_discount_pct: 8
+tax_exempt_review_days: 3
+
+# Warranty and repairs
+warranty_years: 2
+warranty_years_v1: 1
+repair_assessment_fee: "$25"
+repair_turnaround_days: 10
+
+# Accounts
+password_reset_expiry_minutes: 30
+password_reset_expiry_minutes_v1: 60
+data_deletion_days: 30
+unsubscribe_days: 10
+
+# Loyalty
+loyalty_points_per_dollar: 1
+loyalty_reward_points: 100
+loyalty_reward_value: "$5"
+loyalty_reward_expiry_days: 90
+loyalty_points_expiry_months: 12
+silver_tier_spend: "$500"
+gold_tier_spend: "$1,000"
+silver_points_multiplier: "1.25"
+gold_points_multiplier: "1.5"
+
+# Pricing and payment
+price_match_window_days: 14
+price_match_window_days_v1: 7
+gift_card_max: "$500"
+student_discount_pct: 10
+military_discount_pct: 15
+promo_codes_per_order: 1
+affirm_minimum: "$150"
+trade_in_max_pct: 40
+
+# Rentals
+rental_deposit: "$100"
+rental_late_fee: "$15"
+rental_max_days: 14
+
+# Stores and support
+store_count: 12
+flagship_city: "Boulder, Colorado"
+pickup_hold_days: 7
+support_phone: "1-800-555-0142"
+support_email: "help@kestrel.example"
+warranty_email: "warranty@kestrel.example"
+support_hours: "7 a.m. to 7 p.m. Mountain Time, Monday through Saturday"
+
+# Misc
+boot_sizing_advice: "half a size up"
+sustainability_pct: 1
+recall_product: "Ridgeline RS-200 camp stove"

@@ -1,15 +1,20 @@
-"""Chunk, embed and upsert the docs in assistant/docs/.
+"""Chunk, embed and load assistant/docs/ into documents + chunks.
+
+Every version is stored; only the newest version of each doc is indexed.
+Chunk size and embedding model come from app_config.
 
 Usage: python -m assistant.ingest
 """
-import os
+from datetime import date
 from pathlib import Path
 
+import psycopg
+
 from assistant import db
+from assistant.config import load_config
 from assistant.retrieve import embed
 
 DOCS_DIR = Path(__file__).parent / "docs"
-CHUNK_SIZE = int(os.environ.get("CHUNK_SIZE", "300"))
 
 
 def parse(path: Path) -> tuple[dict, str]:
@@ -23,7 +28,7 @@ def parse(path: Path) -> tuple[dict, str]:
     return meta, body.strip()
 
 
-def chunk(text: str, size: int = CHUNK_SIZE) -> list[str]:
+def chunk(text: str, size: int) -> list[str]:
     """Fixed-size chunks of at most `size` chars, broken on word boundaries."""
     chunks, current = [], ""
     for word in text.split():
@@ -37,47 +42,55 @@ def chunk(text: str, size: int = CHUNK_SIZE) -> list[str]:
     return chunks
 
 
-def ingest(conn, path: Path) -> list[str]:
-    meta, body = parse(path)
-    doc_id, version = meta["doc_id"], meta["version"]
-    pieces = chunk(body)
-    vectors = embed(pieces)
+def latest_versions(docs: list[tuple[dict, str]]) -> set[tuple[str, str]]:
+    newest: dict[str, tuple[date, str]] = {}
+    for meta, _ in docs:
+        key = (date.fromisoformat(meta["published_at"]), meta["version"])
+        if meta["doc_id"] not in newest or key > newest[meta["doc_id"]]:
+            newest[meta["doc_id"]] = key
+    return {(doc_id, version) for doc_id, (_, version) in newest.items()}
 
-    with conn.transaction():
-        conn.execute(
-            """
-            INSERT INTO documents (doc_id, version, title, body, published_at)
-            VALUES (%s, %s, %s, %s, %s)
-            ON CONFLICT (doc_id, version) DO UPDATE
-              SET title = EXCLUDED.title, body = EXCLUDED.body,
-                  published_at = EXCLUDED.published_at
-            """,
-            (doc_id, version, meta.get("title"), body, meta.get("published_at")),
-        )
-        # Re-ingest replaces this version's chunks, since the count changes with CHUNK_SIZE.
-        conn.execute(
-            "DELETE FROM chunks WHERE doc_id = %s AND version = %s", (doc_id, version)
-        )
-        ids = []
+
+def ingest_all(conn: psycopg.Connection, docs_dir: Path = DOCS_DIR) -> int:
+    cfg = load_config(conn)
+    docs = [parse(p) for p in sorted(docs_dir.glob("*.md"))]
+    indexed = latest_versions(docs)
+
+    rows = []
+    for meta, body in docs:
+        pieces = chunk(body, cfg.chunk_size)
+        vectors = embed(pieces, cfg.embedding_model)
+        is_indexed = (meta["doc_id"], meta["version"]) in indexed
         for i, (piece, vec) in enumerate(zip(pieces, vectors)):
-            cid = db.chunk_id(doc_id, version, i)
-            conn.execute(
-                """
-                INSERT INTO chunks (chunk_id, doc_id, version, chunk_index, text, embedding)
-                VALUES (%s, %s, %s, %s, %s, %s)
-                """,
-                (cid, doc_id, version, i, piece, vec),
-            )
-            ids.append(cid)
-    return ids
+            rows.append((db.chunk_id(meta["doc_id"], meta["version"], i),
+                         meta["doc_id"], meta["version"], i, piece, vec, is_indexed))
+
+    # Full rebuild, so renamed or removed docs don't linger.
+    with conn.transaction(), conn.cursor() as cur:
+        cur.execute("DELETE FROM chunks")
+        cur.execute("DELETE FROM documents")
+        cur.executemany(
+            "INSERT INTO documents (doc_id, version, title, body, published_at) VALUES (%s, %s, %s, %s, %s)",
+            [(m["doc_id"], m["version"], m.get("title"), body, m["published_at"]) for m, body in docs],
+        )
+        cur.executemany(
+            """
+            INSERT INTO chunks (chunk_id, doc_id, version, chunk_index, text, embedding, indexed)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """,
+            rows,
+        )
+    return len(docs)
 
 
 def main() -> None:
     with db.connect() as conn:
-        db.init_schema(conn)
-        for path in sorted(DOCS_DIR.glob("*.md")):
-            ids = ingest(conn, path)
-            print(f"{path.name}: {len(ids)} chunks ({ids[0]} .. {ids[-1]})")
+        n = ingest_all(conn)
+        n_chunks, n_indexed = conn.execute(
+            "SELECT count(*), count(*) FILTER (WHERE indexed) FROM chunks"
+        ).fetchone()
+        n_docs = conn.execute("SELECT count(DISTINCT doc_id) FROM documents").fetchone()[0]
+        print(f"{n} doc versions ({n_docs} docs), {n_chunks} chunks, {n_indexed} indexed")
 
 
 if __name__ == "__main__":

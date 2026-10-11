@@ -1,6 +1,6 @@
 ---
 doc_id: warranty
-version: v1
+version: v2
 title: Warranty
 published_at: 2026-05-20
 ---

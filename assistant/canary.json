@@ -1,0 +1,646 @@
+[
+  {
+    "id": "q001",
+    "category": "docs",
+    "question": "How long do I have to return boots for a refund?",
+    "must_contain": [
+      "\\b(?:14|fourteen)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": [
+      "\\b(?:30|thirty)[- ](?:calendar |business )?days?\\b"
+    ],
+    "smoke": true
+  },
+  {
+    "id": "q002",
+    "category": "docs",
+    "question": "Once you receive my return, how long until the refund reaches my card?",
+    "must_contain": [
+      "\\b(?:5|five)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q003",
+    "category": "docs",
+    "question": "Do I have to pay for return shipping?",
+    "must_contain": [
+      "\\bfree\\b"
+    ],
+    "must_not_contain": [
+      "\\$7\\.95"
+    ],
+    "smoke": true
+  },
+  {
+    "id": "q004",
+    "category": "docs",
+    "question": "How long do I have to exchange a jacket for a different size?",
+    "must_contain": [
+      "\\b(?:30|thirty)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": [
+      "\\b(?:21|twenty-one)[- ](?:calendar |business )?days?\\b"
+    ],
+    "smoke": false
+  },
+  {
+    "id": "q005",
+    "category": "docs",
+    "question": "What's the minimum order for free standard shipping?",
+    "must_contain": [
+      "\\$75"
+    ],
+    "must_not_contain": [
+      "\\$50"
+    ],
+    "smoke": true
+  },
+  {
+    "id": "q006",
+    "category": "docs",
+    "question": "How much does standard shipping cost on a small order?",
+    "must_contain": [
+      "\\$6\\.95"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q007",
+    "category": "docs",
+    "question": "How much is express shipping?",
+    "must_contain": [
+      "\\$19\\.95"
+    ],
+    "must_not_contain": [
+      "\\$24\\.95"
+    ],
+    "smoke": true
+  },
+  {
+    "id": "q008",
+    "category": "docs",
+    "question": "How much does overnight shipping cost?",
+    "must_contain": [
+      "\\$39\\.95"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q009",
+    "category": "docs",
+    "question": "Do you ship to the United Kingdom, and how much does it cost?",
+    "must_contain": [
+      "\\$29\\.95"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q010",
+    "category": "docs",
+    "question": "How long is the warranty on Kestrel-brand gear?",
+    "must_contain": [
+      "\\b(?:2|two)[- ]years?\\b"
+    ],
+    "must_not_contain": [
+      "\\b(?:1|one)[- ]year\\b"
+    ],
+    "smoke": true
+  },
+  {
+    "id": "q011",
+    "category": "docs",
+    "question": "How long is a password reset link valid?",
+    "must_contain": [
+      "\\b(?:30|thirty)[- ]minutes?\\b"
+    ],
+    "must_not_contain": [
+      "\\b(?:60|sixty)[- ]minutes?\\b"
+    ],
+    "smoke": true
+  },
+  {
+    "id": "q012",
+    "category": "docs",
+    "question": "How long after delivery can I ask for a price match?",
+    "must_contain": [
+      "\\b(?:14|fourteen)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": [
+      "\\b(?:7|seven)[- ](?:calendar |business )?days?\\b"
+    ],
+    "smoke": true
+  },
+  {
+    "id": "q013",
+    "category": "docs",
+    "question": "How many Trail Rewards points do I earn per dollar?",
+    "must_contain": [
+      "\\b(?:1|one) point"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q014",
+    "category": "docs",
+    "question": "How many points do I need for a reward, and what is it worth?",
+    "must_contain": [
+      "\\b100\\b",
+      "\\$5"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q015",
+    "category": "docs",
+    "question": "When do Trail Rewards rewards expire?",
+    "must_contain": [
+      "\\b(?:90|ninety)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q016",
+    "category": "docs",
+    "question": "How much do I need to spend to reach Gold tier?",
+    "must_contain": [
+      "\\$1,000"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q017",
+    "category": "docs",
+    "question": "What extra benefits do Gold tier members get?",
+    "must_contain": [
+      "1\\.5",
+      "express"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q018",
+    "category": "docs",
+    "question": "Do Kestrel gift cards expire?",
+    "must_contain": [
+      "never expire|do not expire|don't expire|no expiration"
+    ],
+    "must_not_contain": [],
+    "smoke": true
+  },
+  {
+    "id": "q019",
+    "category": "docs",
+    "question": "What's the largest amount I can put on a gift card?",
+    "must_contain": [
+      "\\$500"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q020",
+    "category": "docs",
+    "question": "My order arrived damaged. How long do I have to report it?",
+    "must_contain": [
+      "\\b(?:7|seven)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q021",
+    "category": "docs",
+    "question": "How much is the deposit to rent a tent?",
+    "must_contain": [
+      "\\$100"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q022",
+    "category": "docs",
+    "question": "What is the late fee for returning rental gear late?",
+    "must_contain": [
+      "\\$15"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q023",
+    "category": "docs",
+    "question": "How much do you charge to assess a repair on gear that's out of warranty?",
+    "must_contain": [
+      "\\$25"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q024",
+    "category": "docs",
+    "question": "How long do I have to cancel an order after placing it?",
+    "must_contain": [
+      "\\b(?:2|two)[- ]hours?\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q025",
+    "category": "docs",
+    "question": "Can I pay for my order in installments?",
+    "must_contain": [
+      "affirm",
+      "\\$150"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q026",
+    "category": "docs",
+    "question": "How many promo codes can I use on one order?",
+    "must_contain": [
+      "\\b(?:1|one)\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q027",
+    "category": "docs",
+    "question": "Do you have a student discount?",
+    "must_contain": [
+      "\\b10\\s?(?:%|percent)"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q028",
+    "category": "docs",
+    "question": "Is there a military discount?",
+    "must_contain": [
+      "\\b15\\s?(?:%|percent)"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q029",
+    "category": "docs",
+    "question": "What's the phone number for customer support?",
+    "must_contain": [
+      "1\\-800\\-555\\-0142"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q030",
+    "category": "docs",
+    "question": "How long will you hold my store pickup order?",
+    "must_contain": [
+      "\\b(?:7|seven)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q031",
+    "category": "docs",
+    "question": "Should I order my usual size in Kestrel boots?",
+    "must_contain": [
+      "half (?:a )?size (?:up|larger|bigger)"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q032",
+    "category": "docs",
+    "question": "How much store credit can I get for trading in used gear?",
+    "must_contain": [
+      "\\b40\\s?(?:%|percent)"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q033",
+    "category": "docs",
+    "question": "I bought a gift on December 10. Until when can I return it?",
+    "must_contain": [
+      "January\\ 15"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q034",
+    "category": "docs",
+    "question": "Can I return a jacket I bought at 60% off?",
+    "must_contain": [
+      "final[- ]sale",
+      "answer:\\W*no\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q035",
+    "category": "docs",
+    "question": "Which camp stove has been recalled?",
+    "must_contain": [
+      "RS-200"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q036",
+    "category": "tools",
+    "question": "I'm customer C-0001. What's the status of order O-1001?",
+    "must_contain": [
+      "\\bdelivered\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": true
+  },
+  {
+    "id": "q037",
+    "category": "tools",
+    "question": "I'm customer C-0006. What's the status of order O-1006?",
+    "must_contain": [
+      "\\bshipped\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q038",
+    "category": "tools",
+    "question": "I'm customer C-0010. What's the status of order O-1010?",
+    "must_contain": [
+      "\\bprocessing\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q039",
+    "category": "tools",
+    "question": "I'm customer C-0019. What's the status of order O-1066?",
+    "must_contain": [
+      "\\bcancelled\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q040",
+    "category": "tools",
+    "question": "I'm customer C-0002. What's the status of order O-1002?",
+    "must_contain": [
+      "\\bdelivered\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q041",
+    "category": "tools",
+    "question": "I'm customer C-0022. What's the status of my refund for order O-1022?",
+    "must_contain": [
+      "\\brequested\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q042",
+    "category": "tools",
+    "question": "I'm customer C-0017. What's the status of my refund for order O-1017?",
+    "must_contain": [
+      "\\bapproved\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": true
+  },
+  {
+    "id": "q043",
+    "category": "tools",
+    "question": "I'm customer C-0029. What's the status of my refund for order O-1029?",
+    "must_contain": [
+      "\\bprocessed\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q044",
+    "category": "tools",
+    "question": "I'm customer C-0014. What's the status of my refund for order O-1014?",
+    "must_contain": [
+      "\\bdenied\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q045",
+    "category": "tools",
+    "question": "I'm customer C-0005. Has a refund been started for order O-1005?",
+    "must_contain": [
+      "answer:\\W*no\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q046",
+    "category": "tools",
+    "question": "Is the Ridgeline Hiking Boot (product P-001) in stock?",
+    "must_contain": [
+      "answer:\\W*yes\\b",
+      "\\b37\\b"
+    ],
+    "must_not_contain": [
+      "out of stock"
+    ],
+    "smoke": true
+  },
+  {
+    "id": "q047",
+    "category": "tools",
+    "question": "Is the Summit GTX Boot (product P-002) in stock?",
+    "must_contain": [
+      "answer:\\W*yes\\b",
+      "\\b4\\b"
+    ],
+    "must_not_contain": [
+      "out of stock"
+    ],
+    "smoke": false
+  },
+  {
+    "id": "q048",
+    "category": "tools",
+    "question": "Is the Trailrunner Low Shoe (product P-003) in stock?",
+    "must_contain": [
+      "answer:\\W*no\\b"
+    ],
+    "must_not_contain": [
+      "answer:\\W*yes\\b"
+    ],
+    "smoke": false
+  },
+  {
+    "id": "q049",
+    "category": "tools",
+    "question": "Is the Canyon Sandal (product P-005) in stock?",
+    "must_contain": [
+      "answer:\\W*no\\b"
+    ],
+    "must_not_contain": [
+      "answer:\\W*yes\\b"
+    ],
+    "smoke": false
+  },
+  {
+    "id": "q050",
+    "category": "tools",
+    "question": "I'm customer C-0005. How many orders have I placed with you?",
+    "must_contain": [
+      "\\b(?:2|two)\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q051",
+    "category": "multistep",
+    "question": "I'm customer C-0002. Today is 2026-10-12. Can I still return the Comfort Plus Sleeping Pad from order O-1002 for a refund?",
+    "must_contain": [
+      "answer:\\W*yes\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": true
+  },
+  {
+    "id": "q052",
+    "category": "multistep",
+    "question": "I'm customer C-0003. Today is 2026-10-12. Can I still return the Cirrus Down Jacket from order O-1003 for a refund?",
+    "must_contain": [
+      "answer:\\W*yes\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q053",
+    "category": "multistep",
+    "question": "I'm customer C-0008. Today is 2026-10-12. Can I still return the Comfort Plus Sleeping Pad from order O-1008 for a refund?",
+    "must_contain": [
+      "answer:\\W*yes\\b"
+    ],
+    "must_not_contain": [],
+    "smoke": false
+  },
+  {
+    "id": "q054",
+    "category": "multistep",
+    "question": "I'm customer C-0005. Today is 2026-10-12. Can I still return the Stormshell Rain Jacket from order O-1005 for a refund?",
+    "must_contain": [
+      "answer:\\W*no\\b"
+    ],
+    "must_not_contain": [
+      "answer:\\W*yes\\b"
+    ],
+    "smoke": true
+  },
+  {
+    "id": "q055",
+    "category": "multistep",
+    "question": "I'm customer C-0007. Today is 2026-10-12. Can I still return the Glacier 0F Sleeping Bag from order O-1007 for a refund?",
+    "must_contain": [
+      "answer:\\W*no\\b"
+    ],
+    "must_not_contain": [
+      "answer:\\W*yes\\b"
+    ],
+    "smoke": false
+  },
+  {
+    "id": "q056",
+    "category": "multistep",
+    "question": "I'm customer C-0026. Today is 2026-10-12. Can I still return the Insulated Gloves from order O-1026 for a refund?",
+    "must_contain": [
+      "answer:\\W*no\\b"
+    ],
+    "must_not_contain": [
+      "answer:\\W*yes\\b"
+    ],
+    "smoke": false
+  },
+  {
+    "id": "q057",
+    "category": "multistep",
+    "question": "I'm customer C-0015. Today is 2026-10-12. A seam failed on the Ultralight 1-Person Tent from order O-1015. Is it still under warranty?",
+    "must_contain": [
+      "answer:\\W*yes\\b"
+    ],
+    "must_not_contain": [
+      "answer:\\W*no\\b"
+    ],
+    "smoke": true
+  },
+  {
+    "id": "q058",
+    "category": "multistep",
+    "question": "I'm customer C-0012. Today is 2026-10-12. A seam failed on the Trek Hiking Pants from order O-1012. Is it still under warranty?",
+    "must_contain": [
+      "answer:\\W*no\\b"
+    ],
+    "must_not_contain": [
+      "answer:\\W*yes\\b"
+    ],
+    "smoke": false
+  },
+  {
+    "id": "q059",
+    "category": "multistep",
+    "question": "I'm customer C-0009. Today is 2026-10-12. Can I exchange the Insulated Gloves from order O-1009 for a different size?",
+    "must_contain": [
+      "answer:\\W*yes\\b"
+    ],
+    "must_not_contain": [
+      "answer:\\W*no\\b"
+    ],
+    "smoke": false
+  },
+  {
+    "id": "q060",
+    "category": "multistep",
+    "question": "I'm customer C-0013. Today is 2026-10-12. Can I exchange the Beanie from order O-1013 for a different size?",
+    "must_contain": [
+      "answer:\\W*no\\b"
+    ],
+    "must_not_contain": [
+      "answer:\\W*yes\\b"
+    ],
+    "smoke": false
+  }
+]
