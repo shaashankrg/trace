@@ -9,7 +9,7 @@ DEFAULTS = {
     "top_k": "4",
     "similarity_threshold": "0.3",
     "chunk_size": "300",
-    "model": os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6"),
+    "model": os.environ.get("LLM_MODEL") or os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6"),
     "prompt_version": "v1",
     "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
     "guardrail_blocked_topics": json.dumps(

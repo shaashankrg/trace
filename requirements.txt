@@ -12,3 +12,4 @@ pytest
 pyyaml
 opensearch-py
 prometheus-client
+google-genai
