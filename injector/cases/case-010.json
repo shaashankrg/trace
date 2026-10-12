@@ -1,0 +1,26 @@
+{
+  "case_id": "case-010",
+  "conversation_id": "conv-8e868b11",
+  "fault": {
+    "type": "threshold_too_strict",
+    "params": {
+      "value": 0.8
+    },
+    "age_min": 70,
+    "author": "ops-bot",
+    "description": "Reduce low-relevance retrievals",
+    "change_id": "change:config-change-8917"
+  },
+  "decoy": null,
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "How much is the deposit to rent a tent?",
+    "reviewer_correction": "The rental deposit is $100."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\$100"
+    ],
+    "must_not_contain": []
+  }
+}

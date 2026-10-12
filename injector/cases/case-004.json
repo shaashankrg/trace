@@ -1,0 +1,29 @@
+{
+  "case_id": "case-004",
+  "conversation_id": "conv-4cb8bda8",
+  "fault": {
+    "type": "stale_document",
+    "params": {
+      "doc_id": "refund-policy",
+      "old_version": "v1",
+      "new_version": "v2"
+    },
+    "age_min": 116,
+    "author": "ops-bot",
+    "description": ""
+  },
+  "decoy": null,
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "What's the refund window for returning an item?",
+    "reviewer_correction": "The refund window is 14 days, not 30."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:14|fourteen)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": [
+      "\\b(?:30|thirty)[- ](?:calendar |business )?days?\\b"
+    ]
+  }
+}

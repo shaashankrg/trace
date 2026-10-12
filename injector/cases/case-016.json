@@ -1,0 +1,25 @@
+{
+  "case_id": "case-016",
+  "conversation_id": "conv-2680bce1",
+  "fault": {
+    "type": "silent_tool_failure",
+    "params": {
+      "tool": "lookup_order"
+    },
+    "age_min": 73,
+    "author": "ops-bot",
+    "description": ""
+  },
+  "decoy": null,
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "I'm customer C-0011. How many orders have I placed with you?",
+    "reviewer_correction": "Customer C-0011 has 4 orders on file. The assistant said it found none."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b4\\b"
+    ],
+    "must_not_contain": []
+  }
+}

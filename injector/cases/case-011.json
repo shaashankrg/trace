@@ -1,0 +1,36 @@
+{
+  "case_id": "case-011",
+  "conversation_id": "conv-e1710cc0",
+  "fault": {
+    "type": "prompt_regression",
+    "params": {},
+    "age_min": 103,
+    "author": "ops-bot",
+    "description": "Trim redundant prompt instructions",
+    "change_id": "change:prompt-edit-8582"
+  },
+  "decoy": {
+    "type": "unrelated_config_change",
+    "params": {
+      "value": 700
+    },
+    "age_min": 146,
+    "position": "before",
+    "author": "priya",
+    "change_id": "change:config-change-9549",
+    "description": "Raise response length limit"
+  },
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "Can I return an item without a receipt?",
+    "reviewer_correction": "The documents don't say whether a receipt can be skipped. The assistant should have said it didn't know and point the customer to support (help@kestrel.example), not told me no receipt is needed."
+  },
+  "answer_check": {
+    "must_contain": [
+      "(?:don'?t|do not) have (?:any |specific )?information|not covered|no information|contact (?:our )?(?:support|team)|support team|help@kestrel"
+    ],
+    "must_not_contain": [
+      "(?:don'?t|do not) need (?:a |your )?(?:physical )?receipt|no receipt (?:is )?(?:needed|required)|receipt (?:is )?not (?:needed|required)"
+    ]
+  }
+}

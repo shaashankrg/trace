@@ -43,6 +43,21 @@ Accuracy is queryable in Prometheus (http://localhost:9092) as `kestrel_canary_a
 
 Runtime config lives in the `app_config` table and is read on every request. `python -m assistant.bootstrap --reset-config` restores the defaults.
 
+## Fault injection and evaluation
+
+```bash
+python -m eval.setup_eval          # `eval` schema + `eval` / `tools` roles (ground truth is unreadable by `tools`)
+python -m injector.make_cases      # 20 cases -> injector/cases/*.json and eval.cases
+python -m eval.run_case case-001   # reset, inject, record, snapshot to eval/runs/case-001/, revert, check recovery
+python -m eval.run_case --all
+python -m eval.baselines b1        # rule-based baseline over the recorded traces
+python -m eval.score eval/diagnoses/b1.jsonl   # -> eval/results/b1.md, b1.csv, b1_cases.csv
+```
+
+Fault types are in `injector/faults.py`, decoys in `injector/decoys.py`. Each fault has `apply()`, an idempotent
+`revert()`, a `change_record()` (or `None` for an outage) and a `ground_truth()`. Real changes and decoys are
+written to the `changes` table in the same format.
+
 ## Tests
 
 ```bash

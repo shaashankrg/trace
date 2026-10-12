@@ -1,0 +1,38 @@
+{
+  "case_id": "case-005",
+  "conversation_id": "conv-ac598e70",
+  "fault": {
+    "type": "stale_tool_data",
+    "params": {
+      "product_id": "P-005",
+      "new_qty": 18
+    },
+    "age_min": 106,
+    "author": "marco",
+    "description": ""
+  },
+  "decoy": {
+    "type": "unrelated_doc_added",
+    "params": {
+      "doc_id": "trail-volunteer-days"
+    },
+    "age_min": 150,
+    "position": "before",
+    "author": "ops-bot",
+    "change_id": "change:doc-update-5293",
+    "description": "Publish trail-volunteer-days@v1"
+  },
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "Is the Canyon Sandal (product P-005) in stock, and how many do you have?",
+    "reviewer_correction": "The Canyon Sandal is in stock: 18 units available."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b18\\b"
+    ],
+    "must_not_contain": [
+      "out of stock|sold out|unavailable"
+    ]
+  }
+}

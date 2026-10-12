@@ -1,0 +1,39 @@
+{
+  "case_id": "case-017",
+  "conversation_id": "conv-5304717d",
+  "fault": {
+    "type": "stale_document",
+    "params": {
+      "doc_id": "shipping-expedited",
+      "old_version": "v1",
+      "new_version": "v2"
+    },
+    "age_min": 76,
+    "author": "ben",
+    "description": ""
+  },
+  "decoy": {
+    "type": "unrelated_config_change",
+    "params": {
+      "value": 700
+    },
+    "age_min": 86,
+    "position": "before",
+    "author": "alice",
+    "change_id": "change:config-change-2907",
+    "description": "Allow longer replies"
+  },
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "How much does express shipping cost?",
+    "reviewer_correction": "Express shipping is $19.95, not $24.95."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\$19\\.95"
+    ],
+    "must_not_contain": [
+      "\\$24\\.95"
+    ]
+  }
+}

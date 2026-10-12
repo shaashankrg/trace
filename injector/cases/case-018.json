@@ -1,0 +1,26 @@
+{
+  "case_id": "case-018",
+  "conversation_id": "conv-80841fa6",
+  "fault": {
+    "type": "prompt_regression",
+    "params": {},
+    "age_min": 54,
+    "author": "alice",
+    "description": "Simplify system prompt",
+    "change_id": "change:prompt-edit-3227"
+  },
+  "decoy": null,
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "Can I change the shipping address after I place an order?",
+    "reviewer_correction": "The documents say nothing about changing an address. The assistant should have said it didn't know and point the customer to support (help@kestrel.example), not told me it isn't supported."
+  },
+  "answer_check": {
+    "must_contain": [
+      "(?:don'?t|do not) have (?:any |specific )?information|not covered|no information|contact (?:our )?(?:support|team)|support team|help@kestrel"
+    ],
+    "must_not_contain": [
+      "not supported|cannot be changed|can'?t be changed|unable to change|not possible|isn'?t possible"
+    ]
+  }
+}

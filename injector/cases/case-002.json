@@ -1,0 +1,28 @@
+{
+  "case_id": "case-002",
+  "conversation_id": "conv-7e42e891",
+  "fault": {
+    "type": "threshold_too_strict",
+    "params": {
+      "value": 0.85
+    },
+    "age_min": 23,
+    "author": "priya",
+    "description": "Reduce low-relevance retrievals",
+    "change_id": "change:config-change-5777"
+  },
+  "decoy": null,
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "What's the minimum order for free standard shipping?",
+    "reviewer_correction": "Free standard shipping starts at $75."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\$75"
+    ],
+    "must_not_contain": [
+      "\\$50"
+    ]
+  }
+}

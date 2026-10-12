@@ -1,0 +1,35 @@
+{
+  "case_id": "case-008",
+  "conversation_id": "conv-a9f1a5c7",
+  "fault": {
+    "type": "silent_tool_failure",
+    "params": {
+      "tool": "lookup_order"
+    },
+    "age_min": 81,
+    "author": "ops-bot",
+    "description": ""
+  },
+  "decoy": {
+    "type": "unrelated_config_change",
+    "params": {
+      "value": 700
+    },
+    "age_min": 38,
+    "position": "after",
+    "author": "ops-bot",
+    "change_id": "change:config-change-3839",
+    "description": "Raise response length limit"
+  },
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "I'm customer C-0006. What's the status of order O-1006?",
+    "reviewer_correction": "Order O-1006 is shipped."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\bshipped\\b"
+    ],
+    "must_not_contain": []
+  }
+}

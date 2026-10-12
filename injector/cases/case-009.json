@@ -1,0 +1,36 @@
+{
+  "case_id": "case-009",
+  "conversation_id": "conv-51dda7b0",
+  "fault": {
+    "type": "missing_document",
+    "params": {
+      "doc_id": "military-discount"
+    },
+    "age_min": 65,
+    "author": "marco",
+    "description": "Remove outdated entries from the index",
+    "change_id": "change:doc-delete-6207"
+  },
+  "decoy": {
+    "type": "unrelated_doc_added",
+    "params": {
+      "doc_id": "camp-skills-workshops"
+    },
+    "age_min": 51,
+    "position": "after",
+    "author": "priya",
+    "change_id": "change:doc-update-2734",
+    "description": "Publish camp-skills-workshops@v1"
+  },
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "Is there a military discount?",
+    "reviewer_correction": "Yes, military members, veterans and families get 15% off."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b15\\s?(?:%|percent)"
+    ],
+    "must_not_contain": []
+  }
+}

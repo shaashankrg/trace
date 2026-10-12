@@ -97,6 +97,18 @@ CREATE TABLE IF NOT EXISTS refunds (
   updated_at TIMESTAMPTZ
 );
 
+-- Change history the investigator can read. Real changes and decoys share this
+-- format; nothing marks which is which, and outages leave no row.
+CREATE TABLE IF NOT EXISTS changes (
+  change_id   TEXT PRIMARY KEY,   -- 'change:doc-update-2211'
+  kind        TEXT,               -- prompt_edit | doc_update | doc_delete | config_change | model_change
+  target      TEXT,               -- 'prompt', 'doc:refund-policy', 'config:top_k'
+  description TEXT,
+  diff        TEXT,
+  author      TEXT,
+  created_at  TIMESTAMPTZ
+);
+
 -- Every tool input and output, for replay.
 CREATE TABLE IF NOT EXISTS tool_calls (
   id              BIGSERIAL PRIMARY KEY,

@@ -1,0 +1,39 @@
+{
+  "case_id": "case-003",
+  "conversation_id": "conv-c5858137",
+  "fault": {
+    "type": "stale_document",
+    "params": {
+      "doc_id": "warranty",
+      "old_version": "v1",
+      "new_version": "v2"
+    },
+    "age_min": 32,
+    "author": "marco",
+    "description": ""
+  },
+  "decoy": {
+    "type": "unrelated_config_change",
+    "params": {
+      "value": 700
+    },
+    "age_min": 22,
+    "position": "after",
+    "author": "marco",
+    "change_id": "change:config-change-7565",
+    "description": "Allow longer replies"
+  },
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "How long is the warranty on Kestrel-brand gear?",
+    "reviewer_correction": "The warranty is 2 years, not 1."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:2|two)[- ]years?\\b"
+    ],
+    "must_not_contain": [
+      "\\b(?:1|one)[- ]year\\b"
+    ]
+  }
+}

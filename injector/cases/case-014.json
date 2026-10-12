@@ -1,0 +1,34 @@
+{
+  "case_id": "case-014",
+  "conversation_id": "conv-9ad6631c",
+  "fault": {
+    "type": "threshold_too_strict",
+    "params": {
+      "value": 0.9
+    },
+    "age_min": 74,
+    "author": "alice",
+    "description": "Reduce low-relevance retrievals",
+    "change_id": "change:config-change-9298"
+  },
+  "decoy": {
+    "type": "typo_prompt_edit",
+    "params": {},
+    "age_min": 119,
+    "position": "before",
+    "author": "alice",
+    "change_id": "change:prompt-edit-5485",
+    "description": "Prompt typo fix"
+  },
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "How long is a password reset link valid?",
+    "reviewer_correction": "Password reset links are valid for 30 minutes."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:30|thirty)[- ]minutes?\\b"
+    ],
+    "must_not_contain": []
+  }
+}

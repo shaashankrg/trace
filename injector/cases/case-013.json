@@ -1,0 +1,35 @@
+{
+  "case_id": "case-013",
+  "conversation_id": "conv-d974ebf9",
+  "fault": {
+    "type": "silent_tool_failure",
+    "params": {
+      "tool": "lookup_order"
+    },
+    "age_min": 105,
+    "author": "alice",
+    "description": ""
+  },
+  "decoy": {
+    "type": "typo_prompt_edit",
+    "params": {},
+    "age_min": 142,
+    "position": "before",
+    "author": "ben",
+    "change_id": "change:prompt-edit-5949",
+    "description": "Fix typo in system prompt"
+  },
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "I'm customer C-0015. Today is 2026-10-12. A seam failed on the Ultralight 1-Person Tent from order O-1015. Is it still under warranty?",
+    "reviewer_correction": "Order O-1015 was delivered 500 days ago, inside the 2-year warranty. The answer is yes."
+  },
+  "answer_check": {
+    "must_contain": [
+      "answer:\\W*yes\\b"
+    ],
+    "must_not_contain": [
+      "answer:\\W*no\\b"
+    ]
+  }
+}

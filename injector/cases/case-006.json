@@ -1,0 +1,26 @@
+{
+  "case_id": "case-006",
+  "conversation_id": "conv-c4df8715",
+  "fault": {
+    "type": "missing_document",
+    "params": {
+      "doc_id": "gift-cards"
+    },
+    "age_min": 46,
+    "author": "marco",
+    "description": "Clean up index entries",
+    "change_id": "change:doc-delete-4848"
+  },
+  "decoy": null,
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "Do Kestrel gift cards expire?",
+    "reviewer_correction": "Gift cards never expire. The assistant should have answered, not said it didn't know."
+  },
+  "answer_check": {
+    "must_contain": [
+      "never expire|do not expire|don't expire|no expiration"
+    ],
+    "must_not_contain": []
+  }
+}

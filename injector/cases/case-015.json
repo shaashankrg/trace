@@ -1,0 +1,36 @@
+{
+  "case_id": "case-015",
+  "conversation_id": "conv-93524c6d",
+  "fault": {
+    "type": "missing_document",
+    "params": {
+      "doc_id": "store-pickup"
+    },
+    "age_min": 91,
+    "author": "ops-bot",
+    "description": "Clean up index entries",
+    "change_id": "change:doc-delete-4356"
+  },
+  "decoy": {
+    "type": "unrelated_doc_added",
+    "params": {
+      "doc_id": "gear-donation"
+    },
+    "age_min": 52,
+    "position": "after",
+    "author": "ops-bot",
+    "change_id": "change:doc-update-4531",
+    "description": "Publish gear-donation@v1"
+  },
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "How long will you hold my store pickup order?",
+    "reviewer_correction": "Store pickup orders are held for 7 days."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:7|seven)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": []
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "case_id": "case-019",
+  "conversation_id": "conv-d53088df",
+  "fault": {
+    "type": "stale_tool_data",
+    "params": {
+      "product_id": "P-003",
+      "new_qty": 23
+    },
+    "age_min": 35,
+    "author": "marco",
+    "description": ""
+  },
+  "decoy": null,
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "Is the Trailrunner Low Shoe (product P-003) in stock, and how many do you have?",
+    "reviewer_correction": "The Trailrunner Low Shoe is in stock: 23 units available."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b23\\b"
+    ],
+    "must_not_contain": [
+      "out of stock|sold out|unavailable"
+    ]
+  }
+}

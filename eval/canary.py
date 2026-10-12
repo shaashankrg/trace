@@ -86,39 +86,46 @@ def _accuracy(results: list[dict]) -> float:
     return sum(r["passed"] for r in results) / len(results)
 
 
+def run_canary(smoke: bool, workers: int = 4, push: bool = True, verbose: bool = True) -> tuple[list[dict], float]:
+    """Run the canary (or its smoke subset), optionally push to Pushgateway; return (results, accuracy)."""
+    items = json.loads(CANARY_PATH.read_text(encoding="utf-8"))
+    if smoke:
+        items = [x for x in items if x["smoke"]]
+    suite = "smoke" if smoke else "full"
+    run_id = uuid.uuid4().hex[:8]
+
+    with ThreadPoolExecutor(workers) as pool:
+        results = list(pool.map(lambda x: run_one(x, run_id), items))
+
+    if verbose:
+        for r in results:
+            if not r["passed"]:
+                print(f"FAIL {r['id']} [{r['category']}] {r['question']}\n"
+                      f"     {'; '.join(r['failures'])}\n"
+                      f"     trace={r['trace_id']} answer={r['answer'][:200]!r}")
+        for cat in CATEGORIES:
+            subset = [r for r in results if r["category"] == cat]
+            if subset:
+                print(f"{cat:>10}: {sum(r['passed'] for r in subset)}/{len(subset)}")
+        print(f"{suite} accuracy: {_accuracy(results):.3f} ({len(results)} questions, run {run_id})")
+
+    if push:
+        registry = CollectorRegistry()
+        registry.register(_Snapshot(results))
+        push_to_gateway(PUSHGATEWAY_URL, job="kestrel_canary", grouping_key={"suite": suite},
+                        registry=registry)
+        if verbose:
+            print(f"pushed to {PUSHGATEWAY_URL}")
+    return results, _accuracy(results)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--smoke", action="store_true", help="run only questions tagged smoke")
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--no-push", action="store_true")
     args = parser.parse_args()
-
-    items = json.loads(CANARY_PATH.read_text(encoding="utf-8"))
-    if args.smoke:
-        items = [x for x in items if x["smoke"]]
-    suite = "smoke" if args.smoke else "full"
-    run_id = uuid.uuid4().hex[:8]
-
-    with ThreadPoolExecutor(args.workers) as pool:
-        results = list(pool.map(lambda x: run_one(x, run_id), items))
-
-    for r in results:
-        if not r["passed"]:
-            print(f"FAIL {r['id']} [{r['category']}] {r['question']}\n"
-                  f"     {'; '.join(r['failures'])}\n"
-                  f"     trace={r['trace_id']} answer={r['answer'][:200]!r}")
-    for cat in CATEGORIES:
-        subset = [r for r in results if r["category"] == cat]
-        if subset:
-            print(f"{cat:>10}: {sum(r['passed'] for r in subset)}/{len(subset)}")
-    print(f"{suite} accuracy: {_accuracy(results):.3f} ({len(results)} questions, run {run_id})")
-
-    if not args.no_push:
-        registry = CollectorRegistry()
-        registry.register(_Snapshot(results))
-        push_to_gateway(PUSHGATEWAY_URL, job="kestrel_canary", grouping_key={"suite": suite},
-                        registry=registry)
-        print(f"pushed to {PUSHGATEWAY_URL}")
+    run_canary(args.smoke, args.workers, push=not args.no_push)
     return 0
 
 

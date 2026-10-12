@@ -1,0 +1,38 @@
+{
+  "case_id": "case-012",
+  "conversation_id": "conv-034d95a7",
+  "fault": {
+    "type": "stale_tool_data",
+    "params": {
+      "product_id": "P-019",
+      "new_qty": 12
+    },
+    "age_min": 90,
+    "author": "ops-bot",
+    "description": ""
+  },
+  "decoy": {
+    "type": "unrelated_config_change",
+    "params": {
+      "value": 700
+    },
+    "age_min": 50,
+    "position": "after",
+    "author": "marco",
+    "change_id": "change:config-change-3659",
+    "description": "Allow longer replies"
+  },
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "Is the Aspen 20F Sleeping Bag (product P-019) in stock, and how many do you have?",
+    "reviewer_correction": "The Aspen 20F Sleeping Bag is in stock: 12 units available."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b12\\b"
+    ],
+    "must_not_contain": [
+      "out of stock|sold out|unavailable"
+    ]
+  }
+}
