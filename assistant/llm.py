@@ -127,7 +127,9 @@ def _gemini_chat(cfg: Config, system: str, messages: list, tools: list[dict]) ->
         tools=[types.Tool(function_declarations=declarations)],
         automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
         # Thinking tokens would count against max_output_tokens and truncate the answer.
-        thinking_config=types.ThinkingConfig(thinking_budget=0),
+        # Gemini 3.x rejects thinking_budget=0 (400 INVALID_ARGUMENT); it takes a level instead.
+        thinking_config=(types.ThinkingConfig(thinking_level="MINIMAL") if cfg.model.startswith("gemini-3")
+                         else types.ThinkingConfig(thinking_budget=0)),
     )
     contents = _gemini_contents(messages)
     for attempt in range(6):

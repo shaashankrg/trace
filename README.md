@@ -58,6 +58,36 @@ Fault types are in `injector/faults.py`, decoys in `injector/decoys.py`. Each fa
 `revert()`, a `change_record()` (or `None` for an outage) and a `ground_truth()`. Real changes and decoys are
 written to the `changes` table in the same format.
 
+## Investigator tools (MCP)
+
+Ten tools behind one MCP server (stdio). Seven work; `replay_conversation` (Day 6), `search_playbooks` and
+`similar_incidents` (Day 10) are stubs with their real signatures.
+
+```bash
+python -m tools.server                                   # live stack (Jaeger, OpenSearch, Postgres as `tools`, Prometheus)
+TRACEWISE_BACKEND=snapshot:case-007 python -m tools.server   # a recording from eval/runs/case-007/
+npx @modelcontextprotocol/inspector .venv/Scripts/python.exe -m tools.server
+```
+
+| Tool | Returns |
+|---|---|
+| `get_trace(conversation_id)` | span tree: ref, parent, duration, status, key attributes |
+| `get_retrieved_chunks(span_ref)` | ref, doc, version, score, text (300 chars) per chunk |
+| `document_history(doc_id)` | every version, indexed chunk count, short diff; no "current" flag |
+| `search_logs(component, query, start, end, limit)` | log lines + `total_matches` |
+| `recent_changes(start, end)` | prompt, doc and config changes, decoys included |
+| `diff_prompt_versions(a, b)` | unified diff, 80 lines max |
+| `query_metrics(metric, start, end)` | min/max/mean and up to 10 sample points per series |
+
+Every fact carries a typed ref (`tools/refs.py`): `span:<trace>/<span>`, `chunk:<doc>@<v>#<n>`, `doc:<doc>@<v>`,
+`log:<id>`, `change:<id>`, `prompt:<v>`, `metric:<name>@<ts>`. `resolve_ref(backend, ref)` looks one up, and the
+Day 6 verifier is built on it. Responses stay under about 4,000 tokens, lists carry a `total`, and errors come back
+as `{"error", "hint"}`.
+
+Tests (`pytest tests/tools`) run every tool against each recording in `tests/fixtures/` and, if the stack is up,
+against the live backend. Fixtures are copies of `eval/runs/<case>/`; regenerate one with
+`python -m eval.run_case --force <case>`.
+
 ## Tests
 
 ```bash

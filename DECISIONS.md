@@ -57,3 +57,30 @@ Notes from building it (not part of the five above):
 - **Baseline history has real change rows.** One `doc_update` per published doc version, dated by `published_at`, so the `stale_document` cause (`cause_ref`) is a record that already exists, as the spec says. Real changes, decoys and baseline rows share one format and use random ids; nothing marks which is which.
 - **The `tools` role reads the app's tables and cannot write them.** Snapshots are read through it, so `eval/runs/` holds exactly what the investigator's tools can see. `injector/cases/*.json` do contain the fault type; they are the generator's output, never reachable from the database role the tools use.
 - **Case ids are opaque** (`case-007`, `conv-ab12cd34`) so nothing in `alert.json` or the logs names the fault.
+
+## Day 4
+
+1. **A backend interface over querying stores directly inside tools**, because…
+
+2. **Typed refs like `chunk:doc@v#n` over raw database IDs**, because…
+
+3. **Summaries with a `total` field over full dumps**, because…
+
+4. **`document_history` without a "current" flag**, because…
+
+5. **Errors returned as data over raised exceptions**, because…
+
+Notes from building it (not part of the five above):
+
+- **`mcp` is pinned below 2.** mcp 2.x renamed `FastMCP` to `MCPServer`; the 1.x API is what the day's plan uses.
+- **The backend interface grew three methods**: `trace_id_for(conversation_id)` (tools take a conversation, Jaeger stores traces), `log(log_id)` and `metric_names()` (so `log:` refs resolve and a bad metric name gets a useful hint). `logs()` returns `(rows, total)` so `search_logs` can report `total_matches`.
+- **A seventh ref type, `doc:<doc_id>@<version>`.** `document_history` items needed a ref, and none of the six named a document version.
+- **Refs live under keys named `ref`, `*_ref` or `*_refs`.** That is how the tests find every ref to resolve. A change's `target` (`doc:refund-policy`) is plain text, not a ref.
+- **`resolve_ref` returns `{"ref", "kind", "record"}`.** Spreading the record into the result let a change's own `kind` (`config_change`) overwrite the ref kind.
+- **Snapshots now include `chunks.json`.** `get_retrieved_chunks` needs chunk text and index flags, which `documents.json` does not have.
+- **The doc diff is word-level** (`within [30 -> 14] days`). A line diff hid the changed number inside a long paragraph.
+- **Gemini 3.x rejects `thinking_budget=0`** with a bare 400 INVALID_ARGUMENT. It takes `thinking_level="MINIMAL"` instead. This was the 400 from the end of Day 3.
+- **With Gemini 3.5 Flash-Lite most cases are invalid.** Only case-002, case-006 and case-007 broke the answer as designed. The stale-document, prompt-regression and stale-tool-data cases either fail while healthy or survive the fault, so their fixtures (case-001, case-003, case-005) were recorded with the new `run_case --force`, which snapshots anyway and still records the run as invalid. The tool tests only need the fault applied, not the answer wrong. Re-run the evaluation cases on a model they were designed for before scoring anything.
+- **The Inspector does not pass your shell environment to the server it starts.** Without `-e TRACEWISE_BACKEND=snapshot:<case>` it silently uses the live backend, which after `run_case` is back to healthy.
+- **Manual run-through (case-003, stale warranty doc):** `get_trace` (retrieve span shows `warranty@v1#0` and `warranty@v2#0` both in the top 4) -> `get_retrieved_chunks` (1-year vs 2-year text) -> `document_history("warranty")` (both versions have indexed chunks; v2 is newer) -> `recent_changes` (the v2 publish record, plus the unrelated config-change decoy).
+

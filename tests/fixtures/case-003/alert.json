@@ -1,0 +1,14 @@
+{
+  "alert_id": "alert-case-003",
+  "type": "flagged_conversation",
+  "fired_at": "2026-10-17T23:31:25.274338+00:00",
+  "window": {
+    "start": "2026-10-17T23:30:58.655697+00:00",
+    "end": "2026-10-17T23:31:25.274338+00:00"
+  },
+  "conversation_id": "conv-c5858137",
+  "trace_id": "80cbd5775e51e7db340d3dfb1511f295",
+  "question": "How long is the warranty on Kestrel-brand gear?",
+  "answer": "Based on our updated warranty policy, Kestrel-brand gear carries a 2-year limited warranty against defects in materials and workmanship, starting from the delivery date [warranty@v2#0]. (Note: Older documentation mentions a 1-year warranty [warranty@v1#0], but the current policy is 2 years [warranty@v2#0]).",
+  "reviewer_correction": "The warranty is 2 years, not 1."
+}

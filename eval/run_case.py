@@ -10,6 +10,7 @@
 
 Usage: python -m eval.run_case case-001 [case-002 ...]
        python -m eval.run_case --all
+       python -m eval.run_case --force case-003   # snapshot even if the answer is not wrong (tool fixtures only)
 """
 import argparse
 import json
@@ -148,6 +149,9 @@ def snapshot(case: dict, resp: dict, window: tuple[datetime, datetime], case_sta
             FROM documents d LEFT JOIN chunks c USING (doc_id, version)
             GROUP BY d.doc_id, d.version, d.title, d.published_at, d.body
             ORDER BY d.doc_id, d.version"""))
+        dump(out / "chunks.json", rows("""
+            SELECT chunk_id, doc_id, version, chunk_index, text, indexed
+            FROM chunks ORDER BY doc_id, version, chunk_index"""))
         dump(out / "config.json", rows("SELECT key, value, updated_at FROM app_config ORDER BY key"))
         dump(out / "prompt_versions.json", rows("""
             SELECT p.version, p.template, p.created_at, p.author, p.note,
@@ -196,7 +200,7 @@ def record_run(case_id: str, conversation_id: str, valid: bool, note: str, resp:
              (resp or {}).get("answer")))
 
 
-def run_case(case_id: str, fault_canary: bool = True) -> dict:
+def run_case(case_id: str, fault_canary: bool = True, force: bool = False) -> dict:
     case = load_case(case_id)
     case_start = datetime.now(timezone.utc)
     print(f"{case_id}: {case['fault']['type']}" + (f" + {case['decoy']['type']}" if case["decoy"] else ""))
@@ -209,8 +213,9 @@ def run_case(case_id: str, fault_canary: bool = True) -> dict:
         if healthy_failures:
             result["note"] = f"invalid: the alert question already fails while healthy: {healthy_failures}"
             print("  " + result["note"])
-            record_run(case_id, case["conversation_id"], False, result["note"], healthy_resp)
-            return result
+            if not force:
+                record_run(case_id, case["conversation_id"], False, result["note"], healthy_resp)
+                return result
 
         now = datetime.now(timezone.utc)
         decoy = decoys.build(conn, case["decoy"], now) if case["decoy"] else None
@@ -231,10 +236,13 @@ def run_case(case_id: str, fault_canary: bool = True) -> dict:
             if not failures:
                 result["note"] = "invalid: the fault did not make the answer wrong"
                 print(f"  {result['note']}\n    answer: {resp['answer'][:200]!r}")
-                record_run(case_id, case["conversation_id"], False, result["note"], resp)
-                return result
-            result["valid"] = True
-            print(f"  wrong answer confirmed: {failures}")
+                if not force:
+                    record_run(case_id, case["conversation_id"], False, result["note"], resp)
+                    return result
+                print("  --force: snapshotting anyway; this run is not a valid evaluation case")
+            elif not healthy_failures:
+                result["valid"] = True
+                print(f"  wrong answer confirmed: {failures}")
 
             # 5. snapshot, with a fault-time canary so the metrics show the drop
             if fault_canary:
@@ -253,7 +261,7 @@ def run_case(case_id: str, fault_canary: bool = True) -> dict:
 
         healthy_state(conn, "recovery")
         result["recovered"] = True
-        record_run(case_id, case["conversation_id"], True, "ok", resp)
+        record_run(case_id, case["conversation_id"], result["valid"], result["note"] or "ok", resp)
     return result
 
 
@@ -261,6 +269,9 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("case_ids", nargs="*")
     parser.add_argument("--all", action="store_true")
+    parser.add_argument("--force", action="store_true",
+                        help="snapshot even when the case is invalid (healthy answer fails, or the fault "
+                             "did not break it); the run is still recorded as invalid")
     parser.add_argument("--no-fault-canary", action="store_true",
                         help="skip the canary run while the fault is active (metrics.json will show no drop)")
     args = parser.parse_args()
@@ -276,7 +287,7 @@ def main() -> int:
     results = []
     for case_id in ids:
         try:
-            results.append(run_case(case_id, not args.no_fault_canary))
+            results.append(run_case(case_id, not args.no_fault_canary, args.force))
         except CaseAborted as e:
             print(f"  aborted: {e}")
             results.append({"case_id": case_id, "valid": False, "recovered": False, "note": f"aborted: {e}"})
