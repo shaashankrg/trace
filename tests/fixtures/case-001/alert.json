@@ -10,5 +10,13 @@
   "trace_id": "4f7f3c703e9aa789239b41e0c7cac670",
   "question": "How should I break in my new hiking boots?",
   "answer": "Based on the product care documentation provided, there are no instructions specifically regarding how to break in new hiking boots. The document only mentions that you should clean leather boots with a damp brush and reapply [product-care@v1#0]. Therefore, it does not answer how to break them in.\n\nAnswer: No",
-  "reviewer_correction": "The documents have no break-in guidance. The assistant should have said it didn't know and point the customer to support (help@kestrel.example), not given generic tips."
+  "reviewer_correction": "The documents have no break-in guidance. The assistant should have said it didn't know and point the customer to support (help@kestrel.example), not given generic tips.",
+  "answer_check": {
+    "must_contain": [
+      "(?:don'?t|do not) have (?:any |specific )?information|not covered|no information|contact (?:our )?(?:support|team)|support team|help@kestrel"
+    ],
+    "must_not_contain": [
+      "general best practices|start slow|around the house|moleskin|thick socks|short (?:hikes|walks)"
+    ]
+  }
 }

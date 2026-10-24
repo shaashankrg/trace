@@ -59,8 +59,13 @@ def reset_config(conn: psycopg.Connection) -> None:
 
 
 def load_config(conn: psycopg.Connection) -> Config:
+    return from_values(dict(conn.execute("SELECT key, value FROM app_config").fetchall()))
+
+
+def from_values(values: dict[str, str]) -> Config:
+    """A Config from app_config-style string values; missing keys take their defaults."""
     raw = dict(DEFAULTS)
-    raw.update(dict(conn.execute("SELECT key, value FROM app_config").fetchall()))
+    raw.update(values)
     return Config(
         top_k=int(raw["top_k"]),
         similarity_threshold=float(raw["similarity_threshold"]),

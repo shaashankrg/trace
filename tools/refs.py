@@ -7,6 +7,7 @@
   change  change:<id>                         (the change table's own ids already start with `change:`)
   prompt  prompt:<version>
   metric  metric:<name>@<iso_ts>
+  replay  replay:<replay_id>                  (Day 6: a line in the replay log)
 
 Every factual item a tool returns carries one. The Day 6 evidence verifier calls `resolve_ref`
 on each ref a diagnosis cites, so a ref is only as good as the lookup behind it.
@@ -15,7 +16,7 @@ import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
 
-KINDS = ("span", "chunk", "doc", "log", "change", "prompt", "metric")
+KINDS = ("span", "chunk", "doc", "log", "change", "prompt", "metric", "replay")
 
 
 class RefError(ValueError):
@@ -126,7 +127,7 @@ def parse_ref(ref: str) -> Ref:
         return Ref(kind, (m.group(1), format_ts(parse_ts(m.group(2)))))
     if kind == "change":
         return Ref(kind, (change_ref(rest),))
-    return Ref(kind, (rest,))  # log, prompt
+    return Ref(kind, (rest,))  # log, prompt, replay
 
 
 def format_ref(ref: Ref) -> str:
@@ -143,6 +144,8 @@ def format_ref(ref: Ref) -> str:
         return change_ref(p[0])
     if kind == "prompt":
         return prompt_ref(p[0])
+    if kind == "replay":
+        return f"replay:{p[0]}"
     return f"metric:{p[0]}@{p[1]}"
 
 
@@ -188,6 +191,10 @@ def resolve_ref(backend, ref: str) -> dict:
     if kind == "prompt":
         row = next((v for v in backend.prompt_versions() if v["version"] == p[0]), None)
         return found(None if row is None else {"version": row["version"]}, "prompt version")
+    if kind == "replay":
+        rec = backend.replay(p[0]) if hasattr(backend, "replay") else None
+        return found(None if rec is None else {k: rec[k] for k in ("replay_id", "patch", "target_component",
+                                                                   "matches_correction", "judge")}, "replay")
 
     name, iso = p
     at = parse_ts(iso)

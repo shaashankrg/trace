@@ -10,5 +10,13 @@
   "trace_id": "26dde5a6debca60c0da2768fbf3b3e5b",
   "question": "Can I change the shipping address after I place an order?",
   "answer": "Based on the provided Kestrel policies and order procedures, there is no mention of being able to change the shipping address after an order has been placed. \n\nAnswer: No",
-  "reviewer_correction": "The documents say nothing about changing an address. The assistant should have said it didn't know and point the customer to support (help@kestrel.example), not told me it isn't supported."
+  "reviewer_correction": "The documents say nothing about changing an address. The assistant should have said it didn't know and point the customer to support (help@kestrel.example), not told me it isn't supported.",
+  "answer_check": {
+    "must_contain": [
+      "(?:don'?t|do not) have (?:any |specific )?information|not covered|no information|contact (?:our )?(?:support|team)|support team|help@kestrel"
+    ],
+    "must_not_contain": [
+      "not supported|cannot be changed|can'?t be changed|unable to change|not possible|isn'?t possible"
+    ]
+  }
 }

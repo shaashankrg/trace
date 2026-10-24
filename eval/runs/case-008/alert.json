@@ -10,5 +10,11 @@
   "trace_id": "0472f5c09f47401280708f19d39ff7be",
   "question": "I'm customer C-0006. What's the status of order O-1006?",
   "answer": "I don't know the status of order O-1006 because I was unable to find that order for your customer ID. Please contact support for assistance.",
-  "reviewer_correction": "Order O-1006 is shipped."
+  "reviewer_correction": "Order O-1006 is shipped.",
+  "answer_check": {
+    "must_contain": [
+      "\\bshipped\\b"
+    ],
+    "must_not_contain": []
+  }
 }

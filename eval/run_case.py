@@ -161,8 +161,10 @@ def snapshot(case: dict, resp: dict, window: tuple[datetime, datetime], case_sta
             """SELECT conversation_id, trace_id, span_id, tool_name, input, output, timed_out,
                       latency_ms, created_at
                FROM tool_calls WHERE conversation_id = %s ORDER BY id""", (case["conversation_id"],)))
+        dump(out / "store.json", store_rows(conn))
 
-    # No ground truth in here: only what the alert would carry in production.
+    # No ground truth in here: only what the alert would carry in production. answer_check is
+    # the reviewer's correction written as patterns, so a replay can be checked in code.
     dump(out / "alert.json", {
         "alert_id": f"alert-{case['case_id']}",
         "type": case["alert"]["type"],
@@ -173,7 +175,29 @@ def snapshot(case: dict, resp: dict, window: tuple[datetime, datetime], case_sta
         "question": case["alert"]["question"],
         "answer": resp["answer"],
         "reviewer_correction": case["alert"]["reviewer_correction"],
+        "answer_check": case["answer_check"],
     })
+
+
+STORE_TABLES = {
+    "customers": "SELECT * FROM customers ORDER BY customer_id",
+    "products": "SELECT * FROM products ORDER BY product_id",
+    "orders": "SELECT * FROM orders ORDER BY order_id",
+    "order_items": "SELECT * FROM order_items ORDER BY order_id, product_id",
+    "refunds": "SELECT * FROM refunds ORDER BY refund_id",
+    "inventory_source": "SELECT * FROM inventory_source ORDER BY product_id",
+    "inventory_cache": "SELECT * FROM inventory_cache ORDER BY product_id",
+}
+
+
+def store_rows(conn) -> dict[str, list[dict]]:
+    """The store tables as the tools read them; replay re-runs tools against this (Day 6)."""
+    out = {}
+    for table, sql in STORE_TABLES.items():
+        cur = conn.execute(sql)
+        cols = [c.name for c in cur.description]
+        out[table] = [dict(zip(cols, r)) for r in cur.fetchall()]
+    return out
 
 
 def wait_for_scrape(after: float) -> None:

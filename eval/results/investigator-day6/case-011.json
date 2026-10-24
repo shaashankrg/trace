@@ -1,0 +1,513 @@
+{
+  "case_id": "case-011",
+  "model": "gemini-3.8-flash",
+  "wall_s": 63.8,
+  "error": null,
+  "diagnosis": {
+    "root_component": "prompt",
+    "category": "prompt_edit",
+    "cause_ref": "change:prompt-edit-8582",
+    "confidence": 0.95,
+    "summary": "Prompt version v2 removed the critical instruction requiring the model to state that it doesn't know and refer customers to support when documents lack the answer, leading the model to hallucinate that returning without a receipt is allowed because it was not explicitly forbidden.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:prompt-edit-8582",
+        "claim": "The prompt was updated shortly before the incident by ops-bot to trim redundant instructions.",
+        "attribute": null,
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "change",
+        "ref": "prompt:v2",
+        "claim": "Prompt v2 removed the instruction to admit lack of knowledge and direct users to support when documents do not contain the answer.",
+        "attribute": null,
+        "value": null,
+        "quote": "-Only answer from the provided documents. Tool results count as documents. If they do not contain the answer, say you don't know and suggest contacting support.",
+        "supports": null
+      },
+      {
+        "type": "trace",
+        "ref": "span:1fb94cc9ec2d2def3f094185e667d381/eba6c558a2dfd717",
+        "claim": "The llm.chat span executed with prompt version v2.",
+        "attribute": "prompt.version",
+        "value": "v2",
+        "quote": null,
+        "supports": null
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "config_change on config:max_response_tokens",
+        "reason": "Raising max_response_tokens does not alter fallback instructions or cause the model to make ungrounded claims about receipt requirements.",
+        "ref": "change:config-change-9549"
+      }
+    ],
+    "suggested_fix": "Revert the system prompt to version v1 to restore the fallback guidance when documentation is incomplete.",
+    "fix_patch": {
+      "kind": "set_prompt_version",
+      "version": "v1"
+    },
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": true,
+    "checked": 5,
+    "failures": [
+      {
+        "ref": "prompt:v2",
+        "where": "evidence",
+        "problem": "quote not in the prompt text"
+      }
+    ]
+  },
+  "fix": {
+    "ref": "replay:8276bc973663",
+    "patch": {
+      "kind": "set_prompt_version",
+      "version": "v1"
+    },
+    "target_component": "prompt",
+    "matches_correction": true,
+    "votes": [
+      true,
+      true,
+      false
+    ],
+    "judge": "code",
+    "control_ref": "replay:20145aec8738",
+    "control_matches_correction": false,
+    "proves_fix": true,
+    "cost_usd": 0.000247
+  },
+  "gate": {
+    "passed": true,
+    "reason": "2 evidence types (change, trace) support prompt",
+    "hypothesis": "prompt",
+    "supporting_types": [
+      "change",
+      "trace"
+    ],
+    "replay_ref": null,
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "prompt",
+      "category": "prompt_edit",
+      "rationale": "Prompt edit prompt-edit-8582 trimmed prompt instructions shortly before the incident, potentially removing guidelines on admitting lack of information and directing users to support.",
+      "score": 0.75
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model may have hallucinated or incorrectly inferred an affirmative answer despite recognizing that the documents do not specify whether a receipt is required.",
+      "score": 0.15
+    },
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "Retrieval settings such as top_k or similarity threshold may have failed to retrieve a relevant policy document explicitly addressing receipts.",
+      "score": 0.05
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "A relevant knowledge base document or section specifically clarifying return requirements regarding receipts may be missing or unindexed.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 14,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 37,
+  "refs_not_in_pool": [],
+  "llm_calls": 15,
+  "input_tokens": 85302,
+  "output_tokens": 1695,
+  "thinking_tokens": 0,
+  "cost_usd": 0.071381,
+  "investigator_cost_usd": 0.070333,
+  "replay_cost_usd": 0.001048,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-e1710cc0"
+      },
+      "result_chars": 2662,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T03:54:08.421261+00:00",
+        "end": "2026-10-18T03:54:08.421261+00:00"
+      },
+      "result_chars": 565,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1871,
+      "output_tokens": 289,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002487,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"prompt\",\n      \"category\": \"prompt_edit\",\n      \"rationale\": \"Prompt edit prompt-edit-8582 trimmed prompt instructions shortly before the incident, potentially removing guidelines on admitting lack of information and directing users to support.\",\n      \"score\": 0.75\n    },\n    {\n      \"root_component\": \"model\",\n      \"category\": \"model_change\",\n      \"rationale\": \"The model may have hallucinated or incorrectly inferred an affirmative answer desp"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3177,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00248,
+      "tool_calls": [
+        "diff_prompt_versions"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "diff_prompt_versions",
+      "args": {
+        "b": "v2",
+        "a": "v1"
+      },
+      "result_chars": 784,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3478,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002777,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-e1710cc0",
+        "patch": {
+          "kind": "set_prompt_version",
+          "version": "v1"
+        }
+      },
+      "result_chars": 786,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3783,
+      "output_tokens": 66,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003085,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:1fb94cc9ec2d2def3f094185e667d381/357382e9989b7f36"
+      },
+      "result_chars": 1516,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4293,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003295,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "returns-process"
+      },
+      "result_chars": 1410,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4745,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003634,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "refund-policy"
+      },
+      "result_chars": 1086,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5094,
+      "output_tokens": 24,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00391,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "search_logs",
+      "args": {
+        "query": "conv-e1710cc0"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5155,
+      "output_tokens": 42,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004024,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "search_logs",
+      "args": {
+        "query": "1fb94cc9ec2d2def3f094185e667d381"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5234,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003982,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "search_logs",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2589,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6397,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004854,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2498,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7297,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005548,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "gift-cards"
+      },
+      "result_chars": 319,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7445,
+      "output_tokens": 82,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005891,
+      "tool_calls": [
+        "query_metrics"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "query_metrics",
+      "args": {
+        "end": "2026-10-18T04:00:00+00:00",
+        "metric": "kestrel_canary_accuracy",
+        "start": "2026-10-18T01:00:00+00:00"
+      },
+      "result_chars": 7091,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10311,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007831,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 14,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-e1710cc0"
+      },
+      "result_chars": 2662,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 11316,
+      "output_tokens": 501,
+      "thinking_tokens": 0,
+      "cost_usd": 0.010366,
+      "tool_calls": [],
+      "text": "### Summary of Findings\n\n- **Root Component**: `prompt`\n- **Category**: `prompt_edit`\n\n### Evidence and Analysis\n\n1. **Prompt Edit (`change:prompt-edit-8582`)**:\n   - At `2026-10-18T02:10:41.428043+00:00`, change `change:prompt-edit-8582` edited the system prompt from version `prompt:v1` to `prompt:v2` under the description \"Trim redundant prompt instructions\".\n   - `diff_prompt_versions` shows that `v2` removed the instruction:\n     > `\"Only answer from the provided documents. Tool results coun"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5706,
+      "output_tokens": 504,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006169,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"prompt\",\n \"category\": \"prompt_edit\",\n \"cause_ref\": \"change:prompt-edit-8582\",\n \"confidence\": 0.95,\n \"summary\": \"Prompt version v2 removed the critical instruction requiring the model to state that it doesn't know and refer customers to support when documents lack the answer, leading the model to hallucinate that returning without a receipt is allowed because it was not explicitly forbidden.\",\n \"evidence\": [\n  {\n   \"type\": \"change\",\n   \"ref\": \"change:prompt-edit-8582\",\n   \"c"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "2 evidence types (change, trace) support prompt",
+      "hypothesis": "prompt",
+      "supporting_types": [
+        "change",
+        "trace"
+      ],
+      "replay_ref": null,
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

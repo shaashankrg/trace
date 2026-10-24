@@ -10,5 +10,11 @@
   "trace_id": "ab37503f8268bf9ff0c2dcb155a1b184",
   "question": "How long is a password reset link valid?",
   "answer": "I don't know the answer to that question based on the provided documents. Please contact support for assistance.",
-  "reviewer_correction": "Password reset links are valid for 30 minutes."
+  "reviewer_correction": "Password reset links are valid for 30 minutes.",
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:30|thirty)[- ]minutes?\\b"
+    ],
+    "must_not_contain": []
+  }
 }

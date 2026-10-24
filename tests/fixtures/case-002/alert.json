@@ -10,5 +10,13 @@
   "trace_id": "0a6174ddf4c4db659e732c38e618ac25",
   "question": "What's the minimum order for free standard shipping?",
   "answer": "I don't know the minimum order for free standard shipping. Please contact support for assistance.",
-  "reviewer_correction": "Free standard shipping starts at $75."
+  "reviewer_correction": "Free standard shipping starts at $75.",
+  "answer_check": {
+    "must_contain": [
+      "\\$75"
+    ],
+    "must_not_contain": [
+      "\\$50"
+    ]
+  }
 }

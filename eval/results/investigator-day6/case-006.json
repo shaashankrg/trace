@@ -1,0 +1,241 @@
+{
+  "case_id": "case-006",
+  "model": "gemini-3.8-flash",
+  "wall_s": 48.0,
+  "error": null,
+  "diagnosis": {
+    "root_component": "knowledge_base",
+    "category": "doc_delete",
+    "cause_ref": "change:doc-delete-4848",
+    "confidence": 0.99,
+    "summary": "Document gift-cards was deleted/unindexed in change:doc-delete-4848, preventing retrieval of gift card expiration details and causing the assistant to state it did not know the answer.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:doc-delete-4848",
+        "claim": "Document doc:gift-cards was deleted prior to the incident.",
+        "attribute": null,
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "replay",
+        "ref": "replay:ada53944234b",
+        "claim": "Restoring document gift-cards resolved the issue and proved the fix.",
+        "attribute": "matches_correction",
+        "value": true,
+        "quote": null,
+        "supports": null
+      }
+    ],
+    "ruled_out": [],
+    "suggested_fix": "Restore and re-index the gift-cards document.",
+    "fix_patch": {
+      "kind": "restore_doc",
+      "doc_id": "gift-cards"
+    },
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 3,
+    "failures": []
+  },
+  "fix": {
+    "ref": "replay:836d528ac7ee",
+    "patch": {
+      "kind": "restore_doc",
+      "doc_id": "gift-cards"
+    },
+    "target_component": "knowledge_base",
+    "matches_correction": true,
+    "votes": [
+      true,
+      true,
+      true
+    ],
+    "judge": "code",
+    "control_ref": "replay:7040a07c0dd2",
+    "control_matches_correction": false,
+    "proves_fix": true,
+    "cost_usd": 0.000247
+  },
+  "gate": {
+    "passed": true,
+    "reason": "1 evidence types (change) and replay replay:ada53944234b support knowledge_base",
+    "hypothesis": "knowledge_base",
+    "supporting_types": [
+      "change"
+    ],
+    "replay_ref": "replay:ada53944234b",
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_delete",
+      "rationale": "Document doc:gift-cards was deleted shortly before the conversation, causing the retriever to miss the gift card expiration policy and return unrelated documents.",
+      "score": 0.85
+    },
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "The retriever configuration or similarity threshold may have failed to retrieve relevant gift card information that remains in the knowledge base.",
+      "score": 0.1
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The language model failed to answer accurately or defaulted to a fallback response despite possible context.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 4,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 7,
+  "refs_not_in_pool": [],
+  "llm_calls": 5,
+  "input_tokens": 14534,
+  "output_tokens": 929,
+  "thinking_tokens": 0,
+  "cost_usd": 0.015489,
+  "investigator_cost_usd": 0.014384,
+  "replay_cost_usd": 0.001105,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-c4df8715"
+      },
+      "result_chars": 2665,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-10T23:24:25.524579+00:00",
+        "end": "2026-10-17T23:24:25.524579+00:00"
+      },
+      "result_chars": 293,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1760,
+      "output_tokens": 210,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002107,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"knowledge_base\",\n      \"category\": \"doc_delete\",\n      \"rationale\": \"Document doc:gift-cards was deleted shortly before the conversation, causing the retriever to miss the gift card expiration policy and return unrelated documents.\",\n      \"score\": 0.85\n    },\n    {\n      \"root_component\": \"retriever\",\n      \"category\": \"config_change\",\n      \"rationale\": \"The retriever configuration or similarity threshold may have failed to retrieve relevant g"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3018,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002338,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "gift-cards"
+      },
+      "result_chars": 319,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3167,
+      "output_tokens": 46,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002548,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-c4df8715",
+        "patch": {
+          "doc_id": "gift-cards",
+          "kind": "restore_doc"
+        }
+      },
+      "result_chars": 581,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3434,
+      "output_tokens": 355,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003907,
+      "tool_calls": [],
+      "text": "### Summary of Findings\n\n- **Root Component**: `knowledge_base`\n- **Category**: `doc_delete`\n\n### Evidence\n1. **Change Log**: Change `change:doc-delete-4848` on `2026-10-17T22:37:55.399359+00:00` by marco (\"Clean up index entries\") deleted document `doc:gift-cards`.\n2. **Document History**: `doc:gift-cards` shows `indexed_chunk_count: 0` (previously had 2 chunks in `doc:gift-cards@v1`), indicating all chunks were de-indexed.\n3. **Conversation Trace**: In span `span:9600252b9a77da9bbbe672ee676053"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3155,
+      "output_tokens": 298,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003484,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"knowledge_base\",\n  \"category\": \"doc_delete\",\n  \"cause_ref\": \"change:doc-delete-4848\",\n  \"confidence\": 0.99,\n  \"summary\": \"Document gift-cards was deleted/unindexed in change:doc-delete-4848, preventing retrieval of gift card expiration details and causing the assistant to state it did not know the answer.\",\n  \"evidence\": [\n    {\n      \"type\": \"change\",\n      \"ref\": \"change:doc-delete-4848\",\n      \"claim\": \"Document doc:gift-cards was deleted prior to the incident.\"\n    },\n"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "1 evidence types (change) and replay replay:ada53944234b support knowledge_base",
+      "hypothesis": "knowledge_base",
+      "supporting_types": [
+        "change"
+      ],
+      "replay_ref": "replay:ada53944234b",
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

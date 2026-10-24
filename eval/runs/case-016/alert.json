@@ -10,5 +10,11 @@
   "trace_id": "5a1c79f57b640a70a547ed823a3a8583",
   "question": "I'm customer C-0011. How many orders have I placed with you?",
   "answer": "You have placed 0 orders with us.",
-  "reviewer_correction": "Customer C-0011 has 4 orders on file. The assistant said it found none."
+  "reviewer_correction": "Customer C-0011 has 4 orders on file. The assistant said it found none.",
+  "answer_check": {
+    "must_contain": [
+      "\\b4\\b"
+    ],
+    "must_not_contain": []
+  }
 }

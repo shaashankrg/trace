@@ -10,5 +10,11 @@
   "trace_id": "b2e93f9f5f29c8f41d6c8aa7a5dde1f1",
   "question": "How much is the deposit to rent a tent?",
   "answer": "I don't know the deposit amount to rent a tent as it is not mentioned in the available documents. Please contact support for assistance.",
-  "reviewer_correction": "The rental deposit is $100."
+  "reviewer_correction": "The rental deposit is $100.",
+  "answer_check": {
+    "must_contain": [
+      "\\$100"
+    ],
+    "must_not_contain": []
+  }
 }

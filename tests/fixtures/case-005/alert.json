@@ -10,5 +10,13 @@
   "trace_id": "bc447eb02f9d90552697fbd9c32e2476",
   "question": "Is the Canyon Sandal (product P-005) in stock, and how many do you have?",
   "answer": "The Canyon Sandal (product P-005) is currently out of stock, with a quantity of 0.\n\nAnswer: No",
-  "reviewer_correction": "The Canyon Sandal is in stock: 18 units available."
+  "reviewer_correction": "The Canyon Sandal is in stock: 18 units available.",
+  "answer_check": {
+    "must_contain": [
+      "\\b18\\b"
+    ],
+    "must_not_contain": [
+      "out of stock|sold out|unavailable"
+    ]
+  }
 }

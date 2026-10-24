@@ -2,19 +2,21 @@
 
   python -m tools.server                              # live stack
   TRACEWISE_BACKEND=snapshot:case-007 python -m tools.server
+  TRACEWISE_BACKEND=snapshot:case-007 TRACEWISE_REPLAY=1 python -m tools.server   # with replay (~30 s start)
   npx @modelcontextprotocol/inspector .venv/Scripts/python.exe -m tools.server
 
 The backend is chosen once, at start-up, from TRACEWISE_BACKEND. The tools never learn who is
 calling them: the same server answers the Inspector, a script and the Day 5 agent.
 """
 import functools
+import os
 
 from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
 
 load_dotenv()
 
-from tools import handlers  # noqa: E402
+from tools import handlers, replay  # noqa: E402
 from tools.backend import get_backend  # noqa: E402
 
 mcp = FastMCP("tracewise-tools")
@@ -83,8 +85,15 @@ def query_metrics(metric: str, start: str = "", end: str = "") -> dict:
 
 
 @register
-def replay_conversation(conversation_id: str, patch: dict) -> dict:
-    """Replay a conversation with a patch applied and return the new answer. Not implemented yet."""
+async def replay_conversation(conversation_id: str, patch: dict) -> dict:
+    # async, so it runs on the event loop's thread and blocks it for the replay: the one client is
+    # waiting for this answer anyway, and it keeps replays off FastMCP's worker threads.
+    """Re-run the flagged conversation with exactly ONE change and check the new answer against the
+    reviewer's correction (matches_correction). patch is one of: {"kind": "use_doc_version",
+    "doc_id", "version"} | {"kind": "restore_doc", "doc_id"} | {"kind": "set_config", "key",
+    "value"} (only values the change log or trace shows) | {"kind": "set_prompt_version", "version"}
+    | {"kind": "rerun_tool", "tool"} | {"kind": "bypass_cache", "tool": "check_inventory"} | {}
+    (no change). The component a patch targets is set by its kind. Max 3 replays."""
     return handlers.replay_conversation(backend(), conversation_id, patch)
 
 
@@ -101,4 +110,7 @@ def similar_incidents(summary: str, k: int = 3) -> dict:
 
 
 if __name__ == "__main__":
+    replay.IN_SERVER = True
+    if os.environ.get("TRACEWISE_REPLAY") == "1":
+        replay.preload()  # before mcp.run starts reading stdin; see tools/replay.py
     mcp.run(transport="stdio")

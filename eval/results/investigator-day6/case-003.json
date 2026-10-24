@@ -1,0 +1,545 @@
+{
+  "case_id": "case-003",
+  "model": "gemini-3.8-flash",
+  "wall_s": 122.5,
+  "error": null,
+  "diagnosis": {
+    "root_component": "knowledge_base",
+    "category": "doc_update",
+    "cause_ref": "doc:warranty@v2",
+    "confidence": 0.95,
+    "summary": "Both the outdated warranty v1 (1-year) and current warranty v2 (2-year) remain active and indexed in the knowledge base, causing both chunks to be retrieved and confusing the model into citing the deprecated 1-year policy alongside the 2-year policy.",
+    "evidence": [
+      {
+        "type": "trace",
+        "ref": "span:80cbd5775e51e7db340d3dfb1511f295/94138b49249b8d89",
+        "claim": "The retrieve span retrieved chunks from both warranty@v1 and warranty@v2 simultaneously.",
+        "attribute": "chunk_ids",
+        "value": "['warranty@v1#0', 'warranty@v2#0', 'repairs@v1#0', 'trade-in@v1#0']",
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "change",
+        "ref": "doc:warranty@v1",
+        "claim": "Warranty version 1 remains indexed in the knowledge base despite being superseded by version 2.",
+        "attribute": null,
+        "value": null,
+        "quote": "warranty v1 published 2024-11-01, 1/1 chunks indexed",
+        "supports": null
+      },
+      {
+        "type": "change",
+        "ref": "doc:warranty@v2",
+        "claim": "Warranty version 2 was published updating the warranty from 1-year to 2-year.",
+        "attribute": null,
+        "value": null,
+        "quote": "warranty v2 published 2026-05-20, 2/2 chunks indexed",
+        "supports": null
+      },
+      {
+        "type": "chunk",
+        "ref": "chunk:warranty@v1#0",
+        "claim": "The retrieved chunk from warranty@v1 specifies the deprecated 1-year warranty.",
+        "attribute": null,
+        "value": null,
+        "quote": "Kestrel-brand gear carries a 1-year limited warranty",
+        "supports": null
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "config_change on config:max_response_tokens at 2026-10-17T23:08:58.655697+00:00 by marco: Allow longer replies",
+        "reason": "Increasing max response tokens did not alter the warranty policy text or retrieve conflicting documents; the issue stems from both document versions being indexed.",
+        "ref": "change:config-change-7565"
+      }
+    ],
+    "suggested_fix": "De-index or deprecate warranty@v1 so only warranty@v2 is indexed and retrieved.",
+    "fix_patch": {
+      "kind": "use_doc_version",
+      "doc_id": "warranty",
+      "version": "v2"
+    },
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": true,
+    "checked": 6,
+    "failures": [
+      {
+        "ref": "span:80cbd5775e51e7db340d3dfb1511f295/94138b49249b8d89",
+        "where": "evidence",
+        "problem": "span retrieve has no attribute chunk_ids"
+      },
+      {
+        "ref": "doc:warranty@v1",
+        "where": "evidence",
+        "problem": "quote not in the document"
+      },
+      {
+        "ref": "doc:warranty@v2",
+        "where": "evidence",
+        "problem": "quote not in the document"
+      }
+    ]
+  },
+  "fix": {
+    "ref": "replay:d0dd3b836b3a",
+    "patch": {
+      "kind": "use_doc_version",
+      "doc_id": "warranty",
+      "version": "v2"
+    },
+    "target_component": "knowledge_base",
+    "matches_correction": true,
+    "votes": [
+      true,
+      true,
+      true
+    ],
+    "judge": "code",
+    "control_ref": "replay:f8939d5a75fe",
+    "control_matches_correction": true,
+    "proves_fix": false,
+    "cost_usd": 0.000265
+  },
+  "gate": {
+    "passed": true,
+    "reason": "3 evidence types (change, chunk, trace) support knowledge_base",
+    "hypothesis": "knowledge_base",
+    "supporting_types": [
+      "change",
+      "chunk",
+      "trace"
+    ],
+    "replay_ref": null,
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_delete",
+      "rationale": "Both warranty@v1#0 and warranty@v2#0 are currently indexed, causing stale documentation (v1) to be retrieved alongside the active policy (v2).",
+      "score": 0.8
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "A recent document update to the warranty policy left the outdated version indexed alongside the new version in the knowledge base.",
+      "score": 0.15
+    },
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "The retriever configuration may be incorrectly retrieving multiple superseded versions of the same document.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 15,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 33,
+  "refs_not_in_pool": [],
+  "llm_calls": 15,
+  "input_tokens": 76607,
+  "output_tokens": 1390,
+  "thinking_tokens": 0,
+  "cost_usd": 0.063728,
+  "investigator_cost_usd": 0.062667,
+  "replay_cost_usd": 0.001061,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-c5858137"
+      },
+      "result_chars": 2639,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-10T23:31:25.274338+00:00",
+        "end": "2026-10-17T23:31:25.274338+00:00"
+      },
+      "result_chars": 309,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1757,
+      "output_tokens": 219,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002139,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"knowledge_base\",\n      \"category\": \"doc_delete\",\n      \"rationale\": \"Both warranty@v1#0 and warranty@v2#0 are currently indexed, causing stale documentation (v1) to be retrieved alongside the active policy (v2).\",\n      \"score\": 0.8\n    },\n    {\n      \"root_component\": \"knowledge_base\",\n      \"category\": \"doc_update\",\n      \"rationale\": \"A recent document update to the warranty policy left the outdated version indexed alongside the new version i"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3023,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002335,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "warranty"
+      },
+      "result_chars": 796,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3303,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002534,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2491,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4202,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003211,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "warranty"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4256,
+      "output_tokens": 67,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003443,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:80cbd5775e51e7db340d3dfb1511f295/94138b49249b8d89"
+      },
+      "result_chars": 1776,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4828,
+      "output_tokens": 54,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003824,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {
+          "version": "v2",
+          "doc_id": "warranty",
+          "kind": "use_doc_version"
+        },
+        "conversation_id": "conv-c5858137"
+      },
+      "result_chars": 670,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5120,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004009,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-17T00:00:00+00:00",
+        "limit": 30
+      },
+      "result_chars": 309,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5288,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004041,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "search_logs",
+      "args": {
+        "query": "max_response_tokens"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5345,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004177,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-10-17T23:00:00+00:00",
+        "limit": 10
+      },
+      "result_chars": 2580,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6530,
+      "output_tokens": 25,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004991,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "search_logs",
+      "args": {
+        "query": "conv-c5858137"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6592,
+      "output_tokens": 43,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005105,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "search_logs",
+      "args": {
+        "query": "80cbd5775e51e7db340d3dfb1511f295"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6672,
+      "output_tokens": 83,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005315,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-10-17T23:30:58.000+00:00",
+        "end": "2026-10-17T23:31:00.000+00:00",
+        "limit": 10
+      },
+      "result_chars": 307,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6902,
+      "output_tokens": 27,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005278,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 14,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-c5858137"
+      },
+      "result_chars": 2639,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7913,
+      "output_tokens": 22,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006017,
+      "tool_calls": [
+        "query_metrics"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 15,
+      "tool": "query_metrics",
+      "args": {
+        "metric": "kestrel_canary_accuracy"
+      },
+      "result_chars": 7086,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4876,
+      "output_tokens": 691,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006248,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"knowledge_base\",\n \"category\": \"doc_update\",\n \"cause_ref\": \"doc:warranty@v2\",\n \"confidence\": 0.95,\n \"summary\": \"Both the outdated warranty v1 (1-year) and current warranty v2 (2-year) remain active and indexed in the knowledge base, causing both chunks to be retrieved and confusing the model into citing the deprecated 1-year policy alongside the 2-year policy.\",\n \"evidence\": [\n  {\n   \"type\": \"trace\",\n   \"ref\": \"span:80cbd5775e51e7db340d3dfb1511f295/94138b49249b8d89\",\n   \"att"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "3 evidence types (change, chunk, trace) support knowledge_base",
+      "hypothesis": "knowledge_base",
+      "supporting_types": [
+        "change",
+        "chunk",
+        "trace"
+      ],
+      "replay_ref": null,
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

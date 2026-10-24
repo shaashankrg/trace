@@ -98,7 +98,10 @@ def run_all_tools(env: Env) -> dict[str, dict]:
     versions = [v["version"] for v in b.prompt_versions()]
     out["diff_prompt_versions"] = handlers.diff_prompt_versions(b, versions[0], versions[-1])
     out["query_metrics"] = handlers.query_metrics(b, "kestrel_canary_accuracy", start, end)
-    out["replay_conversation"] = handlers.replay_conversation(b, env.conversation_id, {"top_k": 8})
+    # A patch the snapshot cannot back: it is rejected before any model runs (tests/tools/test_replay.py
+    # covers real replays with a fake model).
+    out["replay_conversation"] = handlers.replay_conversation(
+        b, env.conversation_id, {"kind": "set_prompt_version", "version": "no-such-version"})
     out["search_playbooks"] = handlers.search_playbooks(b, "stale document")
     out["similar_incidents"] = handlers.similar_incidents(b, "wrong refund window")
     return out

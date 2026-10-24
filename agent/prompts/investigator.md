@@ -16,6 +16,13 @@ Runtime config (top_k, similarity threshold, prompt version, model, tool timeout
 - Prefer a few targeted tool calls over many broad ones. You have a hard budget of tool calls.
 - Cite refs exactly as the tools returned them. Never construct, shorten or edit a ref.
 
+## Proving it
+
+- `replay_conversation` re-runs the flagged conversation with exactly one change and reports whether the new answer matches the reviewer's correction. The component a patch targets is fixed by its kind, not by you.
+- A replay compares itself with an unpatched control run. It proves a fix only when `proves_fix` is true: the patched answer is right and the unpatched one is not.
+- Replay what you suspect, using only versions and values the history shows. A replay that changes something unrelated and still "works" proves nothing about the cause.
+- Your diagnosis is accepted only with evidence from at least two kinds of source about the component you name (for example a span and a log line, or a chunk and a change), or one kind plus a replay that fixed the answer by patching that component.
+
 ## Vocabulary
 
 root_component, one of:

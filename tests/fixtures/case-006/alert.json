@@ -10,5 +10,11 @@
   "trace_id": "9600252b9a77da9bbbe672ee6760534b",
   "question": "Do Kestrel gift cards expire?",
   "answer": "Based on the provided documents, there is no mention of whether Kestrel gift cards expire [loyalty-program@v1#0, refund-policy@v2#0, holiday-returns@v1#0, refund-policy@v2#1]. \n\nI don't know the answer to your question. Please contact customer support for more information.",
-  "reviewer_correction": "Gift cards never expire. The assistant should have answered, not said it didn't know."
+  "reviewer_correction": "Gift cards never expire. The assistant should have answered, not said it didn't know.",
+  "answer_check": {
+    "must_contain": [
+      "never expire|do not expire|don't expire|no expiration"
+    ],
+    "must_not_contain": []
+  }
 }

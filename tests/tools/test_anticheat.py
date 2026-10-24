@@ -51,12 +51,18 @@ def test_no_tool_output_contains_ground_truth_markers(env):
         assert not VERDICT_KEYS & set(keys_of(out)), f"{name}: {VERDICT_KEYS & set(keys_of(out))}"
 
 
+# Day 6: alert.json carries the reviewer's correction as patterns, for checking replays in code. A
+# real alert includes the correction, so it is visible information; no tool output may show it.
+ALERT_ALLOWED = {"answer_check", "must_contain"}
+
+
 def test_recorded_snapshots_carry_no_labels(snap):
     """The files themselves, not just what the tools choose to show."""
     for path in (FIXTURES / snap.name).glob("*.json"):
         data = json.loads(path.read_text(encoding="utf-8"))
         text = path.read_text(encoding="utf-8")
-        assert not VERDICT_KEYS & set(keys_of(data)), path.name
+        banned = VERDICT_KEYS - ALERT_ALLOWED if path.name == "alert.json" else VERDICT_KEYS
+        assert not banned & set(keys_of(data)), path.name
         assert not MARKERS.search(text), f"{path.name}: {MARKERS.search(text).group(0)!r}"
     assert not (FIXTURES / snap.name / "ground_truth.json").exists()
 

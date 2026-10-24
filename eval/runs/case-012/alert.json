@@ -10,5 +10,13 @@
   "trace_id": "2f595590317002c845ec802435bea724",
   "question": "Is the Aspen 20F Sleeping Bag (product P-019) in stock, and how many do you have?",
   "answer": "The Aspen 20F Sleeping Bag (product P-019) is not in stock; we currently have 0 available.\n\nAnswer: No",
-  "reviewer_correction": "The Aspen 20F Sleeping Bag is in stock: 12 units available."
+  "reviewer_correction": "The Aspen 20F Sleeping Bag is in stock: 12 units available.",
+  "answer_check": {
+    "must_contain": [
+      "\\b12\\b"
+    ],
+    "must_not_contain": [
+      "out of stock|sold out|unavailable"
+    ]
+  }
 }

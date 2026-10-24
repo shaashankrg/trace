@@ -1,5 +1,6 @@
 """The Day 4 MCP server, seen from the investigator: start it over stdio, list its tools in
-Anthropic's tool shape, and route calls to it through one function with the budget in code."""
+Anthropic's tool shape, and route calls to it through one function with the budgets in code:
+TOOL_BUDGET tool calls in all, of which at most REPLAY_BUDGET replays."""
 import json
 import os
 import sys
@@ -9,16 +10,22 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 TOOL_BUDGET = int(os.environ.get("INVESTIGATOR_TOOL_BUDGET", "15"))
+REPLAY_BUDGET = int(os.environ.get("INVESTIGATOR_REPLAY_BUDGET", "3"))
 TOOL_TIMEOUT = timedelta(seconds=float(os.environ.get("INVESTIGATOR_TOOL_TIMEOUT_S", "60")))
-# Stubs until Day 6 (replay) and Day 10 (playbooks, incidents): offering them only burns budget.
-NOT_YET = {"replay_conversation", "search_playbooks", "similar_incidents"}
+# A replay runs the assistant several times, plus an unpatched control the first time.
+REPLAY_TIMEOUT = timedelta(seconds=float(os.environ.get("INVESTIGATOR_REPLAY_TIMEOUT_S", "300")))
+REPLAY = "replay_conversation"
+# Stubs until Day 10 (playbooks, incidents): offering them only burns budget.
+NOT_YET = {"search_playbooks", "similar_incidents"}
 
 
 class Toolbox:
-    def __init__(self, session, budget: int = TOOL_BUDGET) -> None:
+    def __init__(self, session, budget: int = TOOL_BUDGET, replay_budget: int = REPLAY_BUDGET) -> None:
         self.session = session
         self.budget = budget
         self.used = 0
+        self.replay_budget = replay_budget
+        self.replays = 0
 
     @classmethod
     @asynccontextmanager
@@ -54,8 +61,13 @@ class Toolbox:
             result = {"error": "budget_exhausted",
                       "hint": f"all {self.budget} tool calls are used; stop and conclude"}
             return result, {"kind": "tool", "tool": name, "args": args, "skipped": "budget", "result_chars": 0}
+        if name == REPLAY and self.replays >= self.replay_budget:
+            result = {"error": "replay_budget_exhausted",
+                      "hint": f"all {self.replay_budget} replays are used; conclude with the evidence you have"}
+            return result, {"kind": "tool", "tool": name, "args": args, "skipped": "replay_budget", "result_chars": 0}
         self.used += 1
-        r = await self.session.call_tool(name, args, read_timeout_seconds=TOOL_TIMEOUT)
+        r = await self.session.call_tool(name, args,
+                                         read_timeout_seconds=REPLAY_TIMEOUT if name == REPLAY else TOOL_TIMEOUT)
         text = "".join(getattr(c, "text", "") for c in r.content)
         try:
             result = json.loads(text)
@@ -63,6 +75,9 @@ class Toolbox:
             result = {"error": "tool returned non-JSON output", "hint": text[:200]}
         if r.isError and "error" not in result:
             result = {"error": text[:300], "hint": "check the arguments against the tool's schema"}
+        error = result.get("error") if isinstance(result, dict) else None
+        if name == REPLAY and not error:  # a rejected patch runs nothing, so it costs no replay
+            self.replays += 1
         entry = {"kind": "tool", "n": self.used, "tool": name, "args": args, "result_chars": len(text),
-                 "error": result.get("error") if isinstance(result, dict) else None}
+                 "error": error}
         return result, entry

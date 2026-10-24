@@ -7,7 +7,7 @@ from conftest import collect_refs, make_env, retrieve_ref, run_all_tools, window
 from tools import handlers, refs
 from tools.output import MAX_CHARS
 
-STUBS = {"replay_conversation", "search_playbooks", "similar_incidents"}
+STUBS = {"search_playbooks", "similar_incidents"}
 
 
 def test_every_tool_returns_json_under_the_size_cap(env):
@@ -20,6 +20,8 @@ def test_every_tool_returns_json_under_the_size_cap(env):
         assert "Traceback" not in text, name
         if name in STUBS:
             assert out["error"] == "not_implemented" and out["hint"], name
+        elif name == "replay_conversation":  # the conftest sends a patch that must be rejected
+            assert out["error"].startswith("patch rejected" if env.name != "live" else "replay needs") and out["hint"]
         elif env.name == "live" and name == "query_metrics":
             continue  # Prometheus may have aged out the window
         else:

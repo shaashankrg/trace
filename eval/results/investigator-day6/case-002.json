@@ -1,0 +1,478 @@
+{
+  "case_id": "case-002",
+  "model": "gemini-3.8-flash",
+  "wall_s": 120.5,
+  "error": null,
+  "diagnosis": {
+    "root_component": "retriever",
+    "category": "config_change",
+    "cause_ref": "change:config-change-5777",
+    "confidence": 0.99,
+    "summary": "The similarity threshold was increased to 0.85 in change:config-change-5777, which caused the retriever to filter out all relevant shipping chunks, leaving the model with 0 chunks and unable to answer the question.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:config-change-5777",
+        "claim": "The similarity threshold was changed shortly before the incident to reduce low-relevance retrievals.",
+        "attribute": null,
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "trace",
+        "ref": "span:0a6174ddf4c4db659e732c38e618ac25/54cc5033514badad",
+        "claim": "The retrieve span used a high threshold of 0.85 and returned 0 chunks.",
+        "attribute": "retrieval.result_count",
+        "value": 0,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "replay",
+        "ref": "replay:482752f38a50",
+        "claim": "Reverting similarity_threshold to 0.3 allowed retrieval of the relevant shipping document chunk and proved the fix.",
+        "attribute": "matches_correction",
+        "value": true,
+        "quote": null,
+        "supports": null
+      }
+    ],
+    "ruled_out": [],
+    "suggested_fix": "Revert the similarity threshold configuration to 0.3.",
+    "fix_patch": {
+      "kind": "set_config",
+      "key": "similarity_threshold",
+      "value": "0.3"
+    },
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 4,
+    "failures": []
+  },
+  "fix": {
+    "ref": "replay:fca791ad50b0",
+    "patch": {
+      "kind": "set_config",
+      "key": "similarity_threshold",
+      "value": "0.3"
+    },
+    "target_component": "retriever",
+    "matches_correction": true,
+    "votes": [
+      true,
+      true,
+      true
+    ],
+    "judge": "code",
+    "control_ref": "replay:f8c3d5b86e3b",
+    "control_matches_correction": false,
+    "proves_fix": true,
+    "cost_usd": 0.000264
+  },
+  "gate": {
+    "passed": true,
+    "reason": "2 evidence types (change, trace) and replay replay:482752f38a50 support retriever",
+    "hypothesis": "retriever",
+    "supporting_types": [
+      "change",
+      "trace"
+    ],
+    "replay_ref": "replay:482752f38a50",
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "The recent change raising the retrieval similarity threshold to 0.85 caused the retrieve span to return 0 chunks for a standard shipping policy question.",
+      "score": 0.85
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_delete",
+      "rationale": "The shipping policy document or its relevant chunks containing the free standard shipping threshold might have been removed or unindexed.",
+      "score": 0.1
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "An update to the shipping policy document might have omitted or rephrased the $75 threshold, reducing similarity scores below threshold.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 13,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 25,
+  "refs_not_in_pool": [],
+  "llm_calls": 14,
+  "input_tokens": 80481,
+  "output_tokens": 1486,
+  "thinking_tokens": 0,
+  "cost_usd": 0.066841,
+  "investigator_cost_usd": 0.065932,
+  "replay_cost_usd": 0.000909,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-7e42e891"
+      },
+      "result_chars": 2447,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-10T23:23:10.418191+00:00",
+        "end": "2026-10-17T23:23:10.418191+00:00"
+      },
+      "result_chars": 321,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1669,
+      "output_tokens": 222,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002084,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"retriever\",\n   \"category\": \"config_change\",\n   \"rationale\": \"The recent change raising the retrieval similarity threshold to 0.85 caused the retrieve span to return 0 chunks for a standard shipping policy question.\",\n   \"score\": 0.85\n  },\n  {\n   \"root_component\": \"knowledge_base\",\n   \"category\": \"doc_delete\",\n   \"rationale\": \"The shipping policy document or its relevant chunks containing the free standard shipping threshold might have been removed or "
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2941,
+      "output_tokens": 27,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002307,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-7e42e891"
+      },
+      "result_chars": 2447,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3894,
+      "output_tokens": 35,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003052,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-17T00:00:00Z"
+      },
+      "result_chars": 321,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4056,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003109,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "similarity_threshold"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4112,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003144,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "query": "threshold"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4165,
+      "output_tokens": 25,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003217,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "search_logs",
+      "args": {
+        "query": "conv-7e42e891"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4227,
+      "output_tokens": 35,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003302,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-10-17T22:50:00Z"
+      },
+      "result_chars": 3913,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5979,
+      "output_tokens": 72,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004754,
+      "tool_calls": [
+        "query_metrics"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "query_metrics",
+      "args": {
+        "metric": "kestrel_canary_accuracy",
+        "start": "2026-10-17T22:00:00Z",
+        "end": "2026-10-17T23:30:00Z"
+      },
+      "result_chars": 5845,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 8329,
+      "output_tokens": 51,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006438,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-7e42e891",
+        "patch": {
+          "key": "similarity_threshold",
+          "kind": "set_config",
+          "value": 0.7
+        }
+      },
+      "result_chars": 176,
+      "error": "patch rejected: similarity_threshold=0.7 is not a value the change log or the trace shows similarity_threshold holding",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 8453,
+      "output_tokens": 51,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006531,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {
+          "value": 0.3,
+          "kind": "set_config",
+          "key": "similarity_threshold"
+        },
+        "conversation_id": "conv-7e42e891"
+      },
+      "result_chars": 679,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 8741,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006631,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "shipping-domestic"
+      },
+      "result_chars": 880,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 9052,
+      "output_tokens": 27,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00689,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-7e42e891"
+      },
+      "result_chars": 2447,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10004,
+      "output_tokens": 446,
+      "thinking_tokens": 0,
+      "cost_usd": 0.009175,
+      "tool_calls": [],
+      "text": "### Summary of Findings\n\n- **Root Component**: `retriever`\n- **Category**: `config_change`\n\n#### Cause Analysis\n1. Shortly before the alert, a configuration change was deployed (`change:config-change-5777` by `priya` at `2026-10-17T22:59:42.532393+00:00`) raising `config:similarity_threshold` from `0.3` to `0.85`.\n2. In conversation `conv-7e42e891` (trace `0a6174ddf4c4db659e732c38e618ac25`), the retrieval step (`span:0a6174ddf4c4db659e732c38e618ac25/54cc5033514badad`) filtered out all candidate "
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4859,
+      "output_tokens": 441,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005298,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"retriever\",\n  \"category\": \"config_change\",\n  \"cause_ref\": \"change:config-change-5777\",\n  \"confidence\": 0.99,\n  \"summary\": \"The similarity threshold was increased to 0.85 in change:config-change-5777, which caused the retriever to filter out all relevant shipping chunks, leaving the model with 0 chunks and unable to answer the question.\",\n  \"evidence\": [\n    {\n      \"type\": \"change\",\n      \"ref\": \"change:config-change-5777\",\n      \"claim\": \"The similarity threshold was chan"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "2 evidence types (change, trace) and replay replay:482752f38a50 support retriever",
+      "hypothesis": "retriever",
+      "supporting_types": [
+        "change",
+        "trace"
+      ],
+      "replay_ref": "replay:482752f38a50",
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

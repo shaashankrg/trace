@@ -10,5 +10,13 @@
   "trace_id": "bc26a66317223cde3c504cb141c5b2f5",
   "question": "What's the refund window for returning an item?",
   "answer": "Based on the provided documents, items returned after 14 days are not eligible for a refund, meaning the standard refund window is 14 days [refund-policy@v2#1]. Additionally, items purchased between November 1 and December 24 have an extended refund window until January 15 of the following year [holiday-returns@v1#0].",
-  "reviewer_correction": "The refund window is 14 days, not 30."
+  "reviewer_correction": "The refund window is 14 days, not 30.",
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:14|fourteen)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": [
+      "\\b(?:30|thirty)[- ](?:calendar |business )?days?\\b"
+    ]
+  }
 }

@@ -105,3 +105,13 @@ def test_agent_package_never_imports_eval_or_injector():
             names = ([a.name for a in node.names] if isinstance(node, ast.Import)
                      else [node.module or ""] if isinstance(node, ast.ImportFrom) else [])
             assert not any(n.split(".")[0] in {"eval", "injector"} for n in names), (path.name, names)
+
+
+def test_a_malformed_fix_patch_is_dropped_not_fatal():
+    d = Diagnosis.model_validate({**GOOD, "fix_patch": {"kind": "set_config", "tool_timeout_ms": 5000}})
+    assert d.fix_patch is None and "set_config needs key, value" in d.fix_patch_error
+
+
+def test_a_good_fix_patch_is_normalized():
+    d = Diagnosis.model_validate({**GOOD, "fix_patch": {"kind": "set_config", "key": "top_k", "value": 4}})
+    assert d.fix_patch == {"kind": "set_config", "key": "top_k", "value": "4"} and not d.fix_patch_error

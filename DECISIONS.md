@@ -106,3 +106,32 @@ Notes from building it (not part of the five above):
 - **A hard spend cap across runs**: `.spend.json` (gitignored) holds the running total and `Chat.send` refuses once it reaches `INVESTIGATOR_SPEND_CAP_USD` ($2). The call in flight can overshoot by its own cost.
 - **The Day 6 and Day 10 stub tools are hidden from the model.** Offering `replay_conversation` before it works only burns budget on errors.
 - **Cited refs not in the evidence pool: 0 in all 20 cases.** That is a property of the design (the model can only copy refs it was shown), not yet a verified hallucination rate; the Day 6 verifier checks refs against the stores.
+
+## Day 6
+
+1. **Overrides over modifying the database for replay**, because…
+
+2. **Code derives a patch's target component instead of the agent stating it**, because…
+
+3. **The gate is code over asking the LLM "are you confident?"**, because…
+
+4. **The verifier reads raw snapshots instead of calling the MCP tools**, because…
+
+5. **Hallucinated evidence scores as wrong even when the component is right**, because…
+
+Notes from building it (not part of the five above):
+
+- **Results (`investigator-day6`, 20 cases, $1.07 including replays).** On the 12 valid cases: top-1 92% (Day 5: 67%, B1: 0%), precision when answered 92%, abstain rate 0%, hallucinated evidence 8% (1 of 12), fix success 92%, judge fallback 0%. On all 20 recorded cases: top-1 80% (Day 5: 75%), precision 84% (Day 5: 75%), abstain rate 5%, abstention value 100%, hallucinated evidence 16% (3 of 19), fix success 89%. Day 5's 0% hallucination is not comparable: its citations had no quotes or attribute values to check, only refs, and all of those existed.
+- **The gate raised precision and cost one abstention.** case-004 (stale document, forced) is the miss both Day 5 runs got wrong as `model`; this time the gate rejected it (only one evidence type relevant to `model`) and it abstained with `model` as the top candidate, which was wrong. All four `silent_tool_failure` cases, which Day 5 called `config`, now come out `tool:lookup_order`: the `rerun_tool` replay fixed the answer against a failing control, and the config hypothesis could not be proved because no change record shows `tool_timeout_ms` with another value. The gate is code and the labels did not change; this is the gate doing its job, not the label question from Day 5 going away.
+- **All three hallucinated diagnoses are citation-format errors, not invented facts.** Every ref existed and every claim was true, but the agent quoted `document_history`'s summary line ("v1 published …, 1/1 chunks indexed") against the document body, cited the attribute `chunk_ids` instead of `retrieval.chunk_ids`, or quoted the line a prompt diff removed against the version that no longer has it. I kept the verifier strict, because relaxing it after seeing results is how numbers get inflated. Day 7: tell the draft to quote only source text, and re-run.
+- **Empty-patch determinism: 19/20 cases, 56/60 samples.** Retrieval and tool calls matched the recording in all 60 samples; only the assistant model's text varies (exact text repeated in 4 of 20 cases). case-003 never reproduced: its wrong answer (mentioning the old 1-year warranty as an aside) is a minority sample, and the case was only valid on its third recording attempt. Inputs were checked identical (config, chunks, order, prompt).
+- **That is why a replay has samples and a control.** One run proves little when the model itself is noisy. Each replay takes 3 samples and the majority counts, and each patched replay is compared with an unpatched control: `proves_fix` only when the patch fixes it and the control does not. Otherwise a flaky case like case-003 would "fix" itself under any patch, which is failure scenario F5 by another route. A replay costs about $0.0003 (gemini-3.5-flash-lite).
+- **Snapshots gained `store.json` and `answer_check`** (`eval.backfill_snapshots`, and `run_case` records both from now on). Re-running a tool needs the store as it was during the fault. The store seed is deterministic and only `stale_tool_data` touches it, so the backfill rebuilds it in one rolled-back transaction (reset, apply decoy and fault with the original timestamps, dump), then checks it against every tool output recorded in `tool_io.json`: all 20 match.
+- **`tool_io.json` holds the healthy pre-fault run too.** Replay serves only the calls from the alert's own trace, in recorded order, with keys put back in SQL column order (jsonb had re-ordered them, and the model originally saw the SQL order).
+- **`top_k` is a retriever patch.** The plan lists `set_config` as `config` "or retriever for threshold and embedding settings". The schema's component list and the context-overflow ground truth both put `top_k` under the retriever, so it maps there. `chunk_size` cannot be patched, because chunks are already cut.
+- **`pipeline.answer` is shared by the app and replay.** `pipeline.run` now reads config from the database and hands retrieval, the prompt and the tool executor to `answer`; replay passes snapshot-backed ones. One chat loop, so a replay cannot drift from the real assistant.
+- **The MCP server preloads the assistant when `TRACEWISE_REPLAY=1`** (about 30 s). On Windows, loading a native library (numpy, torch) while another thread is blocked reading the stdin pipe waits for that read, so a lazy import inside the server hung the first replay for the full 300 s timeout. A server without the flag answers replay with an error instead of hanging.
+- **A malformed `fix_patch` is dropped, not fatal.** In the first smoke run the draft wrote `{"kind": "set_config", "tool_timeout_ms": 5000}`, failed validation twice, and a correct diagnosis was thrown away. It now scores as "no fix" and keeps `fix_patch_error`.
+- **The anti-cheating rule caught real attempts.** The agent tried `tool_timeout_ms=5000` (case-007, smoke run) and `similarity_threshold=0.5` (case-010): values that appear nowhere in the history. Both were rejected in code; case-010's fix therefore counts as failed.
+- **`answer_check` is now in `alert.json`.** The Day 4 anti-cheat test banned it from snapshot files; it is allowed in `alert.json` only, and no tool output shows it. The investigator never reads it either; only the replay's answer check does.
+- **Judge fallback is 0%.** The LLM judge runs only when an answer has every required pattern and a forbidden one (it states both facts). No replay in this run needed it, so the judge's own accuracy is untested on real answers.

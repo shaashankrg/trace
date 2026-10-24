@@ -1,0 +1,277 @@
+{
+  "case_id": "case-018",
+  "model": "gemini-3.8-flash",
+  "wall_s": 47.1,
+  "error": null,
+  "diagnosis": {
+    "root_component": "prompt",
+    "category": "prompt_edit",
+    "cause_ref": "change:prompt-edit-3227",
+    "confidence": 0.98,
+    "summary": "Prompt v2 removed the requirement to say 'I don't know' and refer to support when documents lack the answer, leading the model to incorrectly assert that address changes are unsupported.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:prompt-edit-3227",
+        "claim": "Alice edited the prompt to v2 shortly before the incident to simplify the system prompt.",
+        "attribute": null,
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "trace",
+        "ref": "span:26dde5a6debca60c0da2768fbf3b3e5b/0ccdaf6a9527646f",
+        "claim": "The chat completion span used prompt version v2.",
+        "attribute": "prompt.version",
+        "value": "v2",
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "replay",
+        "ref": "replay:d0059c5a81e4",
+        "claim": "Reverting the prompt version to v1 fixed the answer and matched reviewer expectations.",
+        "attribute": "matches_correction",
+        "value": true,
+        "quote": null,
+        "supports": null
+      }
+    ],
+    "ruled_out": [],
+    "suggested_fix": "Revert the prompt version to v1 to restore fallback instructions for unanswered questions.",
+    "fix_patch": {
+      "kind": "set_prompt_version",
+      "version": "v1"
+    },
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 4,
+    "failures": []
+  },
+  "fix": {
+    "ref": "replay:f66cf058fa50",
+    "patch": {
+      "kind": "set_prompt_version",
+      "version": "v1"
+    },
+    "target_component": "prompt",
+    "matches_correction": true,
+    "votes": [
+      true,
+      true,
+      true
+    ],
+    "judge": "code",
+    "control_ref": "replay:d1a3d528327d",
+    "control_matches_correction": false,
+    "proves_fix": true,
+    "cost_usd": 0.000234
+  },
+  "gate": {
+    "passed": true,
+    "reason": "2 evidence types (change, trace) and replay replay:d0059c5a81e4 support prompt",
+    "hypothesis": "prompt",
+    "supporting_types": [
+      "change",
+      "trace"
+    ],
+    "replay_ref": "replay:d0059c5a81e4",
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "prompt",
+      "category": "prompt_edit",
+      "rationale": "A recent prompt edit to version v2 may have removed fallback instructions directing the model to refer customers to help@kestrel.example when retrieved context lacks relevant information.",
+      "score": 0.8
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model incorrectly inferred a negative 'No' answer from the absence of information rather than acknowledging that the documents do not cover the question.",
+      "score": 0.15
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "The knowledge base may be missing a dedicated policy document on post-order shipping address modifications.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 5,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 7,
+  "refs_not_in_pool": [],
+  "llm_calls": 6,
+  "input_tokens": 19313,
+  "output_tokens": 1107,
+  "thinking_tokens": 0,
+  "cost_usd": 0.019625,
+  "investigator_cost_usd": 0.018636,
+  "replay_cost_usd": 0.000989,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-80841fa6"
+      },
+      "result_chars": 2673,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T04:01:10.220797+00:00",
+        "end": "2026-10-18T04:01:10.220797+00:00"
+      },
+      "result_chars": 287,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1726,
+      "output_tokens": 218,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002112,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"prompt\",\n   \"category\": \"prompt_edit\",\n   \"rationale\": \"A recent prompt edit to version v2 may have removed fallback instructions directing the model to refer customers to help@kestrel.example when retrieved context lacks relevant information.\",\n   \"score\": 0.8\n  },\n  {\n   \"root_component\": \"model\",\n   \"category\": \"model_change\",\n   \"rationale\": \"The model incorrectly inferred a negative 'No' answer from the absence of information rather than acknowle"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2995,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002344,
+      "tool_calls": [
+        "diff_prompt_versions"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "diff_prompt_versions",
+      "args": {
+        "a": "v1",
+        "b": "v2"
+      },
+      "result_chars": 770,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3293,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002638,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-80841fa6",
+        "patch": {
+          "version": "v1",
+          "kind": "set_prompt_version"
+        }
+      },
+      "result_chars": 698,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3570,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002775,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-80841fa6"
+      },
+      "result_chars": 2673,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4559,
+      "output_tokens": 391,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004886,
+      "tool_calls": [],
+      "text": "### Root Cause Analysis\n\n- **Root Component**: `prompt`\n- **Category**: `prompt_edit`\n\n### Summary of Findings\n1. **Change Log & Prompt Diff**: Change `change:prompt-edit-3227` by Alice updated the prompt from `v1` to `v2` (\"Simplify system prompt\"). A diff between `v1` and `v2` revealed that the following instruction was removed:\n   ```\n   - Only answer from the provided documents. Tool results count as documents. If they do not contain the answer, say you don't know and suggest contacting supp"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3170,
+      "output_tokens": 401,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003881,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"prompt\",\n  \"category\": \"prompt_edit\",\n  \"cause_ref\": \"change:prompt-edit-3227\",\n  \"confidence\": 0.98,\n  \"summary\": \"Prompt v2 removed the requirement to say 'I don't know' and refer to support when documents lack the answer, leading the model to incorrectly assert that address changes are unsupported.\",\n  \"evidence\": [\n    {\n      \"type\": \"change\",\n      \"ref\": \"change:prompt-edit-3227\",\n      \"claim\": \"Alice edited the prompt to v2 shortly before the incident to simplify "
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "2 evidence types (change, trace) and replay replay:d0059c5a81e4 support prompt",
+      "hypothesis": "prompt",
+      "supporting_types": [
+        "change",
+        "trace"
+      ],
+      "replay_ref": "replay:d0059c5a81e4",
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

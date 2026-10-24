@@ -10,5 +10,11 @@
   "trace_id": "4f135ce5336eea5f1d4b6882f13f0f39",
   "question": "How long will you hold my store pickup order?",
   "answer": "I don't know the answer to how long we will hold a store pickup order. Please contact our customer support for assistance.",
-  "reviewer_correction": "Store pickup orders are held for 7 days."
+  "reviewer_correction": "Store pickup orders are held for 7 days.",
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:7|seven)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": []
+  }
 }

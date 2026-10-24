@@ -1,0 +1,482 @@
+{
+  "case_id": "case-014",
+  "model": "gemini-3.8-flash",
+  "wall_s": 65.9,
+  "error": null,
+  "diagnosis": {
+    "root_component": "retriever",
+    "category": "config_change",
+    "cause_ref": "change:config-change-9298",
+    "confidence": 0.99,
+    "summary": "The retriever's similarity threshold was increased to 0.9, causing the relevant password reset documentation to be filtered out and resulting in 0 retrieved chunks.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:config-change-9298",
+        "claim": "Alice increased similarity_threshold to 0.9 to reduce low-relevance retrievals shortly before the alert.",
+        "attribute": null,
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "trace",
+        "ref": "span:ab37503f8268bf9ff0c2dcb155a1b184/b8d9bb62aaea8c0d",
+        "claim": "The retrieve span used a threshold of 0.9 and returned 0 chunks.",
+        "attribute": "retrieval.result_count",
+        "value": 0,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "replay",
+        "ref": "replay:94a7f9b0bb3c",
+        "claim": "Lowering the similarity threshold back to 0.3 retrieved the document and fixed the response.",
+        "attribute": "matches_correction",
+        "value": true,
+        "quote": null,
+        "supports": null
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:prompt-edit-5485",
+        "reason": "Prompt edit was a typo fix and the failure is directly due to 0 retrieved chunks caused by the retriever's high similarity threshold.",
+        "ref": "change:prompt-edit-5485"
+      }
+    ],
+    "suggested_fix": "Revert the similarity_threshold config back to a lower value such as 0.3.",
+    "fix_patch": {
+      "kind": "set_config",
+      "key": "similarity_threshold",
+      "value": "0.3"
+    },
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 5,
+    "failures": []
+  },
+  "fix": {
+    "ref": "replay:1e29cd788f6e",
+    "patch": {
+      "kind": "set_config",
+      "key": "similarity_threshold",
+      "value": "0.3"
+    },
+    "target_component": "retriever",
+    "matches_correction": true,
+    "votes": [
+      true,
+      true,
+      true
+    ],
+    "judge": "code",
+    "control_ref": "replay:2f6a5d64ecc7",
+    "control_matches_correction": false,
+    "proves_fix": true,
+    "cost_usd": 0.000176
+  },
+  "gate": {
+    "passed": true,
+    "reason": "2 evidence types (change, trace) and replay replay:94a7f9b0bb3c support retriever",
+    "hypothesis": "retriever",
+    "supporting_types": [
+      "change",
+      "trace"
+    ],
+    "replay_ref": "replay:94a7f9b0bb3c",
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "A recent configuration change increased the similarity threshold to 0.9, resulting in 0 chunks retrieved for the question.",
+      "score": 0.85
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "The document specifying password reset link validity might not be indexed or its content was updated/removed.",
+      "score": 0.1
+    },
+    {
+      "root_component": "prompt",
+      "category": "prompt_edit",
+      "rationale": "The recent prompt edit to v2 may have instructed the model to be overly restrictive or fail when retrieval returns no context.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 13,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 55,
+  "refs_not_in_pool": [],
+  "llm_calls": 14,
+  "input_tokens": 108310,
+  "output_tokens": 1577,
+  "thinking_tokens": 0,
+  "cost_usd": 0.087807,
+  "investigator_cost_usd": 0.087145,
+  "replay_cost_usd": 0.000662,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-9ad6631c"
+      },
+      "result_chars": 2445,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T03:57:09.859983+00:00",
+        "end": "2026-10-18T03:57:09.859983+00:00"
+      },
+      "result_chars": 549,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1719,
+      "output_tokens": 208,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002069,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"retriever\",\n   \"category\": \"config_change\",\n   \"rationale\": \"A recent configuration change increased the similarity threshold to 0.9, resulting in 0 chunks retrieved for the question.\",\n   \"score\": 0.85\n  },\n  {\n   \"root_component\": \"knowledge_base\",\n   \"category\": \"doc_update\",\n   \"rationale\": \"The document specifying password reset link validity might not be indexed or its content was updated/removed.\",\n   \"score\": 0.1\n  },\n  {\n   \"root_component\": "
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2977,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.0023,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "search_logs",
+      "args": {
+        "query": "similarity_threshold"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3033,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002331,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2482,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3931,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003004,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2589,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5100,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003885,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "query": "threshold"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5153,
+      "output_tokens": 35,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003996,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-10-18T02:40:00Z"
+      },
+      "result_chars": 3875,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6892,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005267,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-9ad6631c"
+      },
+      "result_chars": 2445,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7828,
+      "output_tokens": 22,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005953,
+      "tool_calls": [
+        "query_metrics"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "query_metrics",
+      "args": {
+        "metric": "kestrel_canary_accuracy"
+      },
+      "result_chars": 7095,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10640,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.008036,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 30
+      },
+      "result_chars": 7236,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 13190,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.009968,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "password-reset"
+      },
+      "result_chars": 799,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 13478,
+      "output_tokens": 50,
+      "thinking_tokens": 0,
+      "cost_usd": 0.010296,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-9ad6631c",
+        "patch": {
+          "value": 0.7,
+          "key": "similarity_threshold",
+          "kind": "set_config"
+        }
+      },
+      "result_chars": 175,
+      "error": "patch rejected: similarity_threshold=0.7 is not a value the change log or the trace shows similarity_threshold holding",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 13600,
+      "output_tokens": 50,
+      "thinking_tokens": 0,
+      "cost_usd": 0.010387,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {
+          "kind": "set_config",
+          "key": "similarity_threshold",
+          "value": 0.3
+        },
+        "conversation_id": "conv-9ad6631c"
+      },
+      "result_chars": 528,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 13845,
+      "output_tokens": 582,
+      "thinking_tokens": 0,
+      "cost_usd": 0.012566,
+      "tool_calls": [],
+      "text": "### Incident Summary\n\n#### Root Cause\nThe failure was caused by a configuration change to the **retriever** (`root_component: retriever`, `category: config_change`). \n\nShortly before the incident, change `change:config-change-9298` was applied by Alice at `2026-10-18T02:42:36.733378+00:00`, changing `config:similarity_threshold` to `0.9` (\"Reduce low-relevance retrievals\"). This threshold was set too high, causing the retriever span `span:ab37503f8268bf9ff0c2dcb155a1b184/b8d9bb62aaea8c0d` to ret"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6924,
+      "output_tokens": 505,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007087,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"retriever\",\n  \"category\": \"config_change\",\n  \"cause_ref\": \"change:config-change-9298\",\n  \"confidence\": 0.99,\n  \"summary\": \"The retriever's similarity threshold was increased to 0.9, causing the relevant password reset documentation to be filtered out and resulting in 0 retrieved chunks.\",\n  \"evidence\": [\n    {\n      \"type\": \"change\",\n      \"ref\": \"change:config-change-9298\",\n      \"claim\": \"Alice increased similarity_threshold to 0.9 to reduce low-relevance retrievals shor"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "2 evidence types (change, trace) and replay replay:94a7f9b0bb3c support retriever",
+      "hypothesis": "retriever",
+      "supporting_types": [
+        "change",
+        "trace"
+      ],
+      "replay_ref": "replay:94a7f9b0bb3c",
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

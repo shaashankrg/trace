@@ -1,0 +1,304 @@
+{
+  "case_id": "case-015",
+  "model": "gemini-3.8-flash",
+  "wall_s": 51.4,
+  "error": null,
+  "diagnosis": {
+    "root_component": "knowledge_base",
+    "category": "doc_delete",
+    "cause_ref": "change:doc-delete-4356",
+    "confidence": 0.99,
+    "summary": "The document 'store-pickup' was deleted from the index by ops-bot in change:doc-delete-4356, leaving 0 of 1 chunks indexed. As a result, the retrieve step failed to find store pickup policy details, leading the model to answer that it did not know how long store pickup orders are held.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:doc-delete-4356",
+        "claim": "ops-bot deleted document store-pickup from the index during index cleanup.",
+        "attribute": null,
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "change",
+        "ref": "doc:store-pickup@v1",
+        "claim": "Document store-pickup@v1 has 0 out of 1 chunks indexed following the deletion.",
+        "attribute": null,
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "replay",
+        "ref": "replay:450993883b8b",
+        "claim": "Restoring document store-pickup restores the chunk and fixes the answer to match the reviewer's correction.",
+        "attribute": "matches_correction",
+        "value": true,
+        "quote": null,
+        "supports": null
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "doc_update on doc:gear-donation at 2026-10-18T03:05:38.336469+00:00 by ops-bot",
+        "reason": "This update concerned gear-donation@v1, which is unrelated to store pickup order hold durations.",
+        "ref": "change:doc-update-4531"
+      }
+    ],
+    "suggested_fix": "Restore the store-pickup document to the search index.",
+    "fix_patch": {
+      "kind": "restore_doc",
+      "doc_id": "store-pickup"
+    },
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 5,
+    "failures": []
+  },
+  "fix": {
+    "ref": "replay:5b3ff4781685",
+    "patch": {
+      "kind": "restore_doc",
+      "doc_id": "store-pickup"
+    },
+    "target_component": "knowledge_base",
+    "matches_correction": true,
+    "votes": [
+      true,
+      true,
+      true
+    ],
+    "judge": "code",
+    "control_ref": "replay:c02067d8a1fb",
+    "control_matches_correction": false,
+    "proves_fix": true,
+    "cost_usd": 0.000243
+  },
+  "gate": {
+    "passed": true,
+    "reason": "1 evidence types (change) and replay replay:450993883b8b support knowledge_base",
+    "hypothesis": "knowledge_base",
+    "supporting_types": [
+      "change"
+    ],
+    "replay_ref": "replay:450993883b8b",
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_delete",
+      "rationale": "The document store-pickup was deleted from the index shortly before the incident, preventing retrieval of store pickup hold duration information.",
+      "score": 0.85
+    },
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "Retrieval top_k or similarity threshold parameters may have filtered out relevant store pickup chunks from the candidate set.",
+      "score": 0.1
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The language model failed to synthesize an answer from the retrieved chunks and defaulted to a fallback refusal.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 6,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 12,
+  "refs_not_in_pool": [],
+  "llm_calls": 7,
+  "input_tokens": 23420,
+  "output_tokens": 1311,
+  "thinking_tokens": 0,
+  "cost_usd": 0.023435,
+  "investigator_cost_usd": 0.022481,
+  "replay_cost_usd": 0.000954,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-93524c6d"
+      },
+      "result_chars": 2671,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T03:58:08.429534+00:00",
+        "end": "2026-10-18T03:58:08.429534+00:00"
+      },
+      "result_chars": 545,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1780,
+      "output_tokens": 206,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002107,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"knowledge_base\",\n   \"category\": \"doc_delete\",\n   \"rationale\": \"The document store-pickup was deleted from the index shortly before the incident, preventing retrieval of store pickup hold duration information.\",\n   \"score\": 0.85\n  },\n  {\n   \"root_component\": \"retriever\",\n   \"category\": \"config_change\",\n   \"rationale\": \"Retrieval top_k or similarity threshold parameters may have filtered out relevant store pickup chunks from the candidate set.\",\n   \"sco"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3035,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002351,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "store-pickup"
+      },
+      "result_chars": 341,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3189,
+      "output_tokens": 68,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002647,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:4f135ce5336eea5f1d4b6882f13f0f39/a8225a6435f593b1"
+      },
+      "result_chars": 1624,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3736,
+      "output_tokens": 47,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002978,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-93524c6d",
+        "patch": {
+          "doc_id": "store-pickup",
+          "kind": "restore_doc"
+        }
+      },
+      "result_chars": 584,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4007,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003073,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "query": "store-pickup"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4062,
+      "output_tokens": 453,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004745,
+      "tool_calls": [],
+      "text": "### Root Cause Analysis\n\n- **Root Component**: `knowledge_base`\n- **Category**: `doc_delete`\n\n### Summary & Evidence\n\n1. **Document History & Indexed State**:\n   - `document_history` for `store-pickup` shows version `v1` (`doc:store-pickup@v1`) has `indexed_chunk_count: 0` despite having `chunk_count: 1`.\n   - A recent change `change:doc-delete-4356` at `2026-10-18T02:26:38.336469+00:00` by `ops-bot` deleted `store-pickup` (\"Clean up index entries\").\n\n2. **Retrieval Failure**:\n   - In trace `4f1"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3611,
+      "output_tokens": 499,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00458,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"knowledge_base\",\n  \"category\": \"doc_delete\",\n  \"cause_ref\": \"change:doc-delete-4356\",\n  \"confidence\": 0.99,\n  \"summary\": \"The document 'store-pickup' was deleted from the index by ops-bot in change:doc-delete-4356, leaving 0 of 1 chunks indexed. As a result, the retrieve step failed to find store pickup policy details, leading the model to answer that it did not know how long store pickup orders are held.\",\n  \"evidence\": [\n    {\n      \"type\": \"change\",\n      \"ref\": \"change"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "1 evidence types (change) and replay replay:450993883b8b support knowledge_base",
+      "hypothesis": "knowledge_base",
+      "supporting_types": [
+        "change"
+      ],
+      "replay_ref": "replay:450993883b8b",
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

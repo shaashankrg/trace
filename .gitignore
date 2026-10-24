@@ -6,3 +6,4 @@ __pycache__/
 eval/*.log
 .spend.json
 eval/results/*/*.server.log
+eval/replays/

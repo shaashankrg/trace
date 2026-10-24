@@ -1,0 +1,517 @@
+[
+  {
+    "case_id": "case-001",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": false,
+    "samples_reproducing": 3,
+    "samples": 3,
+    "original_failures": [
+      "missing [\"(?:don'?t|do not) have (?:any |specific )?information|not covered|no information|contact (?:our )?(?:support|team)|support team|help@kestrel\"]"
+    ],
+    "replay_failures": [
+      [
+        "missing [\"(?:don'?t|do not) have (?:any |specific )?information|not covered|no information|contact (?:our )?(?:support|team)|support team|help@kestrel\"]"
+      ],
+      [
+        "missing [\"(?:don'?t|do not) have (?:any |specific )?information|not covered|no information|contact (?:our )?(?:support|team)|support team|help@kestrel\"]"
+      ],
+      [
+        "missing [\"(?:don'?t|do not) have (?:any |specific )?information|not covered|no information|contact (?:our )?(?:support|team)|support team|help@kestrel\"]"
+      ]
+    ],
+    "replay_ref": "replay:1dd79b6f39f7",
+    "cost_usd": 0.000201,
+    "reproduces": true
+  },
+  {
+    "case_id": "case-002",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": true,
+    "samples_reproducing": 3,
+    "samples": 3,
+    "original_failures": [
+      "missing ['\\\\$75']"
+    ],
+    "replay_failures": [
+      [
+        "missing ['\\\\$75']"
+      ],
+      [
+        "missing ['\\\\$75']"
+      ],
+      [
+        "missing ['\\\\$75']"
+      ]
+    ],
+    "replay_ref": "replay:331627451805",
+    "cost_usd": 0.000153,
+    "reproduces": true
+  },
+  {
+    "case_id": "case-003",
+    "verdict": false,
+    "retrieval": true,
+    "tools": true,
+    "text": false,
+    "samples_reproducing": 0,
+    "samples": 3,
+    "original_failures": [
+      "contains '\\\\b(?:1|one)[- ]year\\\\b'"
+    ],
+    "replay_failures": [
+      [],
+      [],
+      []
+    ],
+    "replay_ref": "replay:1baaba1c562a",
+    "cost_usd": 0.00026,
+    "reproduces": false,
+    "answers": {
+      "recorded": "Based on our updated warranty policy, Kestrel-brand gear carries a 2-year limited warranty against defects in materials and workmanship, starting from the delivery date [warranty@v2#0]. (Note: Older documentation mentions a 1-year warranty [warranty@v1#0], but the current policy is 2 years [warranty@v2#0]).",
+      "replay": "Kestrel-brand gear carries a 2-year limited warranty against defects in materials and workmanship, starting from the delivery date [warranty@v2#0]."
+    }
+  },
+  {
+    "case_id": "case-004",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": false,
+    "samples_reproducing": 3,
+    "samples": 3,
+    "original_failures": [],
+    "replay_failures": [
+      [],
+      [],
+      []
+    ],
+    "replay_ref": "replay:06fa3368158c",
+    "cost_usd": 0.000321,
+    "reproduces": true
+  },
+  {
+    "case_id": "case-005",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": true,
+    "samples_reproducing": 3,
+    "samples": 3,
+    "original_failures": [
+      "missing ['\\\\b18\\\\b']",
+      "contains 'out of stock|sold out|unavailable'"
+    ],
+    "replay_failures": [
+      [
+        "missing ['\\\\b18\\\\b']",
+        "contains 'out of stock|sold out|unavailable'"
+      ],
+      [
+        "missing ['\\\\b18\\\\b']",
+        "contains 'out of stock|sold out|unavailable'"
+      ],
+      [
+        "missing ['\\\\b18\\\\b']",
+        "contains 'out of stock|sold out|unavailable'"
+      ]
+    ],
+    "replay_ref": "replay:11a0dff6cacf",
+    "cost_usd": 0.00037,
+    "reproduces": true
+  },
+  {
+    "case_id": "case-006",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": false,
+    "samples_reproducing": 3,
+    "samples": 3,
+    "original_failures": [
+      "missing [\"never expire|do not expire|don't expire|no expiration\"]"
+    ],
+    "replay_failures": [
+      [
+        "missing [\"never expire|do not expire|don't expire|no expiration\"]"
+      ],
+      [
+        "missing [\"never expire|do not expire|don't expire|no expiration\"]"
+      ],
+      [
+        "missing [\"never expire|do not expire|don't expire|no expiration\"]"
+      ]
+    ],
+    "replay_ref": "replay:f5cfe0d7c27a",
+    "cost_usd": 0.000305,
+    "reproduces": true
+  },
+  {
+    "case_id": "case-007",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": false,
+    "samples_reproducing": 2,
+    "samples": 3,
+    "original_failures": [
+      "missing ['answer:\\\\W*yes\\\\b']"
+    ],
+    "replay_failures": [
+      [
+        "missing ['answer:\\\\W*yes\\\\b']"
+      ],
+      [
+        "missing ['answer:\\\\W*yes\\\\b']"
+      ],
+      [
+        "missing ['answer:\\\\W*yes\\\\b']",
+        "contains 'answer:\\\\W*no\\\\b'"
+      ]
+    ],
+    "replay_ref": "replay:90568daacb44",
+    "cost_usd": 0.000521,
+    "reproduces": true
+  },
+  {
+    "case_id": "case-008",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": false,
+    "samples_reproducing": 3,
+    "samples": 3,
+    "original_failures": [
+      "missing ['\\\\bshipped\\\\b']"
+    ],
+    "replay_failures": [
+      [
+        "missing ['\\\\bshipped\\\\b']"
+      ],
+      [
+        "missing ['\\\\bshipped\\\\b']"
+      ],
+      [
+        "missing ['\\\\bshipped\\\\b']"
+      ]
+    ],
+    "replay_ref": "replay:7436523b9db8",
+    "cost_usd": 0.00045,
+    "reproduces": true
+  },
+  {
+    "case_id": "case-009",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": false,
+    "samples_reproducing": 3,
+    "samples": 3,
+    "original_failures": [
+      "missing ['\\\\b15\\\\s?(?:%|percent)']"
+    ],
+    "replay_failures": [
+      [
+        "missing ['\\\\b15\\\\s?(?:%|percent)']"
+      ],
+      [
+        "missing ['\\\\b15\\\\s?(?:%|percent)']"
+      ],
+      [
+        "missing ['\\\\b15\\\\s?(?:%|percent)']"
+      ]
+    ],
+    "replay_ref": "replay:6b28d2a3cacb",
+    "cost_usd": 0.000275,
+    "reproduces": true
+  },
+  {
+    "case_id": "case-010",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": false,
+    "samples_reproducing": 3,
+    "samples": 3,
+    "original_failures": [
+      "missing ['\\\\$100']"
+    ],
+    "replay_failures": [
+      [
+        "missing ['\\\\$100']"
+      ],
+      [
+        "missing ['\\\\$100']"
+      ],
+      [
+        "missing ['\\\\$100']"
+      ]
+    ],
+    "replay_ref": "replay:536314ed8bc2",
+    "cost_usd": 0.00016,
+    "reproduces": true
+  },
+  {
+    "case_id": "case-011",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": false,
+    "samples_reproducing": 3,
+    "samples": 3,
+    "original_failures": [
+      "missing [\"(?:don'?t|do not) have (?:any |specific )?information|not covered|no information|contact (?:our )?(?:support|team)|support team|help@kestrel\"]"
+    ],
+    "replay_failures": [
+      [
+        "missing [\"(?:don'?t|do not) have (?:any |specific )?information|not covered|no information|contact (?:our )?(?:support|team)|support team|help@kestrel\"]"
+      ],
+      [
+        "missing [\"(?:don'?t|do not) have (?:any |specific )?information|not covered|no information|contact (?:our )?(?:support|team)|support team|help@kestrel\"]"
+      ],
+      [
+        "missing [\"(?:don'?t|do not) have (?:any |specific )?information|not covered|no information|contact (?:our )?(?:support|team)|support team|help@kestrel\"]"
+      ]
+    ],
+    "replay_ref": "replay:552985dc8dd5",
+    "cost_usd": 0.000258,
+    "reproduces": true
+  },
+  {
+    "case_id": "case-012",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": false,
+    "samples_reproducing": 3,
+    "samples": 3,
+    "original_failures": [
+      "missing ['\\\\b12\\\\b']"
+    ],
+    "replay_failures": [
+      [
+        "missing ['\\\\b12\\\\b']"
+      ],
+      [
+        "missing ['\\\\b12\\\\b']"
+      ],
+      [
+        "missing ['\\\\b12\\\\b']"
+      ]
+    ],
+    "replay_ref": "replay:941648159383",
+    "cost_usd": 0.000413,
+    "reproduces": true
+  },
+  {
+    "case_id": "case-013",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": false,
+    "samples_reproducing": 3,
+    "samples": 3,
+    "original_failures": [
+      "missing ['answer:\\\\W*yes\\\\b']"
+    ],
+    "replay_failures": [
+      [
+        "missing ['answer:\\\\W*yes\\\\b']"
+      ],
+      [
+        "missing ['answer:\\\\W*yes\\\\b']"
+      ],
+      [
+        "missing ['answer:\\\\W*yes\\\\b']"
+      ]
+    ],
+    "replay_ref": "replay:7756d33f9268",
+    "cost_usd": 0.000525,
+    "reproduces": true
+  },
+  {
+    "case_id": "case-014",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": false,
+    "samples_reproducing": 3,
+    "samples": 3,
+    "original_failures": [
+      "missing ['\\\\b(?:30|thirty)[- ]minutes?\\\\b']"
+    ],
+    "replay_failures": [
+      [
+        "missing ['\\\\b(?:30|thirty)[- ]minutes?\\\\b']"
+      ],
+      [
+        "missing ['\\\\b(?:30|thirty)[- ]minutes?\\\\b']"
+      ],
+      [
+        "missing ['\\\\b(?:30|thirty)[- ]minutes?\\\\b']"
+      ]
+    ],
+    "replay_ref": "replay:ca334d7e0604",
+    "cost_usd": 0.000152,
+    "reproduces": true
+  },
+  {
+    "case_id": "case-015",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": false,
+    "samples_reproducing": 3,
+    "samples": 3,
+    "original_failures": [
+      "missing ['\\\\b(?:7|seven)[- ](?:calendar |business )?days?\\\\b']"
+    ],
+    "replay_failures": [
+      [
+        "missing ['\\\\b(?:7|seven)[- ](?:calendar |business )?days?\\\\b']"
+      ],
+      [
+        "missing ['\\\\b(?:7|seven)[- ](?:calendar |business )?days?\\\\b']"
+      ],
+      [
+        "missing ['\\\\b(?:7|seven)[- ](?:calendar |business )?days?\\\\b']"
+      ]
+    ],
+    "replay_ref": "replay:215712873032",
+    "cost_usd": 0.000234,
+    "reproduces": true
+  },
+  {
+    "case_id": "case-016",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": true,
+    "samples_reproducing": 3,
+    "samples": 3,
+    "original_failures": [
+      "missing ['\\\\b4\\\\b']"
+    ],
+    "replay_failures": [
+      [
+        "missing ['\\\\b4\\\\b']"
+      ],
+      [
+        "missing ['\\\\b4\\\\b']"
+      ],
+      [
+        "missing ['\\\\b4\\\\b']"
+      ]
+    ],
+    "replay_ref": "replay:eaf2110246d4",
+    "cost_usd": 0.00044,
+    "reproduces": true
+  },
+  {
+    "case_id": "case-017",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": true,
+    "samples_reproducing": 3,
+    "samples": 3,
+    "original_failures": [],
+    "replay_failures": [
+      [],
+      [],
+      []
+    ],
+    "replay_ref": "replay:39915ced9601",
+    "cost_usd": 0.000242,
+    "reproduces": true
+  },
+  {
+    "case_id": "case-018",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": false,
+    "samples_reproducing": 3,
+    "samples": 3,
+    "original_failures": [
+      "missing [\"(?:don'?t|do not) have (?:any |specific )?information|not covered|no information|contact (?:our )?(?:support|team)|support team|help@kestrel\"]"
+    ],
+    "replay_failures": [
+      [
+        "missing [\"(?:don'?t|do not) have (?:any |specific )?information|not covered|no information|contact (?:our )?(?:support|team)|support team|help@kestrel\"]"
+      ],
+      [
+        "missing [\"(?:don'?t|do not) have (?:any |specific )?information|not covered|no information|contact (?:our )?(?:support|team)|support team|help@kestrel\"]"
+      ],
+      [
+        "missing [\"(?:don'?t|do not) have (?:any |specific )?information|not covered|no information|contact (?:our )?(?:support|team)|support team|help@kestrel\"]"
+      ]
+    ],
+    "replay_ref": "replay:37df470b643b",
+    "cost_usd": 0.00027,
+    "reproduces": true
+  },
+  {
+    "case_id": "case-019",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": false,
+    "samples_reproducing": 3,
+    "samples": 3,
+    "original_failures": [
+      "missing ['\\\\b23\\\\b']",
+      "contains 'out of stock|sold out|unavailable'"
+    ],
+    "replay_failures": [
+      [
+        "missing ['\\\\b23\\\\b']",
+        "contains 'out of stock|sold out|unavailable'"
+      ],
+      [
+        "missing ['\\\\b23\\\\b']",
+        "contains 'out of stock|sold out|unavailable'"
+      ],
+      [
+        "missing ['\\\\b23\\\\b']",
+        "contains 'out of stock|sold out|unavailable'"
+      ]
+    ],
+    "replay_ref": "replay:51f7dd8a217a",
+    "cost_usd": 0.000372,
+    "reproduces": true
+  },
+  {
+    "case_id": "case-020",
+    "verdict": true,
+    "retrieval": true,
+    "tools": true,
+    "text": false,
+    "samples_reproducing": 3,
+    "samples": 3,
+    "original_failures": [
+      "missing ['out of stock|not in stock|sold out|unavailable|none left|\\\\b0\\\\b']",
+      "contains '\\\\b37\\\\b'"
+    ],
+    "replay_failures": [
+      [
+        "missing ['out of stock|not in stock|sold out|unavailable|none left|\\\\b0\\\\b']",
+        "contains '\\\\b37\\\\b'"
+      ],
+      [
+        "missing ['out of stock|not in stock|sold out|unavailable|none left|\\\\b0\\\\b']",
+        "contains '\\\\b37\\\\b'"
+      ],
+      [
+        "missing ['out of stock|not in stock|sold out|unavailable|none left|\\\\b0\\\\b']",
+        "contains '\\\\b37\\\\b'"
+      ]
+    ],
+    "replay_ref": "replay:7b1263633fec",
+    "cost_usd": 0.000372,
+    "reproduces": true
+  }
+]

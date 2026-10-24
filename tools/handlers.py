@@ -9,7 +9,7 @@ the response says so with `"truncated": true`.
 import difflib
 from datetime import datetime
 
-from tools import refs, trace_model
+from tools import refs, replay, trace_model
 from tools.backend import Backend, iso
 from tools.output import ToolError, clip, tool
 
@@ -253,10 +253,24 @@ def _not_implemented(day: str) -> dict:
 
 
 @tool()
-def replay_conversation(backend: Backend, conversation_id: str, patch: dict) -> dict:
-    """Replay a conversation with a patch applied (config, prompt version, document index) and
-    return the new answer. Built on Day 6."""
-    return _not_implemented("Day 6")
+def replay_conversation(backend: Backend, conversation_id: str, patch: dict | None = None) -> dict:
+    """Re-run the flagged conversation with exactly one patch applied and check the new answer
+    against the reviewer's correction. Recorded cases only: the replay runs on the snapshot."""
+    case_dir = getattr(backend, "dir", None)
+    if case_dir is None:
+        raise ToolError("replay needs a recorded case", "start the server with TRACEWISE_BACKEND=snapshot:<case_id>")
+    if replay.IN_SERVER and not replay.PRELOADED:
+        raise ToolError("replay is not enabled on this server",
+                        "start it with TRACEWISE_REPLAY=1, which loads the assistant before serving")
+    snap = replay.Snapshot(case_dir)
+    if conversation_id not in (snap.alert.get("conversation_id"), snap.alert.get("trace_id")):
+        raise ToolError(f"no recorded conversation {conversation_id!r}",
+                        f"this case's conversation is {snap.alert.get('conversation_id')}")
+    try:
+        record = replay.run_replay(snap, patch, replay.log_path(snap.case_id))
+    except replay.PatchError as e:
+        raise ToolError(f"patch rejected: {e}", e.hint) from e
+    return replay.summary(record)
 
 
 @tool()

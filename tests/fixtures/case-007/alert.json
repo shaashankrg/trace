@@ -10,5 +10,13 @@
   "trace_id": "c3ccf0cb7092aa97ad23c056bad187ac",
   "question": "I'm customer C-0002. Today is 2026-10-12. Can I still return the Comfort Plus Sleeping Pad from order O-1002 for a refund?",
   "answer": "I don't know your order details for customer C-0002. Please contact support.",
-  "reviewer_correction": "Order O-1002 was delivered 2 days ago, inside the 14-day window. The answer is yes."
+  "reviewer_correction": "Order O-1002 was delivered 2 days ago, inside the 14-day window. The answer is yes.",
+  "answer_check": {
+    "must_contain": [
+      "answer:\\W*yes\\b"
+    ],
+    "must_not_contain": [
+      "answer:\\W*no\\b"
+    ]
+  }
 }

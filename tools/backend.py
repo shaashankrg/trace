@@ -32,7 +32,7 @@ RUNS_DIR = Path(__file__).resolve().parent.parent / "eval" / "runs"
 # facts.yaml are not snapshot files and are never read.
 SNAPSHOT_FILES = frozenset({
     "alert", "trace", "logs", "metrics", "changes", "documents", "chunks",
-    "prompt_versions", "config", "tool_io",
+    "prompt_versions", "config", "tool_io", "store",
 })
 
 _CASE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
@@ -230,6 +230,9 @@ class LiveBackend:
                                          "end": end.timestamp(), "step": step})
         return flatten_metric(self._get(f"{self.prometheus}/api/v1/query_range?{params}")["data"]["result"])
 
+    def replay(self, replay_id: str) -> dict | None:
+        return None  # replays run on recorded cases only
+
     def metric_names(self):
         names = self._get(f"{self.prometheus}/api/v1/label/__name__/values")["data"]
         return sorted(n for n in names if n.startswith("kestrel_"))
@@ -318,6 +321,11 @@ class SnapshotBackend:
 
     def metric_names(self):
         return sorted(n for n, r in (self._load("metrics") or {}).items() if r)
+
+    # replays (Day 6)
+    def replay(self, replay_id: str) -> dict | None:
+        from tools.replay import log_path, read_log
+        return next((r for r in read_log(log_path(self.case_id)) if r["replay_id"] == replay_id), None)
 
 
 def get_backend(spec: str | None = None, runs_dir: Path | str | None = None) -> Backend:

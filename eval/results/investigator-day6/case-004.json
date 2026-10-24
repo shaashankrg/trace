@@ -1,0 +1,477 @@
+{
+  "case_id": "case-004",
+  "model": "gemini-3.8-flash",
+  "wall_s": 68.3,
+  "error": null,
+  "diagnosis": {
+    "root_component": null,
+    "category": null,
+    "cause_ref": null,
+    "confidence": 0.0,
+    "summary": "evidence not sufficient after 1 draft(s): only 1 evidence type (trace) relevant to model, no replay that fixes the answer by patching it; not relevant to model: chunk:refund-policy@v2#1",
+    "evidence": [],
+    "ruled_out": [],
+    "suggested_fix": "",
+    "fix_patch": null,
+    "fix_patch_error": "",
+    "abstained": true,
+    "top_candidate": {
+      "root_component": "model",
+      "category": "model_change"
+    },
+    "top_candidates": [
+      {
+        "root_component": "model",
+        "category": "model_change"
+      },
+      {
+        "root_component": "retriever",
+        "category": "config_change"
+      }
+    ],
+    "missing_evidence": "only 1 evidence type (trace) relevant to model, no replay that fixes the answer by patching it; not relevant to model: chunk:refund-policy@v2#1"
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 0,
+    "failures": []
+  },
+  "fix": null,
+  "gate": {
+    "passed": false,
+    "reason": "only 1 evidence type (trace) relevant to model, no replay that fixes the answer by patching it; not relevant to model: chunk:refund-policy@v2#1",
+    "hypothesis": "model",
+    "supporting_types": [
+      "trace"
+    ],
+    "replay_ref": null,
+    "unresolved": [],
+    "irrelevant": [
+      "chunk:refund-policy@v2#1"
+    ]
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model retrieved the correct 14-day policy chunk (refund-policy@v2#1) and stated 14 days, but included unnecessary holiday return caveats or hallucinated details that the reviewer flagged.",
+      "score": 0.45
+    },
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "Retrieval top_k and similarity threshold brought in holiday-returns@v1#0 alongside refund-policy@v2#1, causing extra or conflicting return window information to be cited.",
+      "score": 0.35
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "The knowledge base contains multiple return policies (such as holiday-returns or outdated policy chunks) that confuse the answer about standard return windows.",
+      "score": 0.2
+    }
+  ],
+  "tool_calls_used": 15,
+  "replays_used": 2,
+  "replay_judges": [
+    "code",
+    "code"
+  ],
+  "evidence_pool_size": 58,
+  "refs_not_in_pool": [],
+  "llm_calls": 15,
+  "input_tokens": 88668,
+  "output_tokens": 1234,
+  "thinking_tokens": 0,
+  "cost_usd": 0.072036,
+  "investigator_cost_usd": 0.07113,
+  "replay_cost_usd": 0.000906,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-4cb8bda8"
+      },
+      "result_chars": 2662,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T03:49:09.340121+00:00",
+        "end": "2026-10-18T03:49:09.340121+00:00"
+      },
+      "result_chars": 50,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1698,
+      "output_tokens": 253,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002222,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"model\",\n      \"category\": \"model_change\",\n      \"rationale\": \"The model retrieved the correct 14-day policy chunk (refund-policy@v2#1) and stated 14 days, but included unnecessary holiday return caveats or hallucinated details that the reviewer flagged.\",\n      \"score\": 0.45\n    },\n    {\n      \"root_component\": \"retriever\",\n      \"category\": \"config_change\",\n      \"rationale\": \"Retrieval top_k and similarity threshold brought in holiday-returns@"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2998,
+      "output_tokens": 67,
+      "thinking_tokens": 0,
+      "cost_usd": 0.0025,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:bc26a66317223cde3c504cb141c5b2f5/61a7df9e3295d92b"
+      },
+      "result_chars": 1801,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3570,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002753,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "refund-policy"
+      },
+      "result_chars": 1086,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3920,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003015,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "holiday-returns"
+      },
+      "result_chars": 334,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4069,
+      "output_tokens": 23,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003138,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "query": "conv-4cb8bda8"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4129,
+      "output_tokens": 44,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003262,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "search_logs",
+      "args": {
+        "query": "bc26a66317223cde3c504cb141c5b2f5"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4210,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003326,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-10-18T03:40:00+00:00",
+        "limit": 10
+      },
+      "result_chars": 2588,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5399,
+      "output_tokens": 10,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004087,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "recent_changes",
+      "args": {},
+      "result_chars": 7231,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7942,
+      "output_tokens": 28,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006062,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-4cb8bda8",
+        "patch": {}
+      },
+      "result_chars": 749,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 8222,
+      "output_tokens": 19,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006238,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "exchanges"
+      },
+      "result_chars": 1039,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 8559,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006494,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "returns-process"
+      },
+      "result_chars": 1410,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 9011,
+      "output_tokens": 49,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006942,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-4cb8bda8",
+        "patch": {
+          "kind": "set_config",
+          "key": "similarity_threshold",
+          "value": 0.6
+        }
+      },
+      "result_chars": 170,
+      "error": "patch rejected: similarity_threshold=0.6 is not a value the change log or the trace shows similarity_threshold holding",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 9127,
+      "output_tokens": 54,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007048,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 14,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {
+          "doc_id": "refund-policy",
+          "kind": "use_doc_version",
+          "version": "v1"
+        },
+        "conversation_id": "conv-4cb8bda8"
+      },
+      "result_chars": 832,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 9458,
+      "output_tokens": 22,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007176,
+      "tool_calls": [
+        "query_metrics"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 15,
+      "tool": "query_metrics",
+      "args": {
+        "metric": "kestrel_canary_accuracy"
+      },
+      "result_chars": 1446,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6356,
+      "output_tokens": 560,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006867,
+      "tool_calls": [],
+      "text": "{\n \"abstained\": false,\n \"category\": \"model_change\",\n \"cause_ref\": null,\n \"confidence\": 0.85,\n \"evidence\": [\n  {\n   \"attribute\": \"gen_ai.request.model\",\n   \"claim\": \"The model gemini-3.5-flash-lite was called with retrieved documents specifying the 14-day refund policy, but gave a verbose and partially confused phrasing that the reviewer flagged.\",\n   \"ref\": \"span:bc26a66317223cde3c504cb141c5b2f5/2aaef70624e91d1f\",\n   \"type\": \"trace\",\n   \"value\": \"gemini-3.5-flash-lite\"\n  },\n  {\n   \"claim\": \"The "
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": false,
+      "reason": "only 1 evidence type (trace) relevant to model, no replay that fixes the answer by patching it; not relevant to model: chunk:refund-policy@v2#1",
+      "hypothesis": "model",
+      "supporting_types": [
+        "trace"
+      ],
+      "replay_ref": null,
+      "unresolved": [],
+      "irrelevant": [
+        "chunk:refund-policy@v2#1"
+      ]
+    },
+    {
+      "kind": "end",
+      "node": "abstain"
+    }
+  ]
+}

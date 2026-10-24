@@ -5,11 +5,12 @@ of cause (doc_update, config_change...) rather than with spec section 7's names,
 follows the ground truth.
 """
 import re
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 from tools.refs import RefError, parse_ref
+from tools.replay import PatchError, normalize_patch
 
 COMPONENTS = {
     "knowledge_base": "the documents and which versions of them are indexed for retrieval",
@@ -42,6 +43,11 @@ class EvidenceItem(BaseModel):
     type: Literal["trace", "chunk", "log", "metric", "change", "replay"]
     ref: str
     claim: str = Field(min_length=3)
+    # Optional, checkable against the recording by the evidence verifier (eval/verifier.py):
+    attribute: str | None = None    # a span attribute, e.g. "tool.result_count"
+    value: Any = None               # its value; for a replay, the matches_correction it showed
+    quote: str | None = None        # words that appear in the chunk or log text
+    supports: str | None = None     # the component this item points at (the gate decides for itself)
 
     @field_validator("ref")
     @classmethod
@@ -56,6 +62,17 @@ class EvidenceItem(BaseModel):
 class RuledOut(BaseModel):
     change: str
     reason: str
+    ref: str | None = None          # the change, or a replay, that backs the reason
+
+    @field_validator("ref")
+    @classmethod
+    def ref_is_well_formed(cls, ref: str | None) -> str | None:
+        if ref is not None:
+            try:
+                parse_ref(ref)
+            except RefError as e:
+                raise ValueError(str(e)) from e
+        return ref
 
 
 class Diagnosis(BaseModel):
@@ -67,7 +84,26 @@ class Diagnosis(BaseModel):
     evidence: list[EvidenceItem] = []
     ruled_out: list[RuledOut] = []
     suggested_fix: str = ""
+    fix_patch: dict | None = None         # the suggested fix as a replay patch (tools/replay.py)
+    fix_patch_error: str = ""             # why a malformed fix_patch was dropped
     abstained: bool = False
+    # Filled in by the abstain node: what it would have said, and why that was not enough.
+    top_candidate: dict | None = None     # {root_component, category}
+    top_candidates: list[dict] = []
+    missing_evidence: str = ""
+
+    @model_validator(mode="before")
+    @classmethod
+    def drop_a_malformed_patch(cls, data):
+        """A fix_patch that is not a valid patch is dropped, not fatal: the diagnosis still stands,
+        and it scores as having no fix."""
+        if isinstance(data, dict) and data.get("fix_patch"):
+            try:
+                patch = normalize_patch(data["fix_patch"])
+                data = {**data, "fix_patch": None if patch["kind"] == "none" else patch}
+            except PatchError as e:
+                data = {**data, "fix_patch": None, "fix_patch_error": f"{e}. {e.hint}".strip()}
+        return data
 
     @model_validator(mode="after")
     def check_vocabulary(self) -> "Diagnosis":
@@ -87,7 +123,10 @@ class Diagnosis(BaseModel):
         return self
 
 
-def abstain(summary: str) -> dict:
-    """The fallback when the model cannot produce a valid diagnosis. It names no component, so it
-    scores as a miss; the candidates stay in the state for anyone reading the transcript."""
-    return Diagnosis(abstained=True, confidence=0.0, summary=summary).model_dump()
+def abstain(summary: str, top_candidates: list[dict] | None = None, missing: str = "") -> dict:
+    """An abstention. It names no component, so it scores as no answer; `top_candidate` keeps what
+    the investigator would have said, so the evaluator can tell whether abstaining was right."""
+    tops = [{"root_component": c.get("root_component"), "category": c.get("category")}
+            for c in (top_candidates or [])][:2]
+    return Diagnosis(abstained=True, confidence=0.0, summary=summary, top_candidate=tops[0] if tops else None,
+                     top_candidates=tops, missing_evidence=missing).model_dump()

@@ -6,10 +6,11 @@ from typing import Annotated, Literal, TypedDict
 EvidenceType = Literal["trace", "chunk", "log", "metric", "change", "replay"]
 
 
-class Evidence(TypedDict):
+class Evidence(TypedDict, total=False):
     type: EvidenceType
     ref: str
     claim: str
+    meta: dict          # what the gate needs to judge relevance (see agent/evidence.py)
 
 
 class Candidate(TypedDict):
@@ -29,4 +30,7 @@ class InvestigationState(TypedDict, total=False):
     transcript: Annotated[list[dict], operator.add]     # every LLM and tool call, args, sizes, tokens
     notes: str                                          # the investigator's last words before concluding
     done: bool                                          # investigate decided it has enough
+    draft: dict | None                                  # the diagnosis the gate is asked to accept
+    gate: dict | None                                   # the gate's last result {passed, reason, ...}
+    rounds: int                                         # drafts the gate has judged
     diagnosis: dict | None

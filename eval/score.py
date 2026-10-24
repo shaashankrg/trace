@@ -1,6 +1,9 @@
 """Score diagnoses against the ground truth in the eval schema.
 
-A diagnosis is one JSON object per line: {case_id, root_component, category, cause_ref?}.
+A diagnosis is one JSON object per line: {case_id, root_component, category, cause_ref?}, plus
+optionally the Day 6 fields: abstained, hallucinated (from eval/verifier.py; scored as wrong even when
+the component is right), top_candidate (what an abstention would have said), and the fresh fix
+replay (fix_tested, fix_matches, fix_target, fix_proves).
 Only cases whose latest run was valid (the fault really broke the answer) are scored; a
 valid case with no diagnosis counts as wrong. --include-invalid also scores cases recorded with
 `run_case --force`: the fault was applied, but the answer it produced was not shown to be wrong.
@@ -40,16 +43,44 @@ def score_cases(truth: list[dict], diagnoses: dict[str, dict]) -> list[dict]:
     rows = []
     for t in truth:
         d = diagnoses.get(t["case_id"], {})
+        ok = not d.get("hallucinated")  # a diagnosis citing evidence that is not there is wrong
+        component = d.get("root_component") == t["root_component"]
         rows.append({
             "case_id": t["case_id"], "fault_type": t["fault_type"], "has_decoy": t["has_decoy"],
             "truth_component": t["root_component"], "pred_component": d.get("root_component"),
-            "component_correct": d.get("root_component") == t["root_component"],
+            "component_correct": ok and component,
             "truth_category": t["category"], "pred_category": d.get("category"),
-            "category_correct": d.get("category") == t["category"],
+            "category_correct": ok and d.get("category") == t["category"],
             "truth_cause": t["cause_ref"], "pred_cause": d.get("cause_ref"),
-            "cause_correct": bool(d.get("cause_ref")) and d.get("cause_ref") == t["cause_ref"],
+            "cause_correct": ok and bool(d.get("cause_ref")) and d.get("cause_ref") == t["cause_ref"],
+            "answered": bool(d) and not d.get("abstained") and d.get("root_component") is not None,
+            "abstained": bool(d.get("abstained")),
+            "hallucinated": bool(d.get("hallucinated")),
+            "component_correct_unverified": component,
+            "top_candidate_correct": d.get("top_candidate") == t["root_component"],
+            "fix_success": bool(d.get("fix_matches")) and d.get("fix_target") == t["root_component"],
+            "fix_proven": bool(d.get("fix_proves")) and d.get("fix_target") == t["root_component"],
+            "replay_judges": "|".join(d.get("replay_judges") or []),
         })
     return rows
+
+
+def proof_summary(rows: list[dict]) -> dict:
+    """The Day 6 metrics. Rates over an empty group are NaN (printed n/a)."""
+    answered = [r for r in rows if r["answered"]]
+    abstained = [r for r in rows if r["abstained"]]
+    judges = [j for r in rows for j in r["replay_judges"].split("|") if j]
+    div = lambda a, b: a / b if b else float("nan")  # noqa: E731
+    return {
+        "answered": len(answered), "abstained": len(abstained), "replays": len(judges),
+        "hallucinated_rate": div(sum(r["hallucinated"] for r in answered), len(answered)),
+        "fix_success": div(sum(r["fix_success"] for r in answered), len(answered)),
+        "fix_proven": div(sum(r["fix_proven"] for r in answered), len(answered)),
+        "abstain_rate": div(len(abstained), len(rows)),
+        "precision": div(sum(r["component_correct"] for r in answered), len(answered)),
+        "abstention_value": div(sum(not r["top_candidate_correct"] for r in abstained), len(abstained)),
+        "judge_fallback": div(sum(j == "llm" for j in judges), len(judges)),
+    }
 
 
 def rate(rows: list[dict], key: str) -> float:

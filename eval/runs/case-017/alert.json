@@ -10,5 +10,13 @@
   "trace_id": "25be7fd577de9a67c81dbb56d7131416",
   "question": "How much does express shipping cost?",
   "answer": "Express shipping costs $19.95 [shipping-expedited@v2#0].",
-  "reviewer_correction": "Express shipping is $19.95, not $24.95."
+  "reviewer_correction": "Express shipping is $19.95, not $24.95.",
+  "answer_check": {
+    "must_contain": [
+      "\\$19\\.95"
+    ],
+    "must_not_contain": [
+      "\\$24\\.95"
+    ]
+  }
 }

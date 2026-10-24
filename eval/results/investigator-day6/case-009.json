@@ -1,0 +1,256 @@
+{
+  "case_id": "case-009",
+  "model": "gemini-3.8-flash",
+  "wall_s": 43.7,
+  "error": null,
+  "diagnosis": {
+    "root_component": "knowledge_base",
+    "category": "doc_delete",
+    "cause_ref": "change:doc-delete-6207",
+    "confidence": 0.99,
+    "summary": "Document military-discount was removed from the index by change doc-delete-6207, leaving 0 chunks indexed for military-discount@v1. As a result, the retriever did not return the military discount document, causing the assistant to state that no military discount was mentioned.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:doc-delete-6207",
+        "claim": "Document military-discount was deleted from the index shortly before the alert fired.",
+        "attribute": null,
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "change",
+        "ref": "doc:military-discount@v1",
+        "claim": "military-discount@v1 has 0 out of 1 chunks indexed following its deletion.",
+        "attribute": null,
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "replay",
+        "ref": "replay:2fb2f4fa291a",
+        "claim": "Restoring document military-discount retrieves military-discount@v1#0 and correctly answers the question, proving the fix.",
+        "attribute": "matches_correction",
+        "value": true,
+        "quote": null,
+        "supports": null
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "doc_update on doc:camp-skills-workshops",
+        "reason": "Publishing camp-skills-workshops@v1 is unrelated to military discount policies.",
+        "ref": "change:doc-update-2734"
+      }
+    ],
+    "suggested_fix": "Restore the military-discount document back to the search index.",
+    "fix_patch": {
+      "kind": "restore_doc",
+      "doc_id": "military-discount"
+    },
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 5,
+    "failures": []
+  },
+  "fix": {
+    "ref": "replay:9384ca6f5860",
+    "patch": {
+      "kind": "restore_doc",
+      "doc_id": "military-discount"
+    },
+    "target_component": "knowledge_base",
+    "matches_correction": true,
+    "votes": [
+      true,
+      true,
+      true
+    ],
+    "judge": "code",
+    "control_ref": "replay:569caef6407e",
+    "control_matches_correction": false,
+    "proves_fix": true,
+    "cost_usd": 0.000247
+  },
+  "gate": {
+    "passed": true,
+    "reason": "1 evidence types (change) and replay replay:2fb2f4fa291a support knowledge_base",
+    "hypothesis": "knowledge_base",
+    "supporting_types": [
+      "change"
+    ],
+    "replay_ref": "replay:2fb2f4fa291a",
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_delete",
+      "rationale": "The military-discount document was deleted from the index shortly before the query, preventing the retriever from finding information about military discounts.",
+      "score": 0.85
+    },
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "The retrieval similarity threshold or top_k may have excluded military discount information if relevant chunks were present.",
+      "score": 0.1
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model stated there was no military discount based on the provided context, which lacked the relevant document.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 4,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 8,
+  "refs_not_in_pool": [],
+  "llm_calls": 5,
+  "input_tokens": 14975,
+  "output_tokens": 1069,
+  "thinking_tokens": 0,
+  "cost_usd": 0.016279,
+  "investigator_cost_usd": 0.01524,
+  "replay_cost_usd": 0.001039,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-51dda7b0"
+      },
+      "result_chars": 2665,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T03:52:08.064708+00:00",
+        "end": "2026-10-18T03:52:08.064708+00:00"
+      },
+      "result_chars": 578,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1826,
+      "output_tokens": 206,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002142,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"knowledge_base\",\n   \"category\": \"doc_delete\",\n   \"rationale\": \"The military-discount document was deleted from the index shortly before the query, preventing the retriever from finding information about military discounts.\",\n   \"score\": 0.85\n  },\n  {\n   \"root_component\": \"retriever\",\n   \"category\": \"config_change\",\n   \"rationale\": \"The retrieval similarity threshold or top_k may have excluded military discount information if relevant chunks were prese"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3082,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002387,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "military-discount"
+      },
+      "result_chars": 340,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3231,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002592,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {
+          "doc_id": "military-discount",
+          "kind": "restore_doc"
+        },
+        "conversation_id": "conv-51dda7b0"
+      },
+      "result_chars": 732,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3522,
+      "output_tokens": 345,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003935,
+      "tool_calls": [],
+      "text": "### Root Cause Summary\n\n- **Root Component**: `knowledge_base`\n- **Category**: `doc_delete`\n- **Explanation**: \n  The document `military-discount` was removed from the index by change `change:doc-delete-6207` (\"Remove outdated entries from the index\" by marco at 2026-10-18T02:46:37.782845+00:00). As seen in `document_history`, `doc:military-discount@v1` had its indexed chunk count reduced to 0 (`indexed_chunk_count: 0`). Consequently, during the conversation trace `3d72dc56955581e20e04d0952e5408"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3314,
+      "output_tokens": 453,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004184,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"knowledge_base\",\n  \"category\": \"doc_delete\",\n  \"cause_ref\": \"change:doc-delete-6207\",\n  \"confidence\": 0.99,\n  \"summary\": \"Document military-discount was removed from the index by change doc-delete-6207, leaving 0 chunks indexed for military-discount@v1. As a result, the retriever did not return the military discount document, causing the assistant to state that no military discount was mentioned.\",\n  \"evidence\": [\n    {\n      \"type\": \"change\",\n      \"ref\": \"change:doc-dele"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "1 evidence types (change) and replay replay:2fb2f4fa291a support knowledge_base",
+      "hypothesis": "knowledge_base",
+      "supporting_types": [
+        "change"
+      ],
+      "replay_ref": "replay:2fb2f4fa291a",
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}
