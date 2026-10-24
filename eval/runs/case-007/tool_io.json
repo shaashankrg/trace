@@ -1,0 +1,91 @@
+[
+  {
+    "conversation_id": "conv-38234566",
+    "trace_id": "44afe1a67cccb8fe80b5964b62eb1fbd",
+    "span_id": "e84079b1663dd22f",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0002"
+    },
+    "output": [
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Talus Fleece Pullover",
+            "product_id": "P-008"
+          },
+          {
+            "qty": 2,
+            "name": "Aspen 20F Sleeping Bag",
+            "product_id": "P-019"
+          },
+          {
+            "qty": 2,
+            "name": "Comfort Plus Sleeping Pad",
+            "product_id": "P-022"
+          }
+        ],
+        "total": "1490.00",
+        "status": "delivered",
+        "order_id": "O-1002",
+        "placed_at": "2026-10-05T11:00:00+00:00",
+        "delivered_at": "2026-10-10T11:00:00+00:00"
+      },
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Summit GTX Boot",
+            "product_id": "P-002"
+          },
+          {
+            "qty": 2,
+            "name": "Packable Sun Hat",
+            "product_id": "P-045"
+          },
+          {
+            "qty": 1,
+            "name": "Kayak Paddle",
+            "product_id": "P-049"
+          }
+        ],
+        "total": "1325.00",
+        "status": "delivered",
+        "order_id": "O-1057",
+        "placed_at": "2026-09-16T06:00:00+00:00",
+        "delivered_at": "2026-09-22T06:00:00+00:00"
+      },
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Titanium Cook Pot",
+            "product_id": "P-030"
+          }
+        ],
+        "total": "380.00",
+        "status": "delivered",
+        "order_id": "O-1062",
+        "placed_at": "2026-09-02T06:00:00+00:00",
+        "delivered_at": "2026-09-07T06:00:00+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 7.662699994398281,
+    "created_at": "2026-10-17T23:21:31.448027+00:00"
+  },
+  {
+    "conversation_id": "conv-38234566",
+    "trace_id": "c3ccf0cb7092aa97ad23c056bad187ac",
+    "span_id": "30253ebd5cda320e",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0002"
+    },
+    "output": [],
+    "timed_out": true,
+    "latency_ms": 5.980499990982935,
+    "created_at": "2026-10-17T23:21:35.035761+00:00"
+  }
+]

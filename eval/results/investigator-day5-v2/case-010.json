@@ -1,0 +1,419 @@
+{
+  "case_id": "case-010",
+  "model": "gemini-3.8-flash",
+  "wall_s": 39.6,
+  "error": null,
+  "diagnosis": {
+    "root_component": "retriever",
+    "category": "config_change",
+    "cause_ref": "change:config-change-8917",
+    "confidence": 0.95,
+    "summary": "A configuration change raised the retrieval similarity threshold to 0.8, which prevented relevant chunks from doc:rentals from being retrieved for the user's query about tent rental deposits.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:config-change-8917",
+        "claim": "Ops-bot applied a config_change to config:similarity_threshold at 2026-10-18T02:42:37 to reduce low-relevance retrievals by setting the threshold to 0.8."
+      },
+      {
+        "type": "trace",
+        "ref": "span:b2e93f9f5f29c8f41d6c8aa7a5dde1f1/0f622a5f6f887c08",
+        "claim": "The retrieve span ran with retrieval.threshold=0.8 and returned 0 chunks (retrieval.result_count=0, chunk_ids=[])."
+      },
+      {
+        "type": "change",
+        "ref": "doc:rentals@v1",
+        "claim": "Document doc:rentals@v1 was published on 2026-04-15 and has 2/2 chunks indexed, confirming the rental information is present in the knowledge base."
+      },
+      {
+        "type": "metric",
+        "ref": "metric:kestrel_canary_accuracy@2026-10-18T03:53:06Z",
+        "claim": "The kestrel_canary_accuracy metric for the 'docs' category dropped to a low of 0.125 shortly following the threshold change."
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:doc-update-1047",
+        "reason": "doc:holiday-returns was published well before the incident and is unrelated to tent rental policies."
+      }
+    ],
+    "suggested_fix": "Revert change:config-change-8917 or lower config:similarity_threshold to a value that allows relevant document chunks to be retrieved.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "A recent configuration change raised the similarity_threshold to 0.8, causing retrieval to return 0 chunks for tent rental deposit info.",
+      "score": 0.8
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "The rental policy document may have been recently updated or re-indexed without the tent deposit details included.",
+      "score": 0.1
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_delete",
+      "rationale": "The documentation chunk explaining rental deposit fees may have been removed or deleted from the index.",
+      "score": 0.1
+    }
+  ],
+  "tool_calls_used": 14,
+  "evidence_pool_size": 47,
+  "refs_not_in_pool": [],
+  "llm_calls": 15,
+  "input_tokens": 88095,
+  "output_tokens": 1552,
+  "thinking_tokens": 0,
+  "cost_usd": 0.071891,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-8e868b11"
+      },
+      "result_chars": 2445,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T03:53:10.902401+00:00",
+        "end": "2026-10-18T03:53:10.902401+00:00"
+      },
+      "result_chars": 323,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1495,
+      "output_tokens": 208,
+      "thinking_tokens": 0,
+      "cost_usd": 0.001901,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"retriever\",\n      \"category\": \"config_change\",\n      \"rationale\": \"A recent configuration change raised the similarity_threshold to 0.8, causing retrieval to return 0 chunks for tent rental deposit info.\",\n      \"score\": 0.8\n    },\n    {\n      \"root_component\": \"knowledge_base\",\n      \"category\": \"doc_update\",\n      \"rationale\": \"The rental policy document may have been recently updated or re-indexed without the tent deposit details included.\",\n"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2509,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.001949,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "search_logs",
+      "args": {
+        "query": "similarity_threshold"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2558,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.001978,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "search_logs",
+      "args": {
+        "query": "rental"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2605,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002014,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "retrieve"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2652,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002045,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2599,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3808,
+      "output_tokens": 27,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002957,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-8e868b11"
+      },
+      "result_chars": 2445,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4743,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003613,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2505,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5638,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004304,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "rental-policy"
+      },
+      "result_chars": 166,
+      "error": "no document 'rental-policy'",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5717,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004457,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-01-01T00:00:00+00:00",
+        "limit": 30
+      },
+      "result_chars": 7253,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 8295,
+      "output_tokens": 19,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006293,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "rentals"
+      },
+      "result_chars": 315,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 8433,
+      "output_tokens": 52,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00652,
+      "tool_calls": [
+        "query_metrics"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "query_metrics",
+      "args": {
+        "metric": "kestrel_canary_accuracy",
+        "start": "2026-10-18T00:00:00+00:00"
+      },
+      "result_chars": 7091,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 11262,
+      "output_tokens": 68,
+      "thinking_tokens": 0,
+      "cost_usd": 0.008701,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:b2e93f9f5f29c8f41d6c8aa7a5dde1f1/0f622a5f6f887c08"
+      },
+      "result_chars": 138,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 11424,
+      "output_tokens": 23,
+      "thinking_tokens": 0,
+      "cost_usd": 0.008654,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 14,
+      "tool": "search_logs",
+      "args": {
+        "query": "config-change-8917"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 11477,
+      "output_tokens": 435,
+      "thinking_tokens": 0,
+      "cost_usd": 0.010239,
+      "tool_calls": [],
+      "text": "### Incident Investigation Summary\n\n- **Root Component**: `retriever`\n- **Category**: `config_change`\n\n#### Findings & Evidence\n1. **Trace Analysis**: In trace `b2e93f9f5f29c8f41d6c8aa7a5dde1f1`, the conversation query was *\"How much is the deposit to rent a tent?\"*. The `retrieve` span (`span:b2e93f9f5f29c8f41d6c8aa7a5dde1f1/0f622a5f6f887c08`) executed with `retrieval.threshold=0.8` and returned 0 chunks (`retrieval.result_count=0`, `chunk_ids=[]`). Without any retrieved context, the language m"
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5479,
+      "output_tokens": 575,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006266,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"retriever\",\n  \"category\": \"config_change\",\n  \"cause_ref\": \"change:config-change-8917\",\n  \"confidence\": 0.95,\n  \"summary\": \"A configuration change raised the retrieval similarity threshold to 0.8, which prevented relevant chunks from doc:rentals from being retrieved for the user's query about tent rental deposits.\",\n  \"evidence\": [\n    {\n      \"type\": \"change\",\n      \"ref\": \"change:config-change-8917\",\n      \"claim\": \"Ops-bot applied a config_change to config:similarity_thr"
+    }
+  ]
+}

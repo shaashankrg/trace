@@ -1,0 +1,14 @@
+{
+  "alert_id": "alert-case-009",
+  "type": "flagged_conversation",
+  "fired_at": "2026-10-18T03:52:08.064708+00:00",
+  "window": {
+    "start": "2026-10-18T03:51:37.782845+00:00",
+    "end": "2026-10-18T03:52:08.064708+00:00"
+  },
+  "conversation_id": "conv-51dda7b0",
+  "trace_id": "3d72dc56955581e20e04d0952e5408bb",
+  "question": "Is there a military discount?",
+  "answer": "Based on the provided documents, there is no mention of a military discount. The available discounts are for students [student-discount@v1#0] and corporate orders of 25 or more units [corporate-orders@v1#0]. \n\nAnswer: No",
+  "reviewer_correction": "Yes, military members, veterans and families get 15% off."
+}

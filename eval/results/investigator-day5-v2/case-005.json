@@ -1,0 +1,267 @@
+{
+  "case_id": "case-005",
+  "model": "gemini-3.8-flash",
+  "wall_s": 26.5,
+  "error": null,
+  "diagnosis": {
+    "root_component": "tool:check_inventory",
+    "category": "stale_data",
+    "cause_ref": null,
+    "confidence": 0.95,
+    "summary": "The check_inventory tool returned stale cached data showing 0 units in stock for product P-005, with a cache age exceeding 3 days (265565.7s), causing the model to incorrectly report the Canyon Sandal as out of stock.",
+    "evidence": [
+      {
+        "type": "trace",
+        "ref": "span:4615982dd8aba219baf8a5b891ed5064/d725708505867cb6",
+        "claim": "tool.check_inventory returned cached data with tool.cache_age_s=265565.714732 (over 3 days old)."
+      },
+      {
+        "type": "trace",
+        "ref": "span:4615982dd8aba219baf8a5b891ed5064/a780aaa33e23d6b8",
+        "claim": "llm.chat generated the final answer based on the stale inventory result received from tool.check_inventory."
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:doc-update-5293",
+        "reason": "This document update was for doc:trail-volunteer-days and is unrelated to product inventory or the Canyon Sandal."
+      }
+    ],
+    "suggested_fix": "Invalidate or reduce the TTL of check_inventory tool cache to ensure up-to-date product availability counts.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "tool:check_inventory",
+      "category": "stale_data",
+      "rationale": "The check_inventory tool returned cached inventory data with a cache age over 3 days (265,565 seconds), reflecting an outdated zero-quantity state instead of the current 18 units.",
+      "score": 0.85
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The language model may have misread or hallucinated the stock status from the tool response.",
+      "score": 0.1
+    },
+    {
+      "root_component": "tool:check_inventory",
+      "category": "tool_outage",
+      "rationale": "The check_inventory tool backend may have experienced a partial failure resulting in default zero counts.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 8,
+  "evidence_pool_size": 31,
+  "refs_not_in_pool": [],
+  "llm_calls": 9,
+  "input_tokens": 36939,
+  "output_tokens": 1153,
+  "thinking_tokens": 337,
+  "cost_usd": 0.033292,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-ac598e70"
+      },
+      "result_chars": 3579,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T03:50:10.405993+00:00",
+        "end": "2026-10-18T03:50:10.405993+00:00"
+      },
+      "result_chars": 314,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1712,
+      "output_tokens": 229,
+      "thinking_tokens": 337,
+      "cost_usd": 0.003406,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"tool:check_inventory\",\n      \"category\": \"stale_data\",\n      \"rationale\": \"The check_inventory tool returned cached inventory data with a cache age over 3 days (265,565 seconds), reflecting an outdated zero-quantity state instead of the current 18 units.\",\n      \"score\": 0.85\n    },\n    {\n      \"root_component\": \"model\",\n      \"category\": \"model_change\",\n      \"rationale\": \"The language model may have misread or hallucinated the stock status fro"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2745,
+      "output_tokens": 43,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00222,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-10-18T03:49:00Z",
+        "query": "check_inventory"
+      },
+      "result_chars": 579,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3042,
+      "output_tokens": 51,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002473,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "search_logs",
+      "args": {
+        "query": "P-005",
+        "start": "2026-10-18T00:00:00Z",
+        "component": "tool"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3124,
+      "output_tokens": 41,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002497,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "component": "tool",
+        "start": "2026-10-18T03:49:00Z"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3196,
+      "output_tokens": 35,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002528,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-10-18T03:49:38Z"
+      },
+      "result_chars": 3872,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4927,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003793,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-ac598e70"
+      },
+      "result_chars": 3579,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6282,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004768,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2496,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7181,
+      "output_tokens": 288,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006466,
+      "tool_calls": [],
+      "text": "### Findings\n\n- **Root Component**: `tool:check_inventory`\n- **Category**: `stale_data`\n\n### Investigation Details\n- In trace `4615982dd8aba219baf8a5b891ed5064`, the user asked whether the Canyon Sandal (`P-005`) was in stock and how many units were available.\n- The assistant properly called the inventory tool (`span:4615982dd8aba219baf8a5b891ed5064/d725708505867cb6`), which returned successfully (`status: ok`) in 10.1 ms.\n- However, the tool span shows `tool.cache_age_s=265565.714732` (over 3 d"
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4730,
+      "output_tokens": 425,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005141,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"tool:check_inventory\",\n  \"category\": \"stale_data\",\n  \"cause_ref\": null,\n  \"confidence\": 0.95,\n  \"summary\": \"The check_inventory tool returned stale cached data showing 0 units in stock for product P-005, with a cache age exceeding 3 days (265565.7s), causing the model to incorrectly report the Canyon Sandal as out of stock.\",\n  \"evidence\": [\n    {\n      \"type\": \"trace\",\n      \"ref\": \"span:4615982dd8aba219baf8a5b891ed5064/d725708505867cb6\",\n      \"claim\": \"tool.check_invent"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "alert_id": "alert-case-011",
+  "type": "flagged_conversation",
+  "fired_at": "2026-10-18T03:54:08.421261+00:00",
+  "window": {
+    "start": "2026-10-18T03:53:41.428043+00:00",
+    "end": "2026-10-18T03:54:08.421261+00:00"
+  },
+  "conversation_id": "conv-e1710cc0",
+  "trace_id": "1fb94cc9ec2d2def3f094185e667d381",
+  "question": "Can I return an item without a receipt?",
+  "answer": "To answer your question regarding returning an item without a receipt, our refund and return policies outline the process for online orders through your Kestrel account [returns-process@v2#0] and general item conditions (such as items being unused and in their original packaging) [holiday-returns@v1#0], but the provided policy documents do not mention or require a physical paper receipt for returns initiated through your account [returns-process@v2#0]. \n\nAnswer: Yes",
+  "reviewer_correction": "The documents don't say whether a receipt can be skipped. The assistant should have said it didn't know and point the customer to support (help@kestrel.example), not told me no receipt is needed."
+}

@@ -1,0 +1,554 @@
+[
+  {
+    "chunk_id": "accounts@v1#0",
+    "doc_id": "accounts",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "You can check out as a guest, but a Kestrel account lets you track orders, start returns, save addresses, and earn loyalty points. To change the email on your account or close your account, contact support from the email address currently on file. Closing an account does not cancel orders that have",
+    "indexed": true
+  },
+  {
+    "chunk_id": "accounts@v1#1",
+    "doc_id": "accounts",
+    "version": "v1",
+    "chunk_index": 1,
+    "text": "already shipped, and any unused loyalty points are forfeited.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "backorders@v1#0",
+    "doc_id": "backorders",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "If an item is backordered, the product page shows the expected ship date. You are not charged until the item ships. If a backordered item has not shipped within 60 days, we cancel it automatically and notify you. You can cancel a backordered item yourself at any time before it ships.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "contact-support@v1#0",
+    "doc_id": "contact-support",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "You can reach Kestrel support by phone at 1-800-555-0142 or by email at help@kestrel.example. Phone support is open 7 a.m. to 7 p.m. Mountain Time, Monday through Saturday. Email replies usually arrive within one business day. Have your order number ready to speed things up.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "corporate-orders@v1#0",
+    "doc_id": "corporate-orders",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Orders of 25 or more units qualify for our corporate program, which includes a 8% discount and a dedicated account manager. Corporate orders can include logo embroidery. Contact support to request a quote.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "damaged-items@v1#0",
+    "doc_id": "damaged-items",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "If an item arrives damaged, report it within 7 days of delivery. Email help@kestrel.example with your order number and photos of the damage and the packaging. We ship a replacement at no cost, or refund the item in full if a replacement is not available. You do not need to return the damaged item",
+    "indexed": true
+  },
+  {
+    "chunk_id": "damaged-items@v1#1",
+    "doc_id": "damaged-items",
+    "version": "v1",
+    "chunk_index": 1,
+    "text": "unless we ask for it.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "email-preferences@v1#0",
+    "doc_id": "email-preferences",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "You can unsubscribe from marketing email with the link at the bottom of any message, or from the email preferences page in your account. Unsubscribe requests take effect within 10 business days. Order confirmations, shipping updates and account security messages are always sent, even if you",
+    "indexed": true
+  },
+  {
+    "chunk_id": "email-preferences@v1#1",
+    "doc_id": "email-preferences",
+    "version": "v1",
+    "chunk_index": 1,
+    "text": "unsubscribe from marketing email.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "exchanges@v1#0",
+    "doc_id": "exchanges",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "You can exchange an unused item for a different size or color within 21 days of delivery. Exchanges are subject to availability.",
+    "indexed": false
+  },
+  {
+    "chunk_id": "exchanges@v2#0",
+    "doc_id": "exchanges",
+    "version": "v2",
+    "chunk_index": 0,
+    "text": "You can exchange an unused item for a different size or color within 30 days of delivery. The exchange window is longer than the refund window, so an exchange is often possible after a refund is not. Exchanges ship free. If the new item costs more, we charge the difference; if it costs less, we",
+    "indexed": true
+  },
+  {
+    "chunk_id": "exchanges@v2#1",
+    "doc_id": "exchanges",
+    "version": "v2",
+    "chunk_index": 1,
+    "text": "refund the difference to your original payment method.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "final-sale@v1#0",
+    "doc_id": "final-sale",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Items discounted by 50% or more are final sale and are marked \"Final sale\" on the product page. Final-sale items cannot be returned or exchanged. Final-sale items are still covered by the warranty and the damaged items policy.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "gear-donation@v1#0",
+    "doc_id": "gear-donation",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Drop off clean, usable outdoor gear at any Kestrel store and we pass it on to regional youth outdoor programs. Donated items are checked and cleaned by volunteers before they are handed out. We cannot accept damaged tents, expired climbing ropes or used safety equipment such as helmets and",
+    "indexed": true
+  },
+  {
+    "chunk_id": "gear-donation@v1#1",
+    "doc_id": "gear-donation",
+    "version": "v1",
+    "chunk_index": 1,
+    "text": "harnesses.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "gift-cards@v1#0",
+    "doc_id": "gift-cards",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Kestrel gift cards are available in any amount from $10 up to $500. Gift cards never expire and have no fees. Gift cards cannot be returned, refunded, or exchanged for cash, and they cannot be used to buy other gift cards. Lost or stolen gift cards can be replaced only if you have the original",
+    "indexed": true
+  },
+  {
+    "chunk_id": "gift-cards@v1#1",
+    "doc_id": "gift-cards",
+    "version": "v1",
+    "chunk_index": 1,
+    "text": "receipt.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "holiday-returns@v1#0",
+    "doc_id": "holiday-returns",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Items purchased between November 1 and December 24 can be returned until January 15 of the following year, even if that is later than the normal refund window. All other refund policy conditions still apply: items must be unused and in their original packaging.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "lost-packages@v1#0",
+    "doc_id": "lost-packages",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "If tracking shows your package as delivered but you cannot find it, check with neighbors and around your property. If the package still has not turned up 5 business days after the expected delivery date, contact support. Lost package claims must be filed within 30 days of the expected delivery date.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "lost-packages@v1#1",
+    "doc_id": "lost-packages",
+    "version": "v1",
+    "chunk_index": 1,
+    "text": "We send a replacement or a full refund once the claim is approved.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "loyalty-program@v1#0",
+    "doc_id": "loyalty-program",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Kestrel Trail Rewards is free to join. Members earn 1 point for every dollar spent, before tax and shipping. Every 100 points converts to a $5 reward, issued automatically at the start of each month. Rewards expire 90 days after they are issued. Points expire after 12 months without a purchase.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "loyalty-program@v1#1",
+    "doc_id": "loyalty-program",
+    "version": "v1",
+    "chunk_index": 1,
+    "text": "Points are removed when an order is returned or refunded. Rewards cannot be exchanged for cash.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "loyalty-tiers@v1#0",
+    "doc_id": "loyalty-tiers",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Trail Rewards has three tiers based on spending in a calendar year. Base members earn points at the standard rate. Silver members, who spend $500 or more in a year, earn 1.25 times the standard points. Gold members, who spend $1,000 or more, earn 1.5 times the standard points and get free express",
+    "indexed": true
+  },
+  {
+    "chunk_id": "loyalty-tiers@v1#1",
+    "doc_id": "loyalty-tiers",
+    "version": "v1",
+    "chunk_index": 1,
+    "text": "shipping on every order. Tier status lasts through the end of the following calendar year.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "military-discount@v1#0",
+    "doc_id": "military-discount",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Active-duty service members, veterans and their immediate families get 15% off full-price items. Verify your status once in your account and the discount is applied automatically.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "order-cancellation@v1#0",
+    "doc_id": "order-cancellation",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "You can cancel an order within 2 hours of placing it from the order page in your account. After that, the order is sent to the warehouse and cannot be cancelled. If you miss the cancellation window, you can return the items after they arrive under the normal refund policy.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "order-tracking@v1#0",
+    "doc_id": "order-tracking",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "We email a tracking number within 24 hours of your order leaving the warehouse. You can also see tracking details on the order page in your account. Order statuses are: processing (we are preparing it), shipped (it is with the carrier), delivered, and cancelled.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "password-reset@v1#0",
+    "doc_id": "password-reset",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "To reset your password, choose \"Forgot password\" on the sign-in page. We email a reset link that expires after 60 minutes.",
+    "indexed": false
+  },
+  {
+    "chunk_id": "password-reset@v2#0",
+    "doc_id": "password-reset",
+    "version": "v2",
+    "chunk_index": 0,
+    "text": "To reset your password, choose \"Forgot password\" on the sign-in page. We email a reset link that expires after 30 minutes. Each link works once. If the email does not arrive, check your spam folder, then request a new link. Kestrel staff will never ask for your password.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "payment-methods@v1#0",
+    "doc_id": "payment-methods",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "We accept Visa, Mastercard, American Express, Discover, PayPal, Apple Pay and Kestrel gift cards. Orders of $150 or more can be paid in installments through Affirm. Your card is charged when the order ships, not when it is placed.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "personalization@v1#0",
+    "doc_id": "personalization",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "We can embroider names or initials on packs, jackets and duffels. Personalized items take an extra 5 business days to ship. Personalized items cannot be returned or exchanged unless they arrive damaged or with an error in the personalization.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "pre-orders@v1#0",
+    "doc_id": "pre-orders",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Some new products can be pre-ordered before they are released. Pre-orders require no deposit; your card is charged only when the item ships. You can cancel a pre-order at any time before it ships. Pre-ordered items follow the normal refund policy once delivered.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "price-matching@v1#0",
+    "doc_id": "price-matching",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "If you find a lower price on an identical item from an authorized US retailer within 7 days of your purchase, we refund the difference.",
+    "indexed": false
+  },
+  {
+    "chunk_id": "price-matching@v2#0",
+    "doc_id": "price-matching",
+    "version": "v2",
+    "chunk_index": 0,
+    "text": "If you find a lower price on an identical item from an authorized US retailer within 14 days of delivery, we refund the difference. The item must be in stock at the other retailer. Price matching does not apply to clearance, marketplace sellers, membership-only prices, or bundles. Contact support",
+    "indexed": true
+  },
+  {
+    "chunk_id": "price-matching@v2#1",
+    "doc_id": "price-matching",
+    "version": "v2",
+    "chunk_index": 1,
+    "text": "with a link to the lower price to request a match.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "privacy-policy@v1#0",
+    "doc_id": "privacy-policy",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "We use your personal data only to process orders, run your account and loyalty membership, and send email you have opted into. We never sell your data. You can ask us to delete your data by contacting support. Deletion requests are completed within 30 days. Order records we must keep for tax",
+    "indexed": true
+  },
+  {
+    "chunk_id": "privacy-policy@v1#1",
+    "doc_id": "privacy-policy",
+    "version": "v1",
+    "chunk_index": 1,
+    "text": "purposes are retained as required by law.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "product-care@v1#0",
+    "doc_id": "product-care",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Wash waterproof jackets on a gentle cycle with a technical wash, then tumble dry on low to restore the water-repellent finish. Never use fabric softener. Dry tents and sleeping bags fully before storing them, and store sleeping bags uncompressed. Clean leather boots with a damp brush and reapply",
+    "indexed": true
+  },
+  {
+    "chunk_id": "product-care@v1#1",
+    "doc_id": "product-care",
+    "version": "v1",
+    "chunk_index": 1,
+    "text": "conditioner every season.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "promo-codes@v1#0",
+    "doc_id": "promo-codes",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "You can use 1 promo code per order. Enter it at checkout before payment; codes cannot be applied after an order is placed. Promo codes cannot be combined with student or military discounts, and they do not apply to gift cards.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "recalls@v1#0",
+    "doc_id": "recalls",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "We have recalled the Ridgeline RS-200 camp stove because the fuel valve can leak. Stop using the stove immediately. Return it to any Kestrel store or contact support for a prepaid label, and we give you a full refund, with or without a receipt. The recall has no deadline.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "refund-policy@v1#0",
+    "doc_id": "refund-policy",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "You can return most Kestrel items, including boots, jackets, tents and packs, within 30 days of delivery for a full refund. Items must be unused and in their original packaging. Refunds go back to the original payment method within 5 business days of the item reaching our warehouse. Gift cards and",
+    "indexed": false
+  },
+  {
+    "chunk_id": "refund-policy@v1#1",
+    "doc_id": "refund-policy",
+    "version": "v1",
+    "chunk_index": 1,
+    "text": "personalized gear cannot be returned.",
+    "indexed": false
+  },
+  {
+    "chunk_id": "refund-policy@v2#0",
+    "doc_id": "refund-policy",
+    "version": "v2",
+    "chunk_index": 0,
+    "text": "You can return most Kestrel items, including boots, jackets, tents and packs, within 14 days of delivery for a full refund. Items must be unused, in their original packaging, and include the receipt or order number. Refunds go back to the original payment method within 5 business days of the item",
+    "indexed": true
+  },
+  {
+    "chunk_id": "refund-policy@v2#1",
+    "doc_id": "refund-policy",
+    "version": "v2",
+    "chunk_index": 1,
+    "text": "reaching our warehouse. Final-sale items, gift cards, and personalized gear cannot be returned. Items returned after 14 days are not eligible for a refund but may qualify for store credit at our discretion.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "rentals@v1#0",
+    "doc_id": "rentals",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Kestrel stores rent tents, sleeping bags, backpacks, kayaks and snowshoes. Rentals require a refundable deposit of $100 per item, returned when the gear comes back in good condition. You can rent gear for up to 14 days. Late returns are charged $15 per item per day. Rentals are available in stores",
+    "indexed": true
+  },
+  {
+    "chunk_id": "rentals@v1#1",
+    "doc_id": "rentals",
+    "version": "v1",
+    "chunk_index": 1,
+    "text": "only, not online.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "repairs@v1#0",
+    "doc_id": "repairs",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Repairs covered by the warranty are free. For gear outside the warranty, we charge a $25 assessment fee, which is credited toward the cost of the repair if you go ahead. Most repairs are completed within 10 business days. Drop gear off at any Kestrel store or mail it in with a repair form from your",
+    "indexed": true
+  },
+  {
+    "chunk_id": "repairs@v1#1",
+    "doc_id": "repairs",
+    "version": "v1",
+    "chunk_index": 1,
+    "text": "account page.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "returns-process@v1#0",
+    "doc_id": "returns-process",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "To return an item, email help@kestrel.example with your order number. We send a return label by email. The cost of the return label, $7.95, is deducted from your refund. Pack the item securely and drop it off with the carrier. You can also return items in person at any Kestrel store.",
+    "indexed": false
+  },
+  {
+    "chunk_id": "returns-process@v2#0",
+    "doc_id": "returns-process",
+    "version": "v2",
+    "chunk_index": 0,
+    "text": "To start a return, open your order in your Kestrel account and choose \"Return item\". We email you a free prepaid return label. Return shipping is free for all returns within the return window. Pack the item securely, attach the label, and drop it off with the carrier. You can also return items in",
+    "indexed": true
+  },
+  {
+    "chunk_id": "returns-process@v2#1",
+    "doc_id": "returns-process",
+    "version": "v2",
+    "chunk_index": 1,
+    "text": "person at any of our 12 Kestrel stores and skip shipping entirely.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "shipping-domestic@v1#0",
+    "doc_id": "shipping-domestic",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Standard shipping is free on orders over $50 within the continental United States and takes 3 to 7 business days. Orders below that ship for a flat $6.95.",
+    "indexed": false
+  },
+  {
+    "chunk_id": "shipping-domestic@v2#0",
+    "doc_id": "shipping-domestic",
+    "version": "v2",
+    "chunk_index": 0,
+    "text": "Standard shipping is free on orders over $75 within the continental United States and takes 3 to 7 business days. Orders under $75 ship for a flat $6.95. Orders placed before 1 p.m. Mountain Time ship the same business day. We also ship to Alaska and Hawaii for an extra fee shown at checkout.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "shipping-expedited@v1#0",
+    "doc_id": "shipping-expedited",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Express shipping arrives in 2 business days and costs $24.95. Express shipping is available in the continental United States only.",
+    "indexed": false
+  },
+  {
+    "chunk_id": "shipping-expedited@v2#0",
+    "doc_id": "shipping-expedited",
+    "version": "v2",
+    "chunk_index": 0,
+    "text": "Express shipping arrives in 2 business days and costs $19.95. Overnight shipping arrives the next business day and costs $39.95. Both options are available in the continental United States only. Orders must be placed before 1 p.m. Mountain Time to leave the warehouse the same day.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "shipping-international@v1#0",
+    "doc_id": "shipping-international",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "We ship to Canada, Mexico, the United Kingdom and Australia. International orders ship for a flat $29.95 and arrive in 7 to 14 business days. Duties and import taxes are collected at checkout, so there are no surprise fees on delivery. We do not currently ship to other countries. International",
+    "indexed": true
+  },
+  {
+    "chunk_id": "shipping-international@v1#1",
+    "doc_id": "shipping-international",
+    "version": "v1",
+    "chunk_index": 1,
+    "text": "orders cannot use express or overnight shipping.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "sizing-guide@v1#0",
+    "doc_id": "sizing-guide",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Kestrel boots run small, so we recommend ordering half a size up from your usual shoe size. Our jackets fit true to size with room for a base layer. Each product page has a size chart. If something does not fit, you can exchange it for a different size under our exchange policy.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "store-locations@v1#0",
+    "doc_id": "store-locations",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Kestrel has 12 stores across the Mountain West. Our flagship store is in Boulder, Colorado and includes a repair shop and a rental counter. Store hours and addresses are listed on the store locator page. Most stores are open 9 a.m. to 8 p.m. local time every day.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "store-pickup@v1#0",
+    "doc_id": "store-pickup",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Choose store pickup at checkout to collect your order at any Kestrel store for free. We email you when the order is ready, usually within two hours during store hours. We hold pickup orders for 7 days. Orders not collected by then are cancelled and refunded. Bring a photo ID and your order number.",
+    "indexed": false
+  },
+  {
+    "chunk_id": "student-discount@v1#0",
+    "doc_id": "student-discount",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Students get 10% off full-price items after verifying their enrollment through our verification partner. The discount applies online and in stores.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "sustainability@v1#0",
+    "doc_id": "sustainability",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Kestrel donates 1% of sales to trail maintenance and land conservation groups. Our shipping boxes are made from recycled cardboard and contain no plastic fill. Through the trade-in and repair programs, we keep used gear in service instead of in landfills.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "tax-exempt@v1#0",
+    "doc_id": "tax-exempt",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Tax-exempt organizations can apply for a tax-exempt account by sending their exemption certificate to support. We review certificates within 3 business days. Once approved, sales tax is removed from orders placed while signed in to the approved account. Tax cannot be refunded on orders placed before",
+    "indexed": true
+  },
+  {
+    "chunk_id": "tax-exempt@v1#1",
+    "doc_id": "tax-exempt",
+    "version": "v1",
+    "chunk_index": 1,
+    "text": "approval.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "trade-in@v1#0",
+    "doc_id": "trade-in",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Bring used Kestrel-brand gear to any store and get store credit of up to 40% of the original price, depending on condition. Items must be clean and functional. Traded-in gear is cleaned, repaired and resold, or recycled if it cannot be repaired. Trade-in credit cannot be paid out in cash.",
+    "indexed": true
+  },
+  {
+    "chunk_id": "warranty@v1#0",
+    "doc_id": "warranty",
+    "version": "v1",
+    "chunk_index": 0,
+    "text": "Kestrel-brand gear carries a 1-year limited warranty against defects in materials and workmanship, starting from the delivery date. Third-party brands are covered by their manufacturer's warranty.",
+    "indexed": false
+  },
+  {
+    "chunk_id": "warranty@v2#0",
+    "doc_id": "warranty",
+    "version": "v2",
+    "chunk_index": 0,
+    "text": "Kestrel-brand gear carries a 2-year limited warranty against defects in materials and workmanship, starting from the delivery date. Third-party brands are covered by their manufacturer's warranty. The warranty does not cover normal wear and tear, damage from misuse or accidents, or unauthorized",
+    "indexed": true
+  },
+  {
+    "chunk_id": "warranty@v2#1",
+    "doc_id": "warranty",
+    "version": "v2",
+    "chunk_index": 1,
+    "text": "repairs. To file a claim, email warranty@kestrel.example with your order number and photos of the defect. If the claim is approved we repair the item, replace it, or issue store credit for its purchase price.",
+    "indexed": true
+  }
+]

@@ -1,0 +1,197 @@
+{
+  "case_id": "case-001",
+  "model": "gemini-3.8-flash",
+  "wall_s": 31.3,
+  "error": null,
+  "diagnosis": {
+    "root_component": "prompt",
+    "category": "prompt_edit",
+    "cause_ref": "change:prompt-edit-6188",
+    "confidence": 0.95,
+    "summary": "Prompt edit change:prompt-edit-6188 trimmed instructions from prompt:v1 to prompt:v2, removing the fallback instruction telling the assistant to admit it doesn't know and refer users to support when the documents lack the answer.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:prompt-edit-6188",
+        "claim": "Prompt edit change:prompt-edit-6188 trimmed redundant prompt instructions less than an hour before the alert."
+      },
+      {
+        "type": "change",
+        "ref": "prompt:v2",
+        "claim": "The diff from prompt:v1 to prompt:v2 shows removal of the instruction: 'Only answer from the provided documents. Tool results count as documents. If they do not contain the answer, say you don't know and suggest contacting support.'"
+      },
+      {
+        "type": "trace",
+        "ref": "span:4f7f3c703e9aa789239b41e0c7cac670/a0c25e49d5829fef",
+        "claim": "The llm.chat span ran with prompt.version=v2, which lacked the fallback instruction."
+      },
+      {
+        "type": "trace",
+        "ref": "span:4f7f3c703e9aa789239b41e0c7cac670/9ed6fad95cd24206",
+        "claim": "The retriever returned chunk:product-care@v1#0, which contains no boot break-in guidance."
+      }
+    ],
+    "ruled_out": [],
+    "suggested_fix": "Re-add the fallback instruction to the system prompt directing the assistant to state it does not know and suggest contacting support when documents do not contain the answer.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "prompt",
+      "category": "prompt_edit",
+      "rationale": "A recent prompt edit (v2) trimmed instructions, likely removing the explicit fallback instruction to tell users to contact help@kestrel.example when documents lack information.",
+      "score": 0.75
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model correctly acknowledged the documents lacked instructions but failed to provide the standard fallback message directing the customer to support.",
+      "score": 0.15
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "The knowledge base lacks documentation on breaking in hiking boots, causing the assistant to encounter a missing information scenario.",
+      "score": 0.1
+    }
+  ],
+  "tool_calls_used": 5,
+  "evidence_pool_size": 8,
+  "refs_not_in_pool": [],
+  "llm_calls": 6,
+  "input_tokens": 16120,
+  "output_tokens": 1211,
+  "thinking_tokens": 0,
+  "cost_usd": 0.016632,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-9e32445c"
+      },
+      "result_chars": 2510,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-10T23:32:23.720375+00:00",
+        "end": "2026-10-17T23:32:23.720375+00:00"
+      },
+      "result_chars": 299,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1564,
+      "output_tokens": 218,
+      "thinking_tokens": 0,
+      "cost_usd": 0.001991,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"prompt\",\n      \"category\": \"prompt_edit\",\n      \"rationale\": \"A recent prompt edit (v2) trimmed instructions, likely removing the explicit fallback instruction to tell users to contact help@kestrel.example when documents lack information.\",\n      \"score\": 0.75\n    },\n    {\n      \"root_component\": \"model\",\n      \"category\": \"model_change\",\n      \"rationale\": \"The model correctly acknowledged the documents lacked instructions but failed to provide"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2587,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002038,
+      "tool_calls": [
+        "diff_prompt_versions"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "diff_prompt_versions",
+      "args": {
+        "b": "v2",
+        "a": "v1"
+      },
+      "result_chars": 782,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2879,
+      "output_tokens": 64,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002399,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:4f7f3c703e9aa789239b41e0c7cac670/9ed6fad95cd24206"
+      },
+      "result_chars": 584,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3138,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002429,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "product-care"
+      },
+      "result_chars": 333,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3283,
+      "output_tokens": 377,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003876,
+      "tool_calls": [],
+      "text": "### Incident Investigation Findings\n\n**Root Component:** `prompt`  \n**Category:** `prompt_edit`  \n\n#### Analysis & Evidence\n1. **Trace Analysis**: In conversation `conv-9e32445c` (trace `4f7f3c703e9aa789239b41e0c7cac670`), the user asked *\"How should I break in my new hiking boots?\"*. The retriever span (`span:4f7f3c703e9aa789239b41e0c7cac670/9ed6fad95cd24206`) retrieved chunk `chunk:product-care@v1#0` from `doc:product-care@v1`, which contains boot cleaning instructions but no break-in guidance"
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2669,
+      "output_tokens": 506,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003899,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"prompt\",\n  \"category\": \"prompt_edit\",\n  \"cause_ref\": \"change:prompt-edit-6188\",\n  \"confidence\": 0.95,\n  \"summary\": \"Prompt edit change:prompt-edit-6188 trimmed instructions from prompt:v1 to prompt:v2, removing the fallback instruction telling the assistant to admit it doesn't know and refer users to support when the documents lack the answer.\",\n  \"evidence\": [\n    {\n      \"type\": \"change\",\n      \"ref\": \"change:prompt-edit-6188\",\n      \"claim\": \"Prompt edit change:prompt-e"
+    }
+  ]
+}

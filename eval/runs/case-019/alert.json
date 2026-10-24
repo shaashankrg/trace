@@ -1,0 +1,14 @@
+{
+  "alert_id": "alert-case-019",
+  "type": "flagged_conversation",
+  "fired_at": "2026-10-18T04:02:09.746497+00:00",
+  "window": {
+    "start": "2026-10-18T04:01:39.245157+00:00",
+    "end": "2026-10-18T04:02:09.746497+00:00"
+  },
+  "conversation_id": "conv-d53088df",
+  "trace_id": "87a2814dc828cc23a59a5d92dc4a8a1b",
+  "question": "Is the Trailrunner Low Shoe (product P-003) in stock, and how many do you have?",
+  "answer": "The Trailrunner Low Shoe (product P-003) is currently out of stock, with a quantity of 0. \n\nAnswer: No",
+  "reviewer_correction": "The Trailrunner Low Shoe is in stock: 23 units available."
+}

@@ -1,0 +1,14 @@
+{
+  "alert_id": "alert-case-014",
+  "type": "flagged_conversation",
+  "fired_at": "2026-10-18T03:57:09.859983+00:00",
+  "window": {
+    "start": "2026-10-18T03:56:36.733378+00:00",
+    "end": "2026-10-18T03:57:09.859983+00:00"
+  },
+  "conversation_id": "conv-9ad6631c",
+  "trace_id": "ab37503f8268bf9ff0c2dcb155a1b184",
+  "question": "How long is a password reset link valid?",
+  "answer": "I don't know the answer to that question based on the provided documents. Please contact support for assistance.",
+  "reviewer_correction": "Password reset links are valid for 30 minutes."
+}

@@ -1,0 +1,14 @@
+{
+  "alert_id": "alert-case-015",
+  "type": "flagged_conversation",
+  "fired_at": "2026-10-18T03:58:08.429534+00:00",
+  "window": {
+    "start": "2026-10-18T03:57:38.336469+00:00",
+    "end": "2026-10-18T03:58:08.429534+00:00"
+  },
+  "conversation_id": "conv-93524c6d",
+  "trace_id": "4f135ce5336eea5f1d4b6882f13f0f39",
+  "question": "How long will you hold my store pickup order?",
+  "answer": "I don't know the answer to how long we will hold a store pickup order. Please contact our customer support for assistance.",
+  "reviewer_correction": "Store pickup orders are held for 7 days."
+}

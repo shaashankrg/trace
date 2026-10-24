@@ -1,0 +1,62 @@
+[
+  {
+    "conversation_id": "conv-d53088df",
+    "trace_id": "35736c9559401248f04c9715ca8e128a",
+    "span_id": "7d79f5f3c7d3924c",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-003"
+    },
+    "output": [
+      {
+        "qty": 0,
+        "name": "Trailrunner Low Shoe",
+        "product_id": "P-003",
+        "refreshed_at": "2026-10-17T23:26:58.607783+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 4.296800005249679,
+    "created_at": "2026-10-17T23:27:14.239237+00:00"
+  },
+  {
+    "conversation_id": "conv-d53088df",
+    "trace_id": "766b4dab2009205c4a774c86d8c28f4c",
+    "span_id": "0d412f89ec2e3b5c",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-003"
+    },
+    "output": [
+      {
+        "qty": 0,
+        "name": "Trailrunner Low Shoe",
+        "product_id": "P-003",
+        "refreshed_at": "2026-10-18T04:01:23.544850+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 5.545900001379778,
+    "created_at": "2026-10-18T04:01:38.859502+00:00"
+  },
+  {
+    "conversation_id": "conv-d53088df",
+    "trace_id": "87a2814dc828cc23a59a5d92dc4a8a1b",
+    "span_id": "8c62a89bc982d29a",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-003"
+    },
+    "output": [
+      {
+        "qty": 0,
+        "name": "Trailrunner Low Shoe",
+        "product_id": "P-003",
+        "refreshed_at": "2026-10-15T03:26:39.245157+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 5.573900001763832,
+    "created_at": "2026-10-18T04:01:41.911650+00:00"
+  }
+]

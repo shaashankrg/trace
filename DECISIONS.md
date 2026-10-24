@@ -80,7 +80,29 @@ Notes from building it (not part of the five above):
 - **Snapshots now include `chunks.json`.** `get_retrieved_chunks` needs chunk text and index flags, which `documents.json` does not have.
 - **The doc diff is word-level** (`within [30 -> 14] days`). A line diff hid the changed number inside a long paragraph.
 - **Gemini 3.x rejects `thinking_budget=0`** with a bare 400 INVALID_ARGUMENT. It takes `thinking_level="MINIMAL"` instead. This was the 400 from the end of Day 3.
-- **With Gemini 3.5 Flash-Lite most cases are invalid.** Only case-002, case-006 and case-007 broke the answer as designed. The stale-document, prompt-regression and stale-tool-data cases either fail while healthy or survive the fault, so their fixtures (case-001, case-003, case-005) were recorded with the new `run_case --force`, which snapshots anyway and still records the run as invalid. The tool tests only need the fault applied, not the answer wrong. Re-run the evaluation cases on a model they were designed for before scoring anything.
+- **With Gemini 3.5 Flash-Lite most cases are invalid.** Only case-002, case-006 and case-007 broke the answer as designed on the first try, and case-003 on its second. The prompt-regression and stale-tool-data cases either fail while healthy or survive the fault, so their fixtures (case-001, case-005) were recorded with the new `run_case --force`, which snapshots anyway and still records the run as invalid. The tool tests only need the fault applied, not the answer wrong. Re-run the evaluation cases on a model they were designed for before scoring anything.
 - **The Inspector does not pass your shell environment to the server it starts.** Without `-e TRACEWISE_BACKEND=snapshot:<case>` it silently uses the live backend, which after `run_case` is back to healthy.
 - **Manual run-through (case-003, stale warranty doc):** `get_trace` (retrieve span shows `warranty@v1#0` and `warranty@v2#0` both in the top 4) -> `get_retrieved_chunks` (1-year vs 2-year text) -> `document_history("warranty")` (both versions have indexed chunks; v2 is newer) -> `recent_changes` (the v2 publish record, plus the unrelated config-change decoy).
 
+
+## Day 5
+
+1. **Plain code for triage, not a model turn**, because…
+
+2. **Evidence items built from tool results in code, not written by the model**, because…
+
+3. **Direct SDK calls, not a LangChain chat-model wrapper**, because…
+
+4. **The tool budget enforced in `Toolbox.call_tool`, not only in the prompt**, because…
+
+5. **Pydantic validation with one retry, then abstain, not accepting whatever JSON comes back**, because…
+
+Notes from building it (not part of the five above):
+
+- **First top-1 number: 67% (8 of 12 valid cases), B1 0%.** Run `investigator-day5-v2`, `gemini-3.8-flash`, $0.81 for 20 cases, mean 29s per case. With the 8 forced cases added it is 75% of 20. Decoy cases scored the same as non-decoy ones (67% / 67% on valid). B1 gets 0% because no fault produces an error span, so it always says "model".
+- **All four valid misses are `silent_tool_failure`.** The investigator answers `config / config_change` (it finds `tool_timeout_ms=1` on the root span); the label is `tool:lookup_order / tool_outage`. The investigator's reading is defensible, since the fault *is* a config value. I left the label alone: changing ground truth after seeing results is how numbers get inflated. Decide before Day 8 whether this fault should be labelled `config` or whether the vocabulary needs a "which layer" rule, and re-record the cases if the label changes.
+- **case-004 (stale document, forced) is the only other miss**, `model / model_change` in both runs.
+- **The first full run (`investigator-day5`, 58% valid) had a 49-minute hang on case-014** that ended in a bare `ExceptionGroup`. Blocking SDK calls run in worker threads, which asyncio cannot cancel, so nothing above them could time out. Fixed with an HTTP timeout on both clients (`INVESTIGATOR_HTTP_TIMEOUT_S`, 120s, with two retries on timeout), a per-tool MCP read timeout (60s), a 900s per-case `wait_for`, and `describe()` unwrapping the ExceptionGroup to the real error. The server's stderr now goes to `eval/results/<run>/<case>.server.log`. The rerun had no errors.
+- **A hard spend cap across runs**: `.spend.json` (gitignored) holds the running total and `Chat.send` refuses once it reaches `INVESTIGATOR_SPEND_CAP_USD` ($2). The call in flight can overshoot by its own cost.
+- **The Day 6 and Day 10 stub tools are hidden from the model.** Offering `replay_conversation` before it works only burns budget on errors.
+- **Cited refs not in the evidence pool: 0 in all 20 cases.** That is a property of the design (the model can only copy refs it was shown), not yet a verified hallucination rate; the Day 6 verifier checks refs against the stores.

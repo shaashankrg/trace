@@ -1,0 +1,326 @@
+{
+  "case_id": "case-003",
+  "model": "gemini-3.8-flash",
+  "wall_s": 33.9,
+  "error": null,
+  "diagnosis": {
+    "root_component": "knowledge_base",
+    "category": "doc_update",
+    "cause_ref": "doc:warranty@v2",
+    "confidence": 0.95,
+    "summary": "When warranty@v2 was published updating the warranty from 1 year to 2 years, the obsolete warranty@v1 was not de-indexed. As a result, both warranty@v1#0 and warranty@v2#0 were retrieved and presented to the LLM, causing it to mention the outdated 1-year policy alongside the current 2-year policy.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "doc:warranty@v1",
+        "claim": "warranty@v1 remained indexed with 1/1 chunks even after warranty@v2 was published."
+      },
+      {
+        "type": "change",
+        "ref": "doc:warranty@v2",
+        "claim": "warranty@v2 was published updating the warranty duration to 2 years, with 2/2 chunks indexed."
+      },
+      {
+        "type": "trace",
+        "ref": "span:80cbd5775e51e7db340d3dfb1511f295/94138b49249b8d89",
+        "claim": "The retrieve step returned both outdated chunk warranty@v1#0 and current chunk warranty@v2#0."
+      },
+      {
+        "type": "chunk",
+        "ref": "chunk:warranty@v1#0",
+        "claim": "warranty@v1#0 contains the outdated 1-year limited warranty policy."
+      },
+      {
+        "type": "chunk",
+        "ref": "chunk:warranty@v2#0",
+        "claim": "warranty@v2#0 contains the active 2-year limited warranty policy."
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:config-change-7565",
+        "reason": "The configuration change only increased max_response_tokens and did not alter retrieved chunks or knowledge base indexing."
+      }
+    ],
+    "suggested_fix": "De-index warranty@v1 so that only chunks from the current version (warranty@v2) are indexed in the knowledge base.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "Both warranty@v1 and warranty@v2 are simultaneously indexed in the knowledge base, leading the retriever to return outdated warranty policy chunks alongside current ones.",
+      "score": 0.65
+    },
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "The retriever does not filter out obsolete document versions or properly prioritize latest versions, surfacing superseded warranty@v1 chunks.",
+      "score": 0.2
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model unnecessarily included contradictory details from the older warranty version instead of strictly stating the active 2-year warranty policy.",
+      "score": 0.15
+    }
+  ],
+  "tool_calls_used": 10,
+  "evidence_pool_size": 36,
+  "refs_not_in_pool": [],
+  "llm_calls": 11,
+  "input_tokens": 47715,
+  "output_tokens": 1274,
+  "thinking_tokens": 0,
+  "cost_usd": 0.040564,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-c5858137"
+      },
+      "result_chars": 2639,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-10T23:31:25.274338+00:00",
+        "end": "2026-10-17T23:31:25.274338+00:00"
+      },
+      "result_chars": 309,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1579,
+      "output_tokens": 221,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002013,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"knowledge_base\",\n      \"category\": \"doc_update\",\n      \"rationale\": \"Both warranty@v1 and warranty@v2 are simultaneously indexed in the knowledge base, leading the retriever to return outdated warranty policy chunks alongside current ones.\",\n      \"score\": 0.65\n    },\n    {\n      \"root_component\": \"retriever\",\n      \"category\": \"config_change\",\n      \"rationale\": \"The retriever does not filter out obsolete document versions or properly prioritiz"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2604,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002021,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "warranty"
+      },
+      "result_chars": 796,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2877,
+      "output_tokens": 67,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002409,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:80cbd5775e51e7db340d3dfb1511f295/94138b49249b8d89"
+      },
+      "result_chars": 1776,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3443,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002642,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "warranty"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3490,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002674,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2580,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4638,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003535,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2491,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5529,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004222,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "refund-policy"
+      },
+      "result_chars": 1086,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5871,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004478,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "returns-process"
+      },
+      "result_chars": 1410,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6316,
+      "output_tokens": 19,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004808,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "exchanges"
+      },
+      "result_chars": 1039,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6646,
+      "output_tokens": 303,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006121,
+      "tool_calls": [],
+      "text": "Based on the investigation:\n\n- **Root Component:** `knowledge_base`\n- **Category:** `doc_update`\n\n### Findings\n- Document history inspection for `warranty` (`doc:warranty@v1` and `doc:warranty@v2`) shows that version 1 was not de-indexed when version 2 was published (`indexed_chunk_count: 1` for `warranty@v1` and `indexed_chunk_count: 2` for `warranty@v2`). In contrast, other updated documents (e.g. `refund-policy`, `returns-process`, `exchanges`) properly have 0 indexed chunks for their superse"
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4722,
+      "output_tokens": 560,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005641,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"knowledge_base\",\n  \"category\": \"doc_update\",\n  \"cause_ref\": \"doc:warranty@v2\",\n  \"confidence\": 0.95,\n  \"summary\": \"When warranty@v2 was published updating the warranty from 1 year to 2 years, the obsolete warranty@v1 was not de-indexed. As a result, both warranty@v1#0 and warranty@v2#0 were retrieved and presented to the LLM, causing it to mention the outdated 1-year policy alongside the current 2-year policy.\",\n  \"evidence\": [\n    {\n      \"type\": \"change\",\n      \"ref\": \"d"
+    }
+  ]
+}

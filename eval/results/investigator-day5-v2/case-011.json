@@ -1,0 +1,178 @@
+{
+  "case_id": "case-011",
+  "model": "gemini-3.8-flash",
+  "wall_s": 17.7,
+  "error": null,
+  "diagnosis": {
+    "root_component": "prompt",
+    "category": "prompt_edit",
+    "cause_ref": "change:prompt-edit-8582",
+    "confidence": 0.95,
+    "summary": "Prompt edit change:prompt-edit-8582 removed the instruction requiring the assistant to say it doesn't know and direct the user to support when the documents lack the answer. As a result, when documents did not specify whether returns require a receipt, the assistant inferred that absence of mention meant a receipt was not required and gave an unsupported 'Yes' answer.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:prompt-edit-8582",
+        "claim": "Prompt change change:prompt-edit-8582 by ops-bot updated the prompt to prompt:v2 by removing fallback instructions."
+      },
+      {
+        "type": "change",
+        "ref": "prompt:v2",
+        "claim": "The diff for prompt:v2 shows the removal of: '-Only answer from the provided documents. Tool results count as documents. If they do not contain the answer, say you don't know and suggest contacting support.'"
+      },
+      {
+        "type": "trace",
+        "ref": "span:1fb94cc9ec2d2def3f094185e667d381/eba6c558a2dfd717",
+        "claim": "The llm.chat span executed with prompt.version=v2."
+      },
+      {
+        "type": "chunk",
+        "ref": "chunk:returns-process@v2#0",
+        "claim": "Retrieved chunks such as returns-process@v2#0 describe initiating returns through an account without addressing whether returns can proceed without a receipt."
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:config-change-9549",
+        "reason": "Raising max_response_tokens only increased the response length limit and did not alter model fallback behavior or prompt instructions."
+      }
+    ],
+    "suggested_fix": "Restore the instruction in the system prompt stating that if the provided documents do not contain the answer, the assistant must state that it doesn't know and refer the user to support.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "prompt",
+      "category": "prompt_edit",
+      "rationale": "Recent prompt edit (change:prompt-edit-8582 to v2) likely removed fallback instructions telling the assistant to admit when information is missing and refer customers to support instead of guessing.",
+      "score": 0.65
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model hallucinated an affirmative answer despite acknowledging that the provided policy documents do not specify whether a receipt is required.",
+      "score": 0.25
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "The knowledge base policy documents lack clear receipt requirement guidelines for returns, leading to ambiguous retrievals.",
+      "score": 0.1
+    }
+  ],
+  "tool_calls_used": 4,
+  "evidence_pool_size": 11,
+  "refs_not_in_pool": [],
+  "llm_calls": 5,
+  "input_tokens": 13866,
+  "output_tokens": 1129,
+  "thinking_tokens": 0,
+  "cost_usd": 0.014633,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-e1710cc0"
+      },
+      "result_chars": 2662,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T03:54:08.421261+00:00",
+        "end": "2026-10-18T03:54:08.421261+00:00"
+      },
+      "result_chars": 565,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1693,
+      "output_tokens": 222,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002102,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"prompt\",\n   \"category\": \"prompt_edit\",\n   \"rationale\": \"Recent prompt edit (change:prompt-edit-8582 to v2) likely removed fallback instructions telling the assistant to admit when information is missing and refer customers to support instead of guessing.\",\n   \"score\": 0.65\n  },\n  {\n   \"root_component\": \"model\",\n   \"category\": \"model_change\",\n   \"rationale\": \"The model hallucinated an affirmative answer despite acknowledging that the provided policy do"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2722,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002139,
+      "tool_calls": [
+        "diff_prompt_versions"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "diff_prompt_versions",
+      "args": {
+        "a": "v1",
+        "b": "v2"
+      },
+      "result_chars": 784,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3016,
+      "output_tokens": 66,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00251,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:1fb94cc9ec2d2def3f094185e667d381/357382e9989b7f36"
+      },
+      "result_chars": 1516,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3519,
+      "output_tokens": 264,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003629,
+      "tool_calls": [],
+      "text": "### Root Cause Analysis\n\n- **Root Component**: `prompt`\n- **Category**: `prompt_edit`\n- **Suspect Change**: `change:prompt-edit-8582` (updating prompt from `prompt:v1` to `prompt:v2`)\n\n### Findings & Evidence\n1. **Prompt Diff**: In `change:prompt-edit-8582`, author `ops-bot` removed the fallback instruction:\n   `- Only answer from the provided documents. Tool results count as documents. If they do not contain the answer, say you don't know and suggest contacting support.`\n2. **Impact on Model Be"
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2916,
+      "output_tokens": 551,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004253,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"prompt\",\n  \"category\": \"prompt_edit\",\n  \"cause_ref\": \"change:prompt-edit-8582\",\n  \"confidence\": 0.95,\n  \"summary\": \"Prompt edit change:prompt-edit-8582 removed the instruction requiring the assistant to say it doesn't know and direct the user to support when the documents lack the answer. As a result, when documents did not specify whether returns require a receipt, the assistant inferred that absence of mention meant a receipt was not required and gave an unsupported 'Yes"
+    }
+  ]
+}

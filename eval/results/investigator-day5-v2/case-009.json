@@ -1,0 +1,220 @@
+{
+  "case_id": "case-009",
+  "model": "gemini-3.8-flash",
+  "wall_s": 22.2,
+  "error": null,
+  "diagnosis": {
+    "root_component": "knowledge_base",
+    "category": "doc_delete",
+    "cause_ref": "change:doc-delete-6207",
+    "confidence": 0.95,
+    "summary": "The document regarding military discounts (doc:military-discount) was removed from the index shortly before the query, leading to missing context during retrieval and causing the assistant to state that no military discount exists.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:doc-delete-6207",
+        "claim": "doc:military-discount was removed from the index by marco shortly before the query."
+      },
+      {
+        "type": "change",
+        "ref": "doc:military-discount@v1",
+        "claim": "military-discount@v1 has 0 out of 1 chunks indexed."
+      },
+      {
+        "type": "trace",
+        "ref": "span:3d72dc56955581e20e04d0952e5408bb/c67d441270e13ea7",
+        "claim": "Retrieval returned chunks for corporate orders, payment methods, student discount, and promo codes, but no chunks for military discount."
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:doc-update-2734",
+        "reason": "This update published camp-skills-workshops@v1, which is unrelated to military discount inquiries."
+      }
+    ],
+    "suggested_fix": "Re-index doc:military-discount so that the assistant can retrieve the policy details and answer queries about military discounts correctly.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_delete",
+      "rationale": "The document 'military-discount' was deleted from the knowledge base shortly before the conversation (ref=change:doc-delete-6207), preventing the retriever from finding information on the military discount.",
+      "score": 0.85
+    },
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "The retrieval similarity threshold or top_k may have excluded relevant military discount information if it exists elsewhere in the index.",
+      "score": 0.1
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model answered that no military discount was available based strictly on the retrieved context, though it lacked the correct source document.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 6,
+  "evidence_pool_size": 19,
+  "refs_not_in_pool": [],
+  "llm_calls": 7,
+  "input_tokens": 21625,
+  "output_tokens": 1069,
+  "thinking_tokens": 0,
+  "cost_usd": 0.020227,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-51dda7b0"
+      },
+      "result_chars": 2665,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T03:52:08.064708+00:00",
+        "end": "2026-10-18T03:52:08.064708+00:00"
+      },
+      "result_chars": 578,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1648,
+      "output_tokens": 232,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002106,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"knowledge_base\",\n      \"category\": \"doc_delete\",\n      \"rationale\": \"The document 'military-discount' was deleted from the knowledge base shortly before the conversation (ref=change:doc-delete-6207), preventing the retriever from finding information on the military discount.\",\n      \"score\": 0.85\n    },\n    {\n      \"root_component\": \"retriever\",\n      \"category\": \"config_change\",\n      \"rationale\": \"The retrieval similarity threshold or top_k ma"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2684,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002088,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "military-discount"
+      },
+      "result_chars": 340,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2826,
+      "output_tokens": 68,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002374,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:3d72dc56955581e20e04d0952e5408bb/c67d441270e13ea7"
+      },
+      "result_chars": 1558,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3339,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002572,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "military-discount"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3388,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002597,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2511,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4292,
+      "output_tokens": 310,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004381,
+      "tool_calls": [],
+      "text": "### Root Cause Summary\n\n- **Root Component**: `knowledge_base`\n- **Category**: `doc_delete`\n- **Key Evidence**:\n  - Prior to the incident, document `doc:military-discount` was removed from the search index by change `change:doc-delete-6207` (\"Remove outdated entries from the index\" by marco at `2026-10-18T02:46:37.782845+00:00`).\n  - Checking `doc:military-discount` via `document_history` confirmed that version `v1` currently has `indexed_chunk_count: 0`.\n  - During conversation `conv-51dda7b0` "
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3448,
+      "output_tokens": 406,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004109,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"knowledge_base\",\n \"category\": \"doc_delete\",\n \"cause_ref\": \"change:doc-delete-6207\",\n \"confidence\": 0.95,\n \"summary\": \"The document regarding military discounts (doc:military-discount) was removed from the index shortly before the query, leading to missing context during retrieval and causing the assistant to state that no military discount exists.\",\n \"evidence\": [\n  {\n   \"type\": \"change\",\n   \"ref\": \"change:doc-delete-6207\",\n   \"claim\": \"doc:military-discount was removed fro"
+    }
+  ]
+}

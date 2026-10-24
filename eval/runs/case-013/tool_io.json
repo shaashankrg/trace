@@ -1,0 +1,57 @@
+[
+  {
+    "conversation_id": "conv-d974ebf9",
+    "trace_id": "e07990d62a8fba7ac6cc3833670318ac",
+    "span_id": "49a053347fb8bc6c",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0015"
+    },
+    "output": [
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Hydration Reservoir 2L",
+            "product_id": "P-026"
+          }
+        ],
+        "total": "280.00",
+        "status": "delivered",
+        "order_id": "O-1077",
+        "placed_at": "2026-10-05T11:00:00+00:00",
+        "delivered_at": "2026-10-10T11:00:00+00:00"
+      },
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Ultralight 1-Person Tent",
+            "product_id": "P-018"
+          }
+        ],
+        "total": "320.00",
+        "status": "delivered",
+        "order_id": "O-1015",
+        "placed_at": "2025-05-24T10:00:00+00:00",
+        "delivered_at": "2025-05-30T10:00:00+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 7.587899999634828,
+    "created_at": "2026-10-18T03:55:36.890085+00:00"
+  },
+  {
+    "conversation_id": "conv-d974ebf9",
+    "trace_id": "478dd9119c93bbf9a9fed1db5928d56f",
+    "span_id": "0bc052c765d428a7",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0015"
+    },
+    "output": [],
+    "timed_out": true,
+    "latency_ms": 5.644999999276479,
+    "created_at": "2026-10-18T03:55:40.562460+00:00"
+  }
+]

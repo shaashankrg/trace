@@ -1,0 +1,81 @@
+[
+  {
+    "conversation_id": "conv-a9f1a5c7",
+    "trace_id": "1fd43f925ad0a4e504226f629c68a307",
+    "span_id": "f12cb8f7aaddcb85",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0006"
+    },
+    "output": [
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Merino Base Layer Top",
+            "product_id": "P-011"
+          },
+          {
+            "qty": 2,
+            "name": "Bear Canister",
+            "product_id": "P-036"
+          }
+        ],
+        "total": "360.00",
+        "status": "shipped",
+        "order_id": "O-1006",
+        "placed_at": "2026-10-08T12:00:00+00:00",
+        "delivered_at": null
+      },
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Trailrunner Low Shoe",
+            "product_id": "P-003"
+          },
+          {
+            "qty": 2,
+            "name": "Cirrus Down Jacket",
+            "product_id": "P-007"
+          }
+        ],
+        "total": "260.00",
+        "status": "shipped",
+        "order_id": "O-1040",
+        "placed_at": "2026-10-08T12:00:00+00:00",
+        "delivered_at": null
+      },
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Titanium Cook Pot",
+            "product_id": "P-030"
+          }
+        ],
+        "total": "190.00",
+        "status": "delivered",
+        "order_id": "O-1051",
+        "placed_at": "2025-05-26T12:00:00+00:00",
+        "delivered_at": "2025-05-30T12:00:00+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 6.823900001108996,
+    "created_at": "2026-10-18T03:50:39.852324+00:00"
+  },
+  {
+    "conversation_id": "conv-a9f1a5c7",
+    "trace_id": "0472f5c09f47401280708f19d39ff7be",
+    "span_id": "1054ba96f7a07cf8",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0006"
+    },
+    "output": [],
+    "timed_out": true,
+    "latency_ms": 12.275600000066333,
+    "created_at": "2026-10-18T03:50:43.676241+00:00"
+  }
+]

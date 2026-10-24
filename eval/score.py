@@ -2,7 +2,8 @@
 
 A diagnosis is one JSON object per line: {case_id, root_component, category, cause_ref?}.
 Only cases whose latest run was valid (the fault really broke the answer) are scored; a
-valid case with no diagnosis counts as wrong.
+valid case with no diagnosis counts as wrong. --include-invalid also scores cases recorded with
+`run_case --force`: the fault was applied, but the answer it produced was not shown to be wrong.
 
 Writes eval/results/<run>.md (tables), <run>.csv (the summary) and <run>_cases.csv (one row per case).
 
@@ -21,16 +22,18 @@ def load_diagnoses(path: Path) -> dict[str, dict]:
     return {r["case_id"]: r for r in rows}
 
 
-def load_truth() -> list[dict]:
+def load_truth(include_invalid: bool = False) -> list[dict]:
     from eval.setup_eval import connect_eval
     with connect_eval() as conn:
         rows = conn.execute("""
-            SELECT c.case_id, c.fault_type, c.has_decoy, c.ground_truth
+            SELECT c.case_id, c.fault_type, c.has_decoy, c.ground_truth, last.valid
             FROM eval.cases c
-            WHERE (SELECT r.valid FROM eval.case_runs r WHERE r.case_id = c.case_id
-                   ORDER BY r.id DESC LIMIT 1)
-            ORDER BY c.case_id""").fetchall()
-    return [{"case_id": cid, "fault_type": ft, "has_decoy": decoy, **gt} for cid, ft, decoy, gt in rows]
+            JOIN LATERAL (SELECT r.valid FROM eval.case_runs r WHERE r.case_id = c.case_id
+                          ORDER BY r.id DESC LIMIT 1) last ON TRUE
+            WHERE last.valid OR %s
+            ORDER BY c.case_id""", (include_invalid,)).fetchall()
+    return [{"case_id": cid, "fault_type": ft, "has_decoy": decoy, "valid": valid, **gt}
+            for cid, ft, decoy, gt, valid in rows]
 
 
 def score_cases(truth: list[dict], diagnoses: dict[str, dict]) -> list[dict]:
@@ -104,10 +107,12 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("diagnoses", type=Path)
     parser.add_argument("--run", help="result name (default: the diagnoses file name)")
+    parser.add_argument("--include-invalid", action="store_true",
+                        help="also score cases recorded with run_case --force")
     args = parser.parse_args()
 
     run = args.run or args.diagnoses.stem
-    rows = score_cases(load_truth(), load_diagnoses(args.diagnoses))
+    rows = score_cases(load_truth(args.include_invalid), load_diagnoses(args.diagnoses))
     if not rows:
         raise SystemExit("no valid cases to score; run python -m eval.run_case --all first")
     summary = summarize(rows)

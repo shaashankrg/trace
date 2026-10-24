@@ -88,6 +88,28 @@ Tests (`pytest tests/tools`) run every tool against each recording in `tests/fix
 against the live backend. Fixtures are copies of `eval/runs/<case>/`; regenerate one with
 `python -m eval.run_case --force <case>`.
 
+## Investigator (LangGraph)
+
+```text
+triage ──► hypothesize ──► investigate ⟲ ──► conclude
+```
+
+`agent/` holds the graph. **triage** calls `get_trace` and `recent_changes` (7 days) and summarizes them in code.
+**hypothesize** asks the model for 3 to 5 ranked candidates. **investigate** is a tool-use loop, one model turn
+per visit, and stops when the model has no more calls or the 15-call budget (enforced in `Toolbox.call_tool`) is
+used up. **conclude** writes the spec 9.3 diagnosis, validated with Pydantic, with one retry before it abstains.
+Tool results become typed evidence items in code, so every cited ref was copied from a tool.
+
+The model is `INVESTIGATOR_MODEL` (default `gemini-3.8-flash`; `claude-*` models use the Anthropic SDK), temperature 0.
+
+```bash
+python -m eval.replay_case --agent investigator --cases all     # every case in eval/runs/, on its snapshot
+python -m eval.replay_case --cases case-002 case-007 --run-id try
+```
+
+Each run writes `eval/results/<run_id>/`: one JSON per case (diagnosis, candidates, transcript, tokens, cost,
+wall time), `diagnoses.jsonl`, and `summary.md` with the investigator and B1 side by side.
+
 ## Tests
 
 ```bash

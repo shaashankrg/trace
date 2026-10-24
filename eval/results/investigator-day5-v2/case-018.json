@@ -1,0 +1,202 @@
+{
+  "case_id": "case-018",
+  "model": "gemini-3.8-flash",
+  "wall_s": 20.4,
+  "error": null,
+  "diagnosis": {
+    "root_component": "prompt",
+    "category": "prompt_edit",
+    "cause_ref": "change:prompt-edit-3227",
+    "confidence": 0.95,
+    "summary": "Prompt version v2 removed the fallback instruction directing the assistant to state it does not know and suggest contacting support when documents lack the answer. As a result, when retrieved chunks contained no information about changing a shipping address, the assistant hallucinated a definitive 'No' response instead of stating it didn't know.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:prompt-edit-3227",
+        "claim": "Alice edited the prompt from v1 to v2 to simplify the system prompt shortly before the alert fired."
+      },
+      {
+        "type": "change",
+        "ref": "prompt:v2",
+        "claim": "Diff of prompt v1 to v2 shows removal of the instruction: 'Only answer from the provided documents. Tool results count as documents. If they do not contain the answer, say you don't know and suggest contacting support.'"
+      },
+      {
+        "type": "trace",
+        "ref": "span:26dde5a6debca60c0da2768fbf3b3e5b/e81f183de540f165",
+        "claim": "The root span shows config.prompt_version was set to v2."
+      },
+      {
+        "type": "trace",
+        "ref": "span:26dde5a6debca60c0da2768fbf3b3e5b/428a0fca155f6f83",
+        "claim": "Retrieval returned 4 chunks ('order-cancellation@v1#0', 'pre-orders@v1#0', 'shipping-international@v1#1', 'order-tracking@v1#0'), none of which contain information about changing an address."
+      },
+      {
+        "type": "trace",
+        "ref": "span:26dde5a6debca60c0da2768fbf3b3e5b/0ccdaf6a9527646f",
+        "claim": "The llm.chat span executed with prompt version v2 and generated a negative answer instead of declaring lack of knowledge."
+      }
+    ],
+    "ruled_out": [],
+    "suggested_fix": "Restore the instruction in the system prompt instructing the model to say it does not know and refer users to support (help@kestrel.example) when the retrieved documents do not answer the question.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "prompt",
+      "category": "prompt_edit",
+      "rationale": "A recent prompt edit ('Simplify system prompt' to v2) likely altered or removed the fallback instructions requiring the assistant to admit lack of knowledge and direct customers to help@kestrel.example instead of concluding 'No'.",
+      "score": 0.75
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model incorrectly inferred a definitive negative answer when the retrieved documents lacked information rather than following standard unknown/fallback behavior.",
+      "score": 0.15
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "The knowledge base lacks clear documentation on post-order shipping address modifications, leaving the model to guess or rely on fallback rules.",
+      "score": 0.1
+    }
+  ],
+  "tool_calls_used": 5,
+  "evidence_pool_size": 10,
+  "refs_not_in_pool": [],
+  "llm_calls": 6,
+  "input_tokens": 16621,
+  "output_tokens": 1302,
+  "thinking_tokens": 0,
+  "cost_usd": 0.017349,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-80841fa6"
+      },
+      "result_chars": 2673,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T04:01:10.220797+00:00",
+        "end": "2026-10-18T04:01:10.220797+00:00"
+      },
+      "result_chars": 287,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1548,
+      "output_tokens": 233,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002035,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"prompt\",\n   \"category\": \"prompt_edit\",\n   \"rationale\": \"A recent prompt edit ('Simplify system prompt' to v2) likely altered or removed the fallback instructions requiring the assistant to admit lack of knowledge and direct customers to help@kestrel.example instead of concluding 'No'.\",\n   \"score\": 0.75\n  },\n  {\n   \"root_component\": \"model\",\n   \"category\": \"model_change\",\n   \"rationale\": \"The model incorrectly inferred a definitive negative answer whe"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2587,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002038,
+      "tool_calls": [
+        "diff_prompt_versions"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "diff_prompt_versions",
+      "args": {
+        "b": "v2",
+        "a": "v1"
+      },
+      "result_chars": 770,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2878,
+      "output_tokens": 63,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002395,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:26dde5a6debca60c0da2768fbf3b3e5b/428a0fca155f6f83"
+      },
+      "result_chars": 1609,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3392,
+      "output_tokens": 24,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002634,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "conv-80841fa6"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3447,
+      "output_tokens": 333,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003834,
+      "tool_calls": [],
+      "text": "### Root Cause Analysis\n\n**Root Component**: `prompt`  \n**Category**: `prompt_edit`\n\n### Summary of Findings\n- In change `change:prompt-edit-3227` (`prompt:v2`), author `alice` simplified the system prompt from `prompt:v1` to `prompt:v2`.\n- Diffing `v1` and `v2` via `diff_prompt_versions` reveals the following removed instruction:\n  ```diff\n  -Only answer from the provided documents. Tool results count as documents. If they do not contain the answer, say you don't know and suggest contacting sup"
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2769,
+      "output_tokens": 623,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004413,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"prompt\",\n \"category\": \"prompt_edit\",\n \"cause_ref\": \"change:prompt-edit-3227\",\n \"confidence\": 0.95,\n \"summary\": \"Prompt version v2 removed the fallback instruction directing the assistant to state it does not know and suggest contacting support when documents lack the answer. As a result, when retrieved chunks contained no information about changing a shipping address, the assistant hallucinated a definitive 'No' response instead of stating it didn't know.\",\n \"evidence\": [\n "
+    }
+  ]
+}

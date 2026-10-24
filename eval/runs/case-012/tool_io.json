@@ -1,0 +1,62 @@
+[
+  {
+    "conversation_id": "conv-034d95a7",
+    "trace_id": "bf66deac075d19997b9301d83f712ef5",
+    "span_id": "4746c1f615b52b43",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-019"
+    },
+    "output": [
+      {
+        "qty": 0,
+        "name": "Aspen 20F Sleeping Bag",
+        "product_id": "P-019",
+        "refreshed_at": "2026-10-17T23:26:43.068312+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 4.930600000079721,
+    "created_at": "2026-10-17T23:26:57.896074+00:00"
+  },
+  {
+    "conversation_id": "conv-034d95a7",
+    "trace_id": "ce3f7e43ffb168fc0845aa5484dfdbf3",
+    "span_id": "048ae1403a823926",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-019"
+    },
+    "output": [
+      {
+        "qty": 0,
+        "name": "Aspen 20F Sleeping Bag",
+        "product_id": "P-019",
+        "refreshed_at": "2026-10-18T03:54:22.306696+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 5.767399999967893,
+    "created_at": "2026-10-18T03:54:37.576584+00:00"
+  },
+  {
+    "conversation_id": "conv-034d95a7",
+    "trace_id": "2f595590317002c845ec802435bea724",
+    "span_id": "e42d966f14b4bf55",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-019"
+    },
+    "output": [
+      {
+        "qty": 0,
+        "name": "Aspen 20F Sleeping Bag",
+        "product_id": "P-019",
+        "refreshed_at": "2026-10-15T02:24:38.129188+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 6.36809999923571,
+    "created_at": "2026-10-18T03:54:40.811868+00:00"
+  }
+]

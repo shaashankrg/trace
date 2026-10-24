@@ -1,0 +1,422 @@
+{
+  "case_id": "case-002",
+  "model": "gemini-3.8-flash",
+  "wall_s": 42.3,
+  "error": null,
+  "diagnosis": {
+    "root_component": "retriever",
+    "category": "config_change",
+    "cause_ref": "change:config-change-5777",
+    "confidence": 0.95,
+    "summary": "The similarity threshold was raised to 0.85 in config-change-5777 shortly before the alert, causing retrieval to return 0 chunks for standard shipping queries. Without retrieved context, the assistant was unable to answer the question about the free shipping threshold.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:config-change-5777",
+        "claim": "Priya changed config:similarity_threshold to reduce low-relevance retrievals shortly before the alert (2026-10-17T22:59:42Z)."
+      },
+      {
+        "type": "trace",
+        "ref": "span:0a6174ddf4c4db659e732c38e618ac25/54cc5033514badad",
+        "claim": "The retrieve span with threshold=0.85 returned 0 chunks (chunk_ids=[])."
+      },
+      {
+        "type": "trace",
+        "ref": "span:0a6174ddf4c4db659e732c38e618ac25/77482d16e20b7ffc",
+        "claim": "llm.chat received no retrieved chunks or context to answer the shipping question and fell back to 'I don't know'."
+      }
+    ],
+    "ruled_out": [],
+    "suggested_fix": "Lower the retrieval similarity_threshold back to its prior setting (e.g. 0.7 or lower) so standard shipping policy documents can be retrieved.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "The recent config change raising the similarity threshold to 0.85 directly caused the retriever to return 0 chunks for the query, leaving the model without context.",
+      "score": 0.85
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_delete",
+      "rationale": "The document detailing the free shipping threshold may have been removed or de-indexed, leading to zero retrieved chunks.",
+      "score": 0.1
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "The shipping policy document might have been updated or edited such that its chunks failed to match the query.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 15,
+  "evidence_pool_size": 48,
+  "refs_not_in_pool": [],
+  "llm_calls": 15,
+  "input_tokens": 58899,
+  "output_tokens": 1002,
+  "thinking_tokens": 0,
+  "cost_usd": 0.047933,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-7e42e891"
+      },
+      "result_chars": 2447,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-10T23:23:10.418191+00:00",
+        "end": "2026-10-17T23:23:10.418191+00:00"
+      },
+      "result_chars": 321,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1491,
+      "output_tokens": 218,
+      "thinking_tokens": 0,
+      "cost_usd": 0.001936,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"retriever\",\n   \"category\": \"config_change\",\n   \"rationale\": \"The recent config change raising the similarity threshold to 0.85 directly caused the retriever to return 0 chunks for the query, leaving the model without context.\",\n   \"score\": 0.85\n  },\n  {\n   \"root_component\": \"knowledge_base\",\n   \"category\": \"doc_delete\",\n   \"rationale\": \"The document detailing the free shipping threshold may have been removed or de-indexed, leading to zero retrieved ch"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2515,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.001954,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "search_logs",
+      "args": {
+        "query": "similarity_threshold"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2564,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.001983,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "search_logs",
+      "args": {
+        "query": "shipping"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2611,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002018,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "retrieve"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2658,
+      "output_tokens": 27,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002095,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "query": "54cc5033514badad"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2715,
+      "output_tokens": 25,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00213,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "search_logs",
+      "args": {
+        "query": "conv-7e42e891"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2770,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002134,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "search_logs",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2597,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3931,
+      "output_tokens": 64,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003188,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:0a6174ddf4c4db659e732c38e618ac25/54cc5033514badad"
+      },
+      "result_chars": 139,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4086,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003121,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2503,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4980,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00381,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "shipping-policy"
+      },
+      "result_chars": 168,
+      "error": "no document 'shipping-policy'",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5059,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003869,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "shipping-standard"
+      },
+      "result_chars": 170,
+      "error": "no document 'shipping-standard'",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5138,
+      "output_tokens": 21,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003932,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "shipping-expedited"
+      },
+      "result_chars": 957,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5463,
+      "output_tokens": 47,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004274,
+      "tool_calls": [
+        "query_metrics"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 14,
+      "tool": "query_metrics",
+      "args": {
+        "start": "2026-10-17T22:00:00Z",
+        "metric": "kestrel_canary_accuracy"
+      },
+      "result_chars": 5845,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7781,
+      "output_tokens": 40,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005986,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 15,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-01-01T00:00:00Z",
+        "limit": 30
+      },
+      "result_chars": 7251,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5137,
+      "output_tokens": 440,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005503,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"retriever\",\n \"category\": \"config_change\",\n \"cause_ref\": \"change:config-change-5777\",\n \"confidence\": 0.95,\n \"summary\": \"The similarity threshold was raised to 0.85 in config-change-5777 shortly before the alert, causing retrieval to return 0 chunks for standard shipping queries. Without retrieved context, the assistant was unable to answer the question about the free shipping threshold.\",\n \"evidence\": [\n  {\n   \"type\": \"change\",\n   \"ref\": \"change:config-change-5777\",\n   \"clai"
+    }
+  ]
+}

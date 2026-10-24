@@ -1,0 +1,220 @@
+{
+  "case_id": "case-006",
+  "model": "gemini-3.8-flash",
+  "wall_s": 22.0,
+  "error": null,
+  "diagnosis": {
+    "root_component": "knowledge_base",
+    "category": "doc_delete",
+    "cause_ref": "change:doc-delete-4848",
+    "confidence": 0.95,
+    "summary": "The document 'gift-cards' was deleted from the index shortly before the query, leaving 0 chunks indexed for gift card policies. Consequently, the retriever fetched unrelated chunks about loyalty and refund policies, leaving the model without the necessary information to state that gift cards never expire.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:doc-delete-4848",
+        "claim": "Document doc:gift-cards was deleted from the index by Marco less than an hour before the alert."
+      },
+      {
+        "type": "change",
+        "ref": "doc:gift-cards@v1",
+        "claim": "doc:gift-cards@v1 currently has 0 out of 2 chunks indexed."
+      },
+      {
+        "type": "trace",
+        "ref": "span:9600252b9a77da9bbbe672ee6760534b/82e15f2734e25b68",
+        "claim": "The retriever retrieved chunks from loyalty-program and refund-policy instead of gift card documentation."
+      },
+      {
+        "type": "chunk",
+        "ref": "chunk:refund-policy@v2#1",
+        "claim": "Retrieved chunk mentions that gift cards cannot be returned, but contains no details about gift card expiration."
+      }
+    ],
+    "ruled_out": [],
+    "suggested_fix": "Re-index doc:gift-cards so that gift card policy chunks are available for retrieval.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_delete",
+      "rationale": "The gift-cards document was deleted right before the alert, leaving the retriever with only unrelated policies and preventing the assistant from knowing gift cards never expire.",
+      "score": 0.95
+    },
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "Retriever threshold or ranking parameters may have excluded relevant gift card information from available documents.",
+      "score": 0.03
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model followed instructions appropriately given the retrieved context, but could be suspected if gift card details were present elsewhere.",
+      "score": 0.02
+    }
+  ],
+  "tool_calls_used": 6,
+  "evidence_pool_size": 10,
+  "refs_not_in_pool": [],
+  "llm_calls": 7,
+  "input_tokens": 19405,
+  "output_tokens": 1097,
+  "thinking_tokens": 0,
+  "cost_usd": 0.018667,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-c4df8715"
+      },
+      "result_chars": 2665,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-10T23:24:25.524579+00:00",
+        "end": "2026-10-17T23:24:25.524579+00:00"
+      },
+      "result_chars": 293,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1582,
+      "output_tokens": 213,
+      "thinking_tokens": 0,
+      "cost_usd": 0.001985,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"knowledge_base\",\n      \"category\": \"doc_delete\",\n      \"rationale\": \"The gift-cards document was deleted right before the alert, leaving the retriever with only unrelated policies and preventing the assistant from knowing gift cards never expire.\",\n      \"score\": 0.95\n    },\n    {\n      \"root_component\": \"retriever\",\n      \"category\": \"config_change\",\n      \"rationale\": \"Retriever threshold or ranking parameters may have excluded relevant gift c"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2597,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002023,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "gift-cards"
+      },
+      "result_chars": 319,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2739,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002122,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "search_logs",
+      "args": {
+        "query": "gift-cards"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2788,
+      "output_tokens": 67,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002342,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:9600252b9a77da9bbbe672ee6760534b/82e15f2734e25b68"
+      },
+      "result_chars": 1807,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3361,
+      "output_tokens": 35,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002652,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-17T00:00:00Z"
+      },
+      "result_chars": 293,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3511,
+      "output_tokens": 325,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003852,
+      "tool_calls": [],
+      "text": "### Root Cause Analysis\n\n- **Root Component**: `knowledge_base`\n- **Category**: `doc_delete`\n- **Suspect Change**: `change:doc-delete-4848` (authored by Marco at `2026-10-17T22:37:55.399359+00:00`), which removed document `doc:gift-cards` from the index (\"Clean up index entries\").\n\n### Evidence\n1. **Document History**: `document_history` for `gift-cards` confirms version `doc:gift-cards@v1` now has `indexed_chunk_count: 0`.\n2. **Retriever Results**: During conversation `conv-c4df8715` (span `spa"
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2827,
+      "output_tokens": 419,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003691,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"knowledge_base\",\n \"category\": \"doc_delete\",\n \"cause_ref\": \"change:doc-delete-4848\",\n \"confidence\": 0.95,\n \"summary\": \"The document 'gift-cards' was deleted from the index shortly before the query, leaving 0 chunks indexed for gift card policies. Consequently, the retriever fetched unrelated chunks about loyalty and refund policies, leaving the model without the necessary information to state that gift cards never expire.\",\n \"evidence\": [\n  {\n   \"type\": \"change\",\n   \"ref\": \""
+    }
+  ]
+}

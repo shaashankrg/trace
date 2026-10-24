@@ -1,0 +1,47 @@
+[
+  {
+    "key": "chunk_size",
+    "value": "300",
+    "updated_at": "2026-10-18T04:00:21.810637+00:00"
+  },
+  {
+    "key": "embedding_model",
+    "value": "sentence-transformers/all-MiniLM-L6-v2",
+    "updated_at": "2026-10-18T04:00:21.810637+00:00"
+  },
+  {
+    "key": "guardrail_blocked_topics",
+    "value": "[\"lawsuit\", \"legal advice\", \"medical advice\", \"weapon\", \"firearm\", \"social security number\", \"hack\"]",
+    "updated_at": "2026-10-18T04:00:21.810637+00:00"
+  },
+  {
+    "key": "max_response_tokens",
+    "value": "500",
+    "updated_at": "2026-10-18T04:00:21.810637+00:00"
+  },
+  {
+    "key": "model",
+    "value": "gemini-3.5-flash-lite",
+    "updated_at": "2026-10-18T04:00:21.810637+00:00"
+  },
+  {
+    "key": "prompt_version",
+    "value": "v2",
+    "updated_at": "2026-10-18T03:06:37.122752+00:00"
+  },
+  {
+    "key": "similarity_threshold",
+    "value": "0.3",
+    "updated_at": "2026-10-18T04:00:21.810637+00:00"
+  },
+  {
+    "key": "tool_timeout_ms",
+    "value": "2000",
+    "updated_at": "2026-10-18T04:00:21.810637+00:00"
+  },
+  {
+    "key": "top_k",
+    "value": "4",
+    "updated_at": "2026-10-18T04:00:21.810637+00:00"
+  }
+]

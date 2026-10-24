@@ -1,0 +1,404 @@
+{
+  "case_id": "case-017",
+  "model": "gemini-3.8-flash",
+  "wall_s": 37.4,
+  "error": null,
+  "diagnosis": {
+    "root_component": "knowledge_base",
+    "category": "doc_update",
+    "cause_ref": "change:doc-update-1039",
+    "confidence": 0.95,
+    "summary": "When shipping-expedited@v2 was published, the obsolete shipping-expedited@v1 chunk was not de-indexed. As a result, both v1 and v2 chunks remained indexed in the knowledge base, causing outdated pricing ($24.95 from v1) to be retrieved alongside the current price ($19.95 from v2).",
+    "evidence": [
+      {
+        "type": "trace",
+        "ref": "span:25be7fd577de9a67c81dbb56d7131416/925e25e874efdc4f",
+        "claim": "The retrieve span fetched chunks from both shipping-expedited@v1 and shipping-expedited@v2."
+      },
+      {
+        "type": "chunk",
+        "ref": "chunk:shipping-expedited@v1#0",
+        "claim": "Chunk v1 states express shipping costs $24.95 and scored 0.8343."
+      },
+      {
+        "type": "chunk",
+        "ref": "chunk:shipping-expedited@v2#0",
+        "claim": "Chunk v2 states express shipping costs $19.95 and scored 0.8123."
+      },
+      {
+        "type": "change",
+        "ref": "doc:shipping-expedited@v1",
+        "claim": "shipping-expedited@v1 still has 1/1 chunks indexed instead of being de-indexed upon update."
+      },
+      {
+        "type": "change",
+        "ref": "doc:shipping-expedited@v2",
+        "claim": "shipping-expedited@v2 updated the express shipping cost to $19.95."
+      },
+      {
+        "type": "change",
+        "ref": "change:doc-update-1039",
+        "claim": "The publication of shipping-expedited@v2 left the previous version indexed."
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:config-change-2907",
+        "reason": "Config change modified max_response_tokens to 700 to allow longer replies, which did not affect retrieved document contents or pricing discrepancies."
+      }
+    ],
+    "suggested_fix": "De-index shipping-expedited@v1 chunks from the vector database so only the current shipping-expedited@v2 chunks are retrieved.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "Both v1 and v2 of shipping-expedited remain indexed simultaneously, causing conflicting document versions to be retrieved for the query.",
+      "score": 0.65
+    },
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "The retriever returned duplicate versions of the same document without filtering out obsolete revisions.",
+      "score": 0.2
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model may have misinterpreted the retrieved context or hallucinated conflicting pricing despite the context provided.",
+      "score": 0.15
+    }
+  ],
+  "tool_calls_used": 13,
+  "evidence_pool_size": 35,
+  "refs_not_in_pool": [],
+  "llm_calls": 14,
+  "input_tokens": 72087,
+  "output_tokens": 1654,
+  "thinking_tokens": 326,
+  "cost_usd": 0.06149,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-5304717d"
+      },
+      "result_chars": 2684,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T04:00:08.991578+00:00",
+        "end": "2026-10-18T04:00:08.991578+00:00"
+      },
+      "result_chars": 309,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1530,
+      "output_tokens": 200,
+      "thinking_tokens": 326,
+      "cost_usd": 0.00312,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"knowledge_base\",\n   \"category\": \"doc_update\",\n   \"rationale\": \"Both v1 and v2 of shipping-expedited remain indexed simultaneously, causing conflicting document versions to be retrieved for the query.\",\n   \"score\": 0.65\n  },\n  {\n   \"root_component\": \"retriever\",\n   \"category\": \"config_change\",\n   \"rationale\": \"The retriever returned duplicate versions of the same document without filtering out obsolete revisions.\",\n   \"score\": 0.2\n  },\n  {\n   \"root_com"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2536,
+      "output_tokens": 27,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002003,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-5304717d"
+      },
+      "result_chars": 2684,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3549,
+      "output_tokens": 65,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002906,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:25be7fd577de9a67c81dbb56d7131416/925e25e874efdc4f"
+      },
+      "result_chars": 1784,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4124,
+      "output_tokens": 21,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003172,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "shipping-expedited"
+      },
+      "result_chars": 957,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4450,
+      "output_tokens": 25,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003431,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "query": "conv-5304717d"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4505,
+      "output_tokens": 19,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00345,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "search_logs",
+      "args": {
+        "query": "shipping-expedited"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4554,
+      "output_tokens": 43,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003577,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "search_logs",
+      "args": {
+        "query": "25be7fd577de9a67c81dbb56d7131416"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4627,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003639,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-10-18T03:55:00+00:00",
+        "limit": 10
+      },
+      "result_chars": 2589,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5808,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004412,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2491,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6699,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005099,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "returns-process"
+      },
+      "result_chars": 1410,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7144,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005433,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "shipping-domestic"
+      },
+      "result_chars": 880,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7448,
+      "output_tokens": 22,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005668,
+      "tool_calls": [
+        "query_metrics"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "query_metrics",
+      "args": {
+        "metric": "kestrel_canary_accuracy"
+      },
+      "result_chars": 7081,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10229,
+      "output_tokens": 485,
+      "thinking_tokens": 0,
+      "cost_usd": 0.009491,
+      "tool_calls": [],
+      "text": "### Incident Investigation Summary\n\n**Root Component:** `knowledge_base`  \n**Category:** `doc_update`\n\n#### Findings & Evidence\n1. **Trace & Retrieval Analysis:**\n   - In conversation `conv-5304717d` (trace `25be7fd577de9a67c81dbb56d7131416`), the assistant answered the query *\"How much does express shipping cost?\"* with *\"Express shipping costs $19.95 [shipping-expedited@v2#0].\"*, citing `v2`.\n   - Inspection of the retrieval span (`span:25be7fd577de9a67c81dbb56d7131416/925e25e874efdc4f`) revea"
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4884,
+      "output_tokens": 647,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006089,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"knowledge_base\",\n  \"category\": \"doc_update\",\n  \"cause_ref\": \"change:doc-update-1039\",\n  \"confidence\": 0.95,\n  \"summary\": \"When shipping-expedited@v2 was published, the obsolete shipping-expedited@v1 chunk was not de-indexed. As a result, both v1 and v2 chunks remained indexed in the knowledge base, causing outdated pricing ($24.95 from v1) to be retrieved alongside the current price ($19.95 from v2).\",\n  \"evidence\": [\n    {\n      \"type\": \"trace\",\n      \"ref\": \"span:25be7fd"
+    }
+  ]
+}

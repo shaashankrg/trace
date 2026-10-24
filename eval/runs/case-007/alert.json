@@ -1,0 +1,14 @@
+{
+  "alert_id": "alert-case-007",
+  "type": "flagged_conversation",
+  "fired_at": "2026-10-17T23:21:53.297742+00:00",
+  "window": {
+    "start": "2026-10-17T23:21:32.440850+00:00",
+    "end": "2026-10-17T23:21:53.297742+00:00"
+  },
+  "conversation_id": "conv-38234566",
+  "trace_id": "c3ccf0cb7092aa97ad23c056bad187ac",
+  "question": "I'm customer C-0002. Today is 2026-10-12. Can I still return the Comfort Plus Sleeping Pad from order O-1002 for a refund?",
+  "answer": "I don't know your order details for customer C-0002. Please contact support.",
+  "reviewer_correction": "Order O-1002 was delivered 2 days ago, inside the 14-day window. The answer is yes."
+}

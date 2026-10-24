@@ -1,0 +1,14 @@
+{
+  "alert_id": "alert-case-008",
+  "type": "flagged_conversation",
+  "fired_at": "2026-10-18T03:51:08.543082+00:00",
+  "window": {
+    "start": "2026-10-18T03:50:40.494702+00:00",
+    "end": "2026-10-18T03:51:08.543082+00:00"
+  },
+  "conversation_id": "conv-a9f1a5c7",
+  "trace_id": "0472f5c09f47401280708f19d39ff7be",
+  "question": "I'm customer C-0006. What's the status of order O-1006?",
+  "answer": "I don't know the status of order O-1006 because I was unable to find that order for your customer ID. Please contact support for assistance.",
+  "reviewer_correction": "Order O-1006 is shipped."
+}

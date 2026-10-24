@@ -1,0 +1,62 @@
+[
+  {
+    "conversation_id": "conv-6eef659e",
+    "trace_id": "a69d6a6d1550e659d2a081ae196c84ed",
+    "span_id": "e4e2385a6eebd698",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-001"
+    },
+    "output": [
+      {
+        "qty": 37,
+        "name": "Ridgeline Hiking Boot",
+        "product_id": "P-001",
+        "refreshed_at": "2026-10-17T23:27:15.092224+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 5.011800007196143,
+    "created_at": "2026-10-17T23:27:30.209817+00:00"
+  },
+  {
+    "conversation_id": "conv-6eef659e",
+    "trace_id": "3a7a12e8aca52ebb50abfb1caf0bdeb9",
+    "span_id": "32036935cc5ae89d",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-001"
+    },
+    "output": [
+      {
+        "qty": 37,
+        "name": "Ridgeline Hiking Boot",
+        "product_id": "P-001",
+        "refreshed_at": "2026-10-18T04:02:23.101597+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 4.3447999996715225,
+    "created_at": "2026-10-18T04:02:38.386108+00:00"
+  },
+  {
+    "conversation_id": "conv-6eef659e",
+    "trace_id": "fc88601c7f777c3a48bf6cf8ee4c3d0a",
+    "span_id": "c2b2f29d686d97b2",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-001"
+    },
+    "output": [
+      {
+        "qty": 37,
+        "name": "Ridgeline Hiking Boot",
+        "product_id": "P-001",
+        "refreshed_at": "2026-10-15T02:17:38.914438+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 4.566300000078627,
+    "created_at": "2026-10-18T04:02:41.569538+00:00"
+  }
+]

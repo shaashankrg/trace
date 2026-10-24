@@ -1,0 +1,376 @@
+{
+  "case_id": "case-004",
+  "model": "gemini-3.8-flash",
+  "wall_s": 35.8,
+  "error": null,
+  "diagnosis": {
+    "root_component": "model",
+    "category": "model_change",
+    "cause_ref": null,
+    "confidence": 0.95,
+    "summary": "The reviewer incorrectly flagged the assistant's response. The assistant retrieved chunk:refund-policy@v2#1 and chunk:holiday-returns@v1#0 and correctly stated that the standard refund window is 14 days with an extended holiday return window, which exactly matches the documented policy. The assistant never claimed the refund window was 30 days.",
+    "evidence": [
+      {
+        "type": "trace",
+        "ref": "span:bc26a66317223cde3c504cb141c5b2f5/61a7df9e3295d92b",
+        "claim": "Retrieved chunks included chunk:refund-policy@v2#1 and chunk:holiday-returns@v1#0."
+      },
+      {
+        "type": "chunk",
+        "ref": "chunk:refund-policy@v2#1",
+        "claim": "The refund policy specifies that items returned after 14 days are not eligible for a refund."
+      },
+      {
+        "type": "chunk",
+        "ref": "chunk:holiday-returns@v1#0",
+        "claim": "The holiday returns policy specifies that items purchased between November 1 and December 24 can be returned until January 15 of the following year."
+      },
+      {
+        "type": "trace",
+        "ref": "span:bc26a66317223cde3c504cb141c5b2f5/2aaef70624e91d1f",
+        "claim": "The model generated an answer explicitly stating the 14-day refund window and holiday policy, contrary to the reviewer's claim that the assistant said 30 days."
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:doc-update-1047",
+        "reason": "holiday-returns@v1 correctly reflects the holiday returns policy and was properly retrieved and cited."
+      },
+      {
+        "change": "change:doc-update-1045",
+        "reason": "refund-policy@v2 updated the return window from 30 to 14 days and was correctly retrieved and communicated by the model."
+      }
+    ],
+    "suggested_fix": "No system fix needed. Dismiss the reviewer flag as a false positive since the model correctly stated the 14-day refund window.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model answered with the 14-day window and holiday extension accurately from the retrieved chunks, but the reviewer flagged the answer believing it stated 30 days or the model unnecessarily introduced conflicting/extra details.",
+      "score": 0.5
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "The knowledge base includes potentially outdated or conflicting versions across documents such as refund-policy@v2 vs holiday-returns@v1 leading to ambiguity in refund windows.",
+      "score": 0.3
+    },
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "The retriever pulled secondary return chunks (holiday-returns, exchanges) alongside the standard policy chunk, providing superfluous contexts that may have confused the response.",
+      "score": 0.2
+    }
+  ],
+  "tool_calls_used": 12,
+  "evidence_pool_size": 34,
+  "refs_not_in_pool": [],
+  "llm_calls": 13,
+  "input_tokens": 60624,
+  "output_tokens": 1625,
+  "thinking_tokens": 0,
+  "cost_usd": 0.051563,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-4cb8bda8"
+      },
+      "result_chars": 2662,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T03:49:09.340121+00:00",
+        "end": "2026-10-18T03:49:09.340121+00:00"
+      },
+      "result_chars": 50,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1520,
+      "output_tokens": 244,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002055,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"model\",\n   \"category\": \"model_change\",\n   \"rationale\": \"The model answered with the 14-day window and holiday extension accurately from the retrieved chunks, but the reviewer flagged the answer believing it stated 30 days or the model unnecessarily introduced conflicting/extra details.\",\n   \"score\": 0.5\n  },\n  {\n   \"root_component\": \"knowledge_base\",\n   \"category\": \"doc_update\",\n   \"rationale\": \"The knowledge base includes potentially outdated or conf"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2572,
+      "output_tokens": 25,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002023,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-4cb8bda8"
+      },
+      "result_chars": 2662,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3574,
+      "output_tokens": 67,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002932,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:bc26a66317223cde3c504cb141c5b2f5/61a7df9e3295d92b"
+      },
+      "result_chars": 1801,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4139,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003179,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "refund-policy"
+      },
+      "result_chars": 1086,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4482,
+      "output_tokens": 23,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003448,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "query": "conv-4cb8bda8"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4535,
+      "output_tokens": 44,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003566,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "search_logs",
+      "args": {
+        "query": "bc26a66317223cde3c504cb141c5b2f5"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4609,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003532,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "holiday-returns"
+      },
+      "result_chars": 334,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4750,
+      "output_tokens": 19,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003634,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "exchanges"
+      },
+      "result_chars": 1039,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5080,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003979,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-10-18T03:45:00+00:00",
+        "limit": 10
+      },
+      "result_chars": 2588,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6262,
+      "output_tokens": 82,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005004,
+      "tool_calls": [
+        "query_metrics"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "query_metrics",
+      "args": {
+        "start": "2026-10-18T03:00:00+00:00",
+        "end": "2026-10-18T04:00:00+00:00",
+        "metric": "kestrel_canary_accuracy"
+      },
+      "result_chars": 1446,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6770,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005134,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2483,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7658,
+      "output_tokens": 398,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007236,
+      "tool_calls": [],
+      "text": "### Investigation Summary\n\n- **Alert Context**: A reviewer flagged the assistant's answer to *\"What's the refund window for returning an item?\"* claiming: *\"The refund window is 14 days, not 30.\"*\n- **Trace Analysis (`bc26a66317223cde3c504cb141c5b2f5`)**:\n  - The assistant answered: *\"Based on the provided documents, items returned after 14 days are not eligible for a refund, meaning the standard refund window is 14 days [refund-policy@v2#1]. Additionally, items purchased between November 1 and "
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4673,
+      "output_tokens": 623,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005841,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"model\",\n  \"category\": \"model_change\",\n  \"cause_ref\": null,\n  \"confidence\": 0.95,\n  \"summary\": \"The reviewer incorrectly flagged the assistant's response. The assistant retrieved chunk:refund-policy@v2#1 and chunk:holiday-returns@v1#0 and correctly stated that the standard refund window is 14 days with an extended holiday return window, which exactly matches the documented policy. The assistant never claimed the refund window was 30 days.\",\n  \"evidence\": [\n    {\n      \"type"
+    }
+  ]
+}

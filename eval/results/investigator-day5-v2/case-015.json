@@ -1,0 +1,184 @@
+{
+  "case_id": "case-015",
+  "model": "gemini-3.8-flash",
+  "wall_s": 16.5,
+  "error": null,
+  "diagnosis": {
+    "root_component": "knowledge_base",
+    "category": "doc_delete",
+    "cause_ref": "change:doc-delete-4356",
+    "confidence": 0.98,
+    "summary": "The document 'store-pickup' had its indexed entries cleaned up/removed, leaving 0/1 chunks indexed. As a result, the assistant could not retrieve the store pickup policy and was unable to answer how long pickup orders are held.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:doc-delete-4356",
+        "claim": "ops-bot ran a doc_delete operation on doc:store-pickup to clean up index entries shortly before the incident."
+      },
+      {
+        "type": "change",
+        "ref": "doc:store-pickup@v1",
+        "claim": "doc:store-pickup@v1 currently has 0 out of 1 chunks indexed in the knowledge base."
+      },
+      {
+        "type": "trace",
+        "ref": "span:4f135ce5336eea5f1d4b6882f13f0f39/a8225a6435f593b1",
+        "claim": "The retrieve span retrieved unrelated chunks (store-locations, order-cancellation, order-tracking, returns-process) because store-pickup was unindexed."
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:doc-update-4531",
+        "reason": "Publishing gear-donation@v1 is unrelated to store pickup order hold policies."
+      }
+    ],
+    "suggested_fix": "Re-index the chunks for doc:store-pickup@v1 so that the store pickup policy is available during retrieval.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_delete",
+      "rationale": "The store-pickup document was deleted from the index shortly before the query, preventing the retriever from finding information about store pickup hold times.",
+      "score": 0.85
+    },
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "The retriever's similarity threshold or top-k configuration may have excluded relevant store pickup policy chunks from the retrieved context.",
+      "score": 0.1
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The language model failed to synthesize a helpful response or fallback regarding pickup policies from the context provided.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 5,
+  "evidence_pool_size": 11,
+  "refs_not_in_pool": [],
+  "llm_calls": 5,
+  "input_tokens": 13759,
+  "output_tokens": 1075,
+  "thinking_tokens": 0,
+  "cost_usd": 0.014351,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-93524c6d"
+      },
+      "result_chars": 2671,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T03:58:08.429534+00:00",
+        "end": "2026-10-18T03:58:08.429534+00:00"
+      },
+      "result_chars": 545,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1602,
+      "output_tokens": 213,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"knowledge_base\",\n      \"category\": \"doc_delete\",\n      \"rationale\": \"The store-pickup document was deleted from the index shortly before the query, preventing the retriever from finding information about store pickup hold times.\",\n      \"score\": 0.85\n    },\n    {\n      \"root_component\": \"retriever\",\n      \"category\": \"config_change\",\n      \"rationale\": \"The retriever's similarity threshold or top-k configuration may have excluded relevant store "
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2619,
+      "output_tokens": 88,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002294,
+      "tool_calls": [
+        "document_history",
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "store-pickup"
+      },
+      "result_chars": 341,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:4f135ce5336eea5f1d4b6882f13f0f39/a8225a6435f593b1"
+      },
+      "result_chars": 1624,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3304,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002546,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "store-pickup"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3353,
+      "output_tokens": 312,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003685,
+      "tool_calls": [],
+      "text": "### Root Cause Analysis\n\n- **Root Component**: `knowledge_base`\n- **Category**: `doc_delete`\n- **Evidence**:\n  - In recent changes, change `change:doc-delete-4356` at `2026-10-18T03:26:38.336469+00:00` by `ops-bot` removed index entries for document `store-pickup` (\"Clean up index entries\").\n  - Checking `document_history(doc_id=\"store-pickup\")` shows `doc:store-pickup@v1` (\"Buy Online, Pick Up in Store\") currently has `indexed_chunk_count: 0` (out of 1 chunk).\n  - As a result, the `retrieve` sp"
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2881,
+      "output_tokens": 444,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003826,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"knowledge_base\",\n  \"category\": \"doc_delete\",\n  \"cause_ref\": \"change:doc-delete-4356\",\n  \"confidence\": 0.98,\n  \"summary\": \"The document 'store-pickup' had its indexed entries cleaned up/removed, leaving 0/1 chunks indexed. As a result, the assistant could not retrieve the store pickup policy and was unable to answer how long pickup orders are held.\",\n  \"evidence\": [\n    {\n      \"type\": \"change\",\n      \"ref\": \"change:doc-delete-4356\",\n      \"claim\": \"ops-bot ran a doc_delete"
+    }
+  ]
+}

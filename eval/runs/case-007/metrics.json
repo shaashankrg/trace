@@ -1,0 +1,94 @@
+{
+  "kestrel_canary_accuracy": [
+    {
+      "metric": {
+        "__name__": "kestrel_canary_accuracy",
+        "category": "docs",
+        "job": "kestrel_canary",
+        "suite": "smoke"
+      },
+      "values": [
+        [
+          1792279291.178,
+          "1"
+        ],
+        [
+          1792279306.178,
+          "1"
+        ]
+      ]
+    },
+    {
+      "metric": {
+        "__name__": "kestrel_canary_accuracy",
+        "category": "multistep",
+        "job": "kestrel_canary",
+        "suite": "smoke"
+      },
+      "values": [
+        [
+          1792279291.178,
+          "1"
+        ],
+        [
+          1792279306.178,
+          "1"
+        ]
+      ]
+    },
+    {
+      "metric": {
+        "__name__": "kestrel_canary_accuracy",
+        "category": "tools",
+        "job": "kestrel_canary",
+        "suite": "smoke"
+      },
+      "values": [
+        [
+          1792279291.178,
+          "1"
+        ],
+        [
+          1792279306.178,
+          "1"
+        ]
+      ]
+    },
+    {
+      "metric": {
+        "__name__": "kestrel_canary_accuracy",
+        "job": "kestrel_canary",
+        "suite": "smoke"
+      },
+      "values": [
+        [
+          1792279291.178,
+          "1"
+        ],
+        [
+          1792279306.178,
+          "1"
+        ]
+      ]
+    }
+  ],
+  "kestrel_canary_run_timestamp": [
+    {
+      "metric": {
+        "__name__": "kestrel_canary_run_timestamp",
+        "job": "kestrel_canary",
+        "suite": "smoke"
+      },
+      "values": [
+        [
+          1792279291.178,
+          "1792279270.860594"
+        ],
+        [
+          1792279306.178,
+          "1792279288.8725436"
+        ]
+      ]
+    }
+  ]
+}

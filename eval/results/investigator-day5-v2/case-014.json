@@ -1,0 +1,401 @@
+{
+  "case_id": "case-014",
+  "model": "gemini-3.8-flash",
+  "wall_s": 33.5,
+  "error": null,
+  "diagnosis": {
+    "root_component": "retriever",
+    "category": "config_change",
+    "cause_ref": "change:config-change-9298",
+    "confidence": 0.98,
+    "summary": "A configuration change raised the retrieval similarity threshold to 0.9 to reduce low-relevance retrievals. This caused relevant document chunks regarding password reset link validity to be filtered out during retrieval, leaving the LLM with 0 chunks and leading it to answer that it did not know.",
+    "evidence": [
+      {
+        "type": "trace",
+        "ref": "span:ab37503f8268bf9ff0c2dcb155a1b184/b8d9bb62aaea8c0d",
+        "claim": "The retrieve step ran with threshold=0.9 and returned 0 chunks (chunk_ids=[])."
+      },
+      {
+        "type": "change",
+        "ref": "change:config-change-9298",
+        "claim": "Alice modified config:similarity_threshold shortly before the incident to reduce low-relevance retrievals."
+      },
+      {
+        "type": "change",
+        "ref": "doc:password-reset@v2",
+        "claim": "Document password-reset@v2 is indexed and specifies that the reset link expires after 30 minutes."
+      },
+      {
+        "type": "metric",
+        "ref": "metric:kestrel_canary_accuracy@2026-10-18T03:57:06Z",
+        "claim": "Canary accuracy for the docs category dropped to 0.0 following the threshold change."
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:prompt-edit-5485",
+        "reason": "The prompt edit was a minor punctuation/hyphenation fix ('outdoor gear' to 'outdoor-gear') and did not cause retrieval failure."
+      }
+    ],
+    "suggested_fix": "Revert change:config-change-9298 or lower config:similarity_threshold from 0.9 to a reasonable value so relevant document chunks are retrieved.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "A recent config change raised the similarity threshold to 0.9, causing the retrieve span to return 0 chunks for the query.",
+      "score": 0.8
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "The document containing information about password reset link expiration might not be indexed or was updated/removed.",
+      "score": 0.1
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_delete",
+      "rationale": "The relevant documentation regarding account security or password reset validity may have been deleted from the index.",
+      "score": 0.05
+    },
+    {
+      "root_component": "prompt",
+      "category": "prompt_edit",
+      "rationale": "The recent prompt edit to v2 may have instructed the model to respond too conservatively when context is missing or partial.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 13,
+  "evidence_pool_size": 50,
+  "refs_not_in_pool": [],
+  "llm_calls": 14,
+  "input_tokens": 78311,
+  "output_tokens": 1399,
+  "thinking_tokens": 0,
+  "cost_usd": 0.063979,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-9ad6631c"
+      },
+      "result_chars": 2445,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T03:57:09.859983+00:00",
+        "end": "2026-10-18T03:57:09.859983+00:00"
+      },
+      "result_chars": 549,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1541,
+      "output_tokens": 272,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002176,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"retriever\",\n   \"category\": \"config_change\",\n   \"rationale\": \"A recent config change raised the similarity threshold to 0.9, causing the retrieve span to return 0 chunks for the query.\",\n   \"score\": 0.8\n  },\n  {\n   \"root_component\": \"knowledge_base\",\n   \"category\": \"doc_update\",\n   \"rationale\": \"The document containing information about password reset link expiration might not be indexed or was updated/removed.\",\n   \"score\": 0.1\n  },\n  {\n   \"root_compo"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2591,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002003,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "search_logs",
+      "args": {
+        "query": "similarity"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2638,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002038,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "search_logs",
+      "args": {
+        "query": "password"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2685,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002074,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "retrieve"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2732,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002105,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2589,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3893,
+      "output_tokens": 64,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00316,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:ab37503f8268bf9ff0c2dcb155a1b184/b8d9bb62aaea8c0d"
+      },
+      "result_chars": 138,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4047,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003092,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2482,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4937,
+      "output_tokens": 22,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003785,
+      "tool_calls": [
+        "query_metrics"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "query_metrics",
+      "args": {
+        "metric": "kestrel_canary_accuracy"
+      },
+      "result_chars": 7095,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7742,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005881,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "account-security"
+      },
+      "result_chars": 169,
+      "error": "no document 'account-security'",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7821,
+      "output_tokens": 40,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006016,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-01-01T00:00:00Z",
+        "limit": 30
+      },
+      "result_chars": 7236,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10389,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007867,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "password-reset"
+      },
+      "result_chars": 799,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10670,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.0081,
+      "tool_calls": [
+        "diff_prompt_versions"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "diff_prompt_versions",
+      "args": {
+        "b": "v2",
+        "a": "v1"
+      },
+      "result_chars": 706,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10946,
+      "output_tokens": 340,
+      "thinking_tokens": 0,
+      "cost_usd": 0.009484,
+      "tool_calls": [],
+      "text": "### Root Cause Summary\n\n- **Root Component**: `retriever`\n- **Category**: `config_change`\n- **Evidence**:\n  - In trace `span:ab37503f8268bf9ff0c2dcb155a1b184/b8d9bb62aaea8c0d`, the retriever returned 0 chunks (`retrieval.result_count=0`, `chunk_ids=[]`) with a similarity threshold of `0.9` (`retrieval.threshold=0.9`).\n  - Change `change:config-change-9298` by `alice` at `2026-10-18T02:42:36.733378+00:00` modified `config:similarity_threshold` to \"Reduce low-relevance retrievals\". Raising this th"
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5679,
+      "output_tokens": 517,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006198,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"retriever\",\n \"category\": \"config_change\",\n \"cause_ref\": \"change:config-change-9298\",\n \"confidence\": 0.98,\n \"summary\": \"A configuration change raised the retrieval similarity threshold to 0.9 to reduce low-relevance retrievals. This caused relevant document chunks regarding password reset link validity to be filtered out during retrieval, leaving the LLM with 0 chunks and leading it to answer that it did not know.\",\n \"evidence\": [\n  {\n   \"type\": \"trace\",\n   \"ref\": \"span:ab37"
+    }
+  ]
+}
