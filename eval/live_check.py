@@ -24,6 +24,7 @@ load_dotenv()
 from agent.graph import investigate_alert  # noqa: E402
 from agent.llm import model_name  # noqa: E402
 from eval.replay_case import run_one  # noqa: E402
+from eval import spend  # noqa: E402
 from eval.run_case import run_case  # noqa: E402
 from eval.score import RESULTS_DIR  # noqa: E402
 
@@ -60,6 +61,7 @@ def main() -> int:
     parser.add_argument("--compare-runs", nargs="*", default=["investigator-day7-r1", "investigator-day7-r2",
                                                               "investigator-day7-r3"])
     args = parser.parse_args()
+    spend.install()
     runs_dir = OUT / "runs"
     runs_dir.mkdir(parents=True, exist_ok=True)
     model = model_name()

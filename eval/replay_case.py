@@ -41,7 +41,7 @@ load_dotenv()
 from agent.graph import investigate_alert  # noqa: E402
 from agent.llm import SPEND_CAP_USD, _record_spend, model_name, spent  # noqa: E402
 from agent.schema import abstain  # noqa: E402
-from eval import splits, verifier  # noqa: E402
+from eval import spend, splits, verifier  # noqa: E402
 from eval.baselines import run_b1  # noqa: E402
 from eval.score import (RESULTS_DIR, load_truth, pct, proof_summary, score_cases, summarize,  # noqa: E402
                         write_results)
@@ -276,6 +276,11 @@ def main() -> int:
     parser.add_argument("--compare-with", default=COMPARE_WITH, help="an earlier run id ('' for none)")
     parser.add_argument("--rescore", action="store_true", help="only rebuild summary.md from saved cases")
     args = parser.parse_args()
+
+    # The day budget refuses a call once the window is spent; --rescore makes no calls at all.
+    if not args.rescore:
+        spend.install()
+        print(f"day budget: {spend.describe()}")
 
     runs_dir = args.runs_dir.resolve()
     recorded = sorted(p.name for p in runs_dir.iterdir() if (p / "alert.json").exists())

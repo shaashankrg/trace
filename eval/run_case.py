@@ -35,7 +35,7 @@ load_dotenv()
 
 from assistant import db  # noqa: E402
 from assistant.logs import INDEX_PREFIX, OPENSEARCH_URL  # noqa: E402
-from eval import canary  # noqa: E402
+from eval import canary, spend  # noqa: E402
 from eval.setup_eval import connect_eval, connect_tools  # noqa: E402
 from injector import decoys, faults, state  # noqa: E402
 
@@ -422,6 +422,7 @@ def main() -> int:
     parser.add_argument("--no-fault-canary", action="store_true",
                         help="skip the canary run while the fault is active (metrics.json will show no drop)")
     args = parser.parse_args()
+    spend.install()
 
     if args.all:
         with connect_eval() as conn:

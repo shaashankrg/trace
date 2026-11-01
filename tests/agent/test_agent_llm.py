@@ -10,6 +10,8 @@ def ledger(tmp_path, monkeypatch):
     path = tmp_path / "spend.json"
     monkeypatch.setattr(llm, "SPEND_LEDGER", path)
     monkeypatch.setattr(llm, "SPEND_CAP_USD", 0.05)
+    monkeypatch.setattr(llm, "_budget_check", None)  # no day budget in a cap test
+    monkeypatch.setattr(llm, "_budget_add", None)
     return path
 
 
