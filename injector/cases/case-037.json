@@ -1,0 +1,29 @@
+{
+  "case_id": "case-037",
+  "conversation_id": "conv-3849c1d3",
+  "fault": {
+    "type": "stale_tool_data",
+    "params": {
+      "product_id": "P-020",
+      "new_qty": 17
+    },
+    "age_min": 99,
+    "author": "alice",
+    "description": ""
+  },
+  "decoy": null,
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "Is the Glacier 0F Sleeping Bag (product P-020) in stock, and how many do you have?",
+    "reviewer_correction": "The Glacier 0F Sleeping Bag is in stock: 17 units available."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b17\\b"
+    ],
+    "must_not_contain": [
+      "out of stock|sold out|unavailable"
+    ]
+  },
+  "split": "test"
+}

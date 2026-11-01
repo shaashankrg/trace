@@ -1,0 +1,94 @@
+{
+  "alert_id": "alert-case-022",
+  "type": "quality_drop",
+  "fired_at": "2026-11-01T01:34:24.799582+00:00",
+  "window": {
+    "start": "2026-11-01T01:33:28.006430+00:00",
+    "end": "2026-11-01T01:34:24.799582+00:00"
+  },
+  "conversation_id": "conv-d05c9f9b",
+  "trace_id": "e3c1f4465b72722cf557eb3590a645a2",
+  "question": "How often should I replace my hiking socks?",
+  "answer": "I don't have any specific care documents or guidelines on hand regarding how often you should replace hiking socks. However, a general rule of thumb for hiking socks (which take a lot of friction and moisture) is to inspect them regularly and replace them when you notice thinning in the heel or toe, loss of elasticity, or holes forming—typically after 300 to 500 miles of hiking or when they no longer provide proper cushioning and moisture management.",
+  "reviewer_correction": "The documents have no sock-replacement guidance. The assistant should have said it didn't know and pointed the customer to support (help@kestrel.example), not given generic tips.",
+  "answer_check": {
+    "must_contain": [
+      "(?:don'?t|do not) (?:have (?:any |specific )?information|know)|not covered|no (?:specific )?(?:information|mention|instructions|guidance|details)|(?:doesn'?t|does not|don'?t|do not) (?:mention|cover|address|specify|say)|not (?:mentioned|specified|addressed)|contact(?:ing)? (?:our )?(?:customer )?(?:support|team)|support team|help@kestrel"
+    ],
+    "must_not_contain": [
+      "every \\d+|general(?:ly)? recommend|rule of thumb|signs of wear"
+    ]
+  },
+  "metric": "kestrel_canary_accuracy",
+  "before": 1.0,
+  "after": 0.85,
+  "failing_samples": [
+    {
+      "conversation_id": "canary-71b5fffe-q049",
+      "trace_id": "7c56e65ec11560eddbb0d4d6a7d2bf5b",
+      "question": "Is the Canyon Sandal (product P-005) in stock?",
+      "answer": "I don't know if the Canyon Sandal (product P-005) is in stock based on the available information. Please contact support for assistance.",
+      "reviewer_correction": "missing ['answer:\\\\W*no\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "answer:\\W*no\\b"
+        ],
+        "must_not_contain": [
+          "answer:\\W*yes\\b"
+        ]
+      }
+    },
+    {
+      "conversation_id": "canary-71b5fffe-q050",
+      "trace_id": "dd6bdac82746c748a81ef2ee44fa03eb",
+      "question": "I'm customer C-0005. How many orders have I placed with you?",
+      "answer": "You have placed 0 orders with us.",
+      "reviewer_correction": "missing ['\\\\b(?:2|two)\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\b(?:2|two)\\b"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "conversation_id": "canary-71b5fffe-q051",
+      "trace_id": "224ab32592d68a3880e1f20dd69a8393",
+      "question": "I'm customer C-0002. Today is 2026-10-12. Can I still return the Comfort Plus Sleeping Pad from order O-1002 for a refund?",
+      "answer": "I couldn't find any orders for customer ID C-0002, so I'm unable to verify the delivery date for your Comfort Plus Sleeping Pad from order O-1002. \n\nIf you have your order number or need further assistance, please contact support.\n\nAnswer: No",
+      "reviewer_correction": "missing ['answer:\\\\W*yes\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "answer:\\W*yes\\b"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "conversation_id": "canary-71b5fffe-q052",
+      "trace_id": "73ae1a3b487ba312a08d2cf6ae03f5cf",
+      "question": "I'm customer C-0003. Today is 2026-10-12. Can I still return the Cirrus Down Jacket from order O-1003 for a refund?",
+      "answer": "I'm sorry, but I couldn't find any orders associated with customer ID C-0003, so I am unable to check the delivery date for the Cirrus Down Jacket from order O-1003. \n\nPlease double-check your customer ID and order number, or contact support for further assistance.",
+      "reviewer_correction": "missing ['answer:\\\\W*yes\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "answer:\\W*yes\\b"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "conversation_id": "canary-71b5fffe-q053",
+      "trace_id": "5292aa13cf86f11c89f9ceb42d2c8f01",
+      "question": "I'm customer C-0008. Today is 2026-10-12. Can I still return the Comfort Plus Sleeping Pad from order O-1008 for a refund?",
+      "answer": "I'm sorry, but I couldn't find any orders associated with customer ID C-0008. Therefore, I cannot verify the purchase or delivery date for the Comfort Plus Sleeping Pad from order O-1008. Please double-check your customer ID and order number, or contact support directly for assistance.\n\nAnswer: No",
+      "reviewer_correction": "missing ['answer:\\\\W*yes\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "answer:\\W*yes\\b"
+        ],
+        "must_not_contain": []
+      }
+    }
+  ]
+}

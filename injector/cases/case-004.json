@@ -25,5 +25,6 @@
     "must_not_contain": [
       "\\b(?:30|thirty)[- ](?:calendar |business )?days?\\b"
     ]
-  }
+  },
+  "split": "train"
 }

@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS documents (
 );
 
 CREATE TABLE IF NOT EXISTS chunks (
-  chunk_id    TEXT PRIMARY KEY,          -- 'refund-policy@v2#0'
+  chunk_id    TEXT PRIMARY KEY,          -- 'refund-policy@v2#0', or '...#0/c80' off-size
   doc_id      TEXT,
   version     TEXT,
   chunk_index INT,
@@ -137,5 +137,7 @@ def init_schema(conn: psycopg.Connection) -> None:
     conn.execute(SCHEMA)
 
 
-def chunk_id(doc_id: str, version: str, index: int) -> str:
-    return f"{doc_id}@{version}#{index}"
+def chunk_id(doc_id: str, version: str, index: int, size: int | None = None) -> str:
+    """'refund-policy@v2#3', or 'refund-policy@v2#3/c80' for a non-default chunking (Day 8)."""
+    base = f"{doc_id}@{version}#{index}"
+    return base if size is None else f"{base}/c{size}"

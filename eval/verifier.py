@@ -13,13 +13,14 @@ For every evidence item (and every ruled_out ref and the cause_ref):
 One failed item marks the whole diagnosis `hallucinated`, and the scorer counts it as wrong even
 when the root component is right.
 """
+import ast
 import json
 import re
 from datetime import datetime, timezone
 from pathlib import Path
 
 SPAN = re.compile(r"^span:([0-9a-f]{32})/([0-9a-f]{16})$")
-CHUNK = re.compile(r"^chunk:([^@#\s]+@[^@#\s]+#\d+)$")
+CHUNK = re.compile(r"^chunk:([^@#\s]+@[^@#\s]+#\d+(?:/c\d+)?)$")
 DOC = re.compile(r"^doc:([^@#\s]+)@([^@#\s]+)$")
 METRIC = re.compile(r"^metric:([A-Za-z_:][A-Za-z0-9_:]*)@(.+)$")
 SIMPLE = re.compile(r"^(log|change|prompt|replay):(.+)$")
@@ -40,10 +41,12 @@ def _parse(value):
         v = value.strip()
         if v.lower() in ("true", "false"):
             return v.lower() == "true"
-        try:
-            return json.loads(v)
-        except ValueError:
-            return v
+        for parse in (json.loads, ast.literal_eval):  # the same list may come JSON- or Python-quoted
+            try:
+                return parse(v)
+            except (ValueError, SyntaxError):
+                pass
+        return v
     return value
 
 

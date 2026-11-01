@@ -1,0 +1,22 @@
+{
+  "alert_id": "alert-case-049",
+  "type": "flagged_conversation",
+  "fired_at": "2026-11-01T02:08:09.314950+00:00",
+  "window": {
+    "start": "2026-11-01T02:07:38.980658+00:00",
+    "end": "2026-11-01T02:08:09.314950+00:00"
+  },
+  "conversation_id": "conv-9dd049f3",
+  "trace_id": "0c75e98be1960ef5eb42aa6239c5293c",
+  "question": "I'm customer C-0008. Today is 2026-10-12. Can I still return the Comfort Plus Sleeping Pad from order O-1008 for a refund?",
+  "answer": "I'm sorry, but I couldn't find any orders associated with customer ID C-0008. Therefore, I cannot verify the delivery date or whether you are eligible to return the Comfort Plus Sleeping Pad. \n\nAnswer: No",
+  "reviewer_correction": "Order O-1008 was delivered 9 days ago, inside the 14-day window. The answer is yes.",
+  "answer_check": {
+    "must_contain": [
+      "answer:\\W*yes\\b"
+    ],
+    "must_not_contain": [
+      "answer:\\W*no\\b"
+    ]
+  }
+}

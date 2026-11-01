@@ -1,0 +1,36 @@
+{
+  "case_id": "case-047",
+  "conversation_id": "conv-2be6cb51",
+  "fault": {
+    "type": "silent_tool_failure",
+    "params": {
+      "tool": "lookup_order"
+    },
+    "age_min": 103,
+    "author": "priya",
+    "description": ""
+  },
+  "decoy": {
+    "type": "unrelated_doc_added",
+    "params": {
+      "doc_id": "trail-volunteer-days"
+    },
+    "age_min": 90,
+    "position": "after",
+    "author": "alice",
+    "change_id": "change:doc-update-4913",
+    "description": "Publish trail-volunteer-days@v1"
+  },
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "I'm customer C-0022. How many orders have I placed with you?",
+    "reviewer_correction": "Customer C-0022 has 4 orders on file. The assistant said it found none."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b4\\b"
+    ],
+    "must_not_contain": []
+  },
+  "split": "test"
+}

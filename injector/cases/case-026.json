@@ -1,0 +1,29 @@
+{
+  "case_id": "case-026",
+  "conversation_id": "conv-1f26c5fc",
+  "fault": {
+    "type": "stale_tool_data",
+    "params": {
+      "product_id": "P-006",
+      "new_qty": 0
+    },
+    "age_min": 71,
+    "author": "marco",
+    "description": ""
+  },
+  "decoy": null,
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "Is the Stormshell Rain Jacket (product P-006) in stock, and how many do you have?",
+    "reviewer_correction": "The Stormshell Rain Jacket is out of stock. There are none left."
+  },
+  "answer_check": {
+    "must_contain": [
+      "out of stock|not in stock|sold out|unavailable|none left|\\b0\\b"
+    ],
+    "must_not_contain": [
+      "\\b36\\b"
+    ]
+  },
+  "split": "test"
+}

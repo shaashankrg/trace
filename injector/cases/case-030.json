@@ -1,0 +1,27 @@
+{
+  "case_id": "case-030",
+  "conversation_id": "conv-97a44487",
+  "fault": {
+    "type": "missing_document",
+    "params": {
+      "doc_id": "student-discount"
+    },
+    "age_min": 29,
+    "author": "priya",
+    "description": "Clean up index entries",
+    "change_id": "change:doc-delete-6234"
+  },
+  "decoy": null,
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "What discount do students get?",
+    "reviewer_correction": "Students get 10% off with verification."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b\\d+\\s?(?:%|percent)"
+    ],
+    "must_not_contain": []
+  },
+  "split": "test"
+}

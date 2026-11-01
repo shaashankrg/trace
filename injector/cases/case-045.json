@@ -1,0 +1,36 @@
+{
+  "case_id": "case-045",
+  "conversation_id": "conv-bee1ce78",
+  "fault": {
+    "type": "threshold_too_strict",
+    "params": {
+      "value": 0.85
+    },
+    "age_min": 35,
+    "author": "alice",
+    "description": "Tune retrieval relevance cutoff",
+    "change_id": "change:config-change-7054"
+  },
+  "decoy": {
+    "type": "typo_prompt_edit",
+    "params": {},
+    "age_min": 64,
+    "position": "before",
+    "author": "priya",
+    "change_id": "change:prompt-edit-5718",
+    "description": "Prompt typo fix"
+  },
+  "alert": {
+    "type": "quality_drop",
+    "question": "What's the price match window?",
+    "reviewer_correction": "The price match window is 14 days.",
+    "metric": "kestrel_canary_accuracy"
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:14|fourteen)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": []
+  },
+  "split": "test"
+}

@@ -34,5 +34,6 @@
     "must_not_contain": [
       "out of stock|sold out|unavailable"
     ]
-  }
+  },
+  "split": "train"
 }

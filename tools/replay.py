@@ -17,7 +17,8 @@ taken from the caller (failure scenario F5):
   use_doc_version     {"doc_id", "version"}   knowledge_base
   restore_doc         {"doc_id"}              knowledge_base   (index the newest version again)
   set_config          {"key", "value"}        retriever for top_k / similarity_threshold /
-                                              embedding_model, model, guardrail, else config
+                                              embedding_model / chunk_size, model, guardrail,
+                                              else config
   set_prompt_version  {"version"}             prompt
   rerun_tool          {"tool"}                tool:<tool>      (run it again on the store)
   bypass_cache        {"tool"}                tool:<tool>      (read the source, not the cache)
@@ -26,6 +27,11 @@ Anti-cheating, in code: doc and prompt versions must exist in the snapshot, and 
 value must be one the change log shows the key holding, or the value already on the trace.
 
 Every replay is appended to a JSONL replay log so `replay:<id>` refs can be checked later.
+
+Quality drops (Day 8). When the alert is a `quality_drop`, the claim is that one change hurt many
+questions, so `run_quality_replay` replays the patch against several of the alert's failing
+samples and confirms it only if it fixes at least 2 of 3. One lucky fix is not evidence of a
+broad cause.
 """
 import json
 import os
@@ -44,9 +50,15 @@ SNAPSHOT_FILES = ("alert", "config", "chunks", "documents", "prompt_versions", "
 TOOL_NAMES = ("lookup_order", "refund_status", "check_inventory")
 CACHED_TOOLS = {"check_inventory"}
 CONFIG_TARGETS = {"top_k": "retriever", "similarity_threshold": "retriever", "embedding_model": "retriever",
-                  "model": "model", "guardrail_blocked_topics": "guardrail"}
-NOT_PATCHABLE = {"prompt_version": "use a set_prompt_version patch",
-                 "chunk_size": "documents are already chunked; a replay cannot re-chunk them"}
+                  "chunk_size": "retriever", "model": "model", "guardrail_blocked_topics": "guardrail"}
+NOT_PATCHABLE = {"prompt_version": "use a set_prompt_version patch"}
+
+# A chunk id carries its chunking: 'refund-policy@v2#3' is the default one, 'refund-policy@v2#3/c80'
+# an 80-char one. A chunking_regression case snapshots both families, so switching chunk_size is a
+# choice between chunk ids the snapshot already holds, not a re-chunk.
+CHUNK_SUFFIX = re.compile(r"/c(\d+)$")
+# The size the unsuffixed chunk ids were built at (assistant.config.DEFAULTS["chunk_size"]).
+DEFAULT_CHUNK_SIZE = "300"
 PATCH_FIELDS = {
     "none": (),
     "use_doc_version": ("doc_id", "version"),
@@ -121,6 +133,40 @@ def normalize_patch(patch) -> dict:
     if extra:
         raise PatchError(f"{kind} does not take {', '.join(extra)}", "a replay changes exactly one thing")
     return {"kind": kind, **{f: _text(patch[f]) for f in fields}}
+
+
+
+def chunk_size_of(chunk_id: str) -> str | None:
+    """The chunking a chunk id belongs to: '80' for '...#3/c80', None for the default one."""
+    m = CHUNK_SUFFIX.search(chunk_id)
+    return m.group(1) if m else None
+
+
+def chunks_for_size(snap: "Snapshot", size: str | None) -> set[str]:
+    """Every chunk id in the snapshot that belongs to the `size` chunking (None = the default)."""
+    return {c["chunk_id"] for c in snap.chunks if chunk_size_of(c["chunk_id"]) == size}
+
+
+def _switch_chunking(ov: "Overrides", snap: "Snapshot", size: str) -> "Overrides":
+    """Index the `size` chunking instead of whatever is indexed now.
+
+    Both families are in the snapshot, so this only moves index flags. Only the doc/version pairs
+    that actually have a `size` chunking are switched: everything else keeps its default chunks,
+    which is what the running system does when one doc is re-chunked."""
+    want = None if size == DEFAULT_CHUNK_SIZE else size
+    target = chunks_for_size(snap, want)
+    if not target:
+        sizes = sorted({s or "default" for s in (chunk_size_of(c["chunk_id"]) for c in snap.chunks)})
+        raise PatchError(f"the snapshot has no chunk_size={size} chunking",
+                         f"chunkings in this snapshot: {', '.join(sizes)}")
+    # Only touch docs that have both chunkings; a doc with one chunking is unaffected either way.
+    docs = {(c["doc_id"], c["version"]) for c in snap.chunks if c["chunk_id"] in target}
+    others = {c["chunk_id"] for c in snap.chunks
+              if (c["doc_id"], c["version"]) in docs and c["chunk_id"] not in target}
+    # Keep the index flags the snapshot recorded for the family being switched in.
+    keep = {c["chunk_id"] for c in snap.chunks if c["chunk_id"] in target}
+    return replace(ov, include_chunks=(ov.include_chunks - others) | keep,
+                   exclude_chunks=(ov.exclude_chunks - keep) | others)
 
 
 def target_component(patch: dict) -> str | None:
@@ -252,7 +298,11 @@ def apply_patch(ov: Overrides, patch: dict, snap: Snapshot) -> Overrides:
         if not any(_same(value, v) for v in allowed):
             raise PatchError(f"{key}={value} is not a value the change log or the trace shows {key} holding",
                              f"values on record: {', '.join(allowed) or 'only the current one'}")
-        return replace(ov, config={**ov.config, key: value})
+        ov = replace(ov, config={**ov.config, key: value})
+        if key == "chunk_size":
+            # Re-point the index at the chunking that size names; both are in the snapshot.
+            ov = _switch_chunking(ov, snap, value.strip())
+        return ov
     if kind == "set_prompt_version":
         version = patch["version"]
         if version not in snap.prompts:
@@ -522,6 +572,9 @@ def read_log(path: Path) -> list[dict]:
 
 
 SAMPLES = int(os.environ.get("TRACEWISE_REPLAY_SAMPLES", "3"))
+# A quality drop is confirmed only if one patch fixes at least 2 of 3 sampled failing questions.
+QUALITY_DROP_SAMPLED = int(os.environ.get("TRACEWISE_QUALITY_SAMPLES", "3"))
+QUALITY_DROP_MIN_FIXED = int(os.environ.get("TRACEWISE_QUALITY_MIN_FIXED", "2"))
 _controls: dict[str, dict] = {}
 _controls_lock = threading.Lock()
 
@@ -636,6 +689,82 @@ def run_replay(snap: Snapshot, patch, log: Path | None = None, judge=llm_judge, 
     with _log_lock, path.open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(record, default=str) + "\n")
     return record
+
+
+
+def failing_samples(snap: Snapshot) -> list[dict]:
+    """The failing canary conversations a quality-drop alert carries, if any."""
+    return list(snap.alert.get("failing_samples") or [])
+
+
+def _sample_snapshot(snap: Snapshot, sample: dict) -> Snapshot:
+    """The same snapshot pointed at one failing sample's conversation instead of the alert's.
+
+    Nothing is copied from disk: only the alert view changes, so the sample's own question,
+    answer_check, conversation and trace drive the replay while the world stays the recorded one.
+    """
+    clone = object.__new__(Snapshot)
+    clone.__dict__.update(snap.__dict__)
+    clone.alert = {**snap.alert,
+                   "question": sample["question"],
+                   "answer": sample.get("answer", ""),
+                   "reviewer_correction": sample.get("reviewer_correction", ""),
+                   "answer_check": sample.get("answer_check") or {},
+                   "conversation_id": sample.get("conversation_id") or snap.alert.get("conversation_id"),
+                   "trace_id": sample.get("trace_id") or snap.alert.get("trace_id")}
+    # A per-sample case id keeps each sample's control replay separate in the control cache.
+    clone.case_id = f"{snap.case_id}#{sample.get('conversation_id') or sample['question'][:24]}"
+    return clone
+
+
+def run_quality_replay(snap: Snapshot, patch, log: Path | None = None, judge=llm_judge,
+                       purpose: str = "quality_fix", sampled: int | None = None,
+                       min_fixed: int | None = None) -> dict:
+    """Replay `patch` against several of a quality-drop alert's failing samples.
+
+    Returns a record whose `matches_correction` is the 2-of-3 verdict, with the per-sample
+    replays under `sample_replays`. Raises ValueError if the alert carries no failing samples.
+    """
+    samples = failing_samples(snap)
+    if not samples:
+        raise ValueError(f"{snap.case_id} has no failing_samples; it is not a quality-drop alert")
+    want = sampled or QUALITY_DROP_SAMPLED
+    need = min_fixed or QUALITY_DROP_MIN_FIXED
+    chosen = samples[:want]
+
+    records = []
+    for sample in chosen:
+        sub = _sample_snapshot(snap, sample)
+        try:
+            rec = run_replay(sub, patch, log, judge, purpose=purpose)
+        except PatchError as e:
+            rec = {"error": f"patch rejected: {e}", "matches_correction": False,
+                   "proves_fix": False, "cost_usd": 0.0,
+                   "question": sample["question"]}
+        rec["question"] = sample["question"]
+        records.append(rec)
+
+    # A sample counts as fixed only when the patch fixes it and its own control does not: the
+    # same proves_fix rule one conversation gets, applied per sample.
+    fixed = [r for r in records if r.get("proves_fix")]
+    patch_norm = normalize_patch(patch)
+    return {
+        "purpose": purpose,
+        "case_id": snap.case_id,
+        "patch": patch_norm,
+        "target_component": target_component(patch_norm),
+        "sampled": len(records),
+        "fixed": len(fixed),
+        "min_fixed": need,
+        "matches_correction": len(fixed) >= need,
+        "rule": f"{need}-of-{len(records)}",
+        "cost_usd": round(sum(r.get("cost_usd") or 0.0 for r in records), 6),
+        "sample_replays": [{"question": r["question"], "ref": r.get("ref"),
+                            "matches_correction": r.get("matches_correction"),
+                            "proves_fix": r.get("proves_fix"),
+                            "control_matches_correction": r.get("control_matches_correction"),
+                            "error": r.get("error")} for r in records],
+    }
 
 
 _log_lock = threading.Lock()

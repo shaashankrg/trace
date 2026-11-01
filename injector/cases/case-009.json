@@ -32,5 +32,6 @@
       "\\b15\\s?(?:%|percent)"
     ],
     "must_not_contain": []
-  }
+  },
+  "split": "train"
 }

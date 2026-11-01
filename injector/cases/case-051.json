@@ -1,0 +1,38 @@
+{
+  "case_id": "case-051",
+  "conversation_id": "conv-d115668c",
+  "fault": {
+    "type": "chunking_regression",
+    "params": {
+      "doc_id": "rentals",
+      "chunk_size": 40
+    },
+    "age_min": 62,
+    "author": "alice",
+    "description": "Tune chunk size for retrieval",
+    "change_id": "change:config-change-4433"
+  },
+  "decoy": {
+    "type": "unrelated_config_change",
+    "params": {
+      "value": 700
+    },
+    "age_min": 77,
+    "position": "before",
+    "author": "priya",
+    "change_id": "change:config-change-8023",
+    "description": "Allow longer replies"
+  },
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "How much is the deposit to rent a tent?",
+    "reviewer_correction": "The rental deposit is $100."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\$100"
+    ],
+    "must_not_contain": []
+  },
+  "split": "test"
+}

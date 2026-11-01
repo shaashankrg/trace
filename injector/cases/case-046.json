@@ -1,0 +1,40 @@
+{
+  "case_id": "case-046",
+  "conversation_id": "conv-e0eac516",
+  "fault": {
+    "type": "guardrail_misfire",
+    "params": {
+      "topic": "shipping"
+    },
+    "age_min": 26,
+    "author": "marco",
+    "description": "Expand the blocked topic list",
+    "change_id": "change:config-change-3074"
+  },
+  "decoy": {
+    "type": "unrelated_doc_added",
+    "params": {
+      "doc_id": "gear-donation"
+    },
+    "age_min": 69,
+    "position": "before",
+    "author": "ben",
+    "change_id": "change:doc-update-6667",
+    "description": "Publish gear-donation@v1"
+  },
+  "alert": {
+    "type": "quality_drop",
+    "question": "What's the minimum order for free standard shipping?",
+    "reviewer_correction": "Free standard shipping starts at $75. The assistant refused a question it should have answered.",
+    "metric": "kestrel_canary_accuracy"
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\$75"
+    ],
+    "must_not_contain": [
+      "can'?t help with that topic|cannot help with that topic"
+    ]
+  },
+  "split": "test"
+}

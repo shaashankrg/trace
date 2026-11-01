@@ -22,6 +22,10 @@ FAULT_SPECS = {
     "silent_tool_failure": {"tool": "lookup_order"},
     "stale_tool_data": {"product_id": "P-003", "new_qty": 23},
     "prompt_regression": {},
+    "chunking_regression": {"doc_id": "refund-policy", "chunk_size": 80},
+    "embedding_mismatch": {"embedding_model": "sentence-transformers/all-MiniLM-L12-v2"},
+    "model_downgrade": {"model": "gemini-2.5-flash-lite"},
+    "guardrail_misfire": {"topic": "return"},
 }
 DECOY_SPECS = {
     "typo_prompt_edit": {},
@@ -46,6 +50,7 @@ def world(conn) -> dict:
     return {
         "config": q("SELECT key, value FROM app_config ORDER BY key"),
         "index": q("SELECT chunk_id, indexed FROM chunks ORDER BY chunk_id"),
+        "chunk_ids": q("SELECT chunk_id FROM chunks ORDER BY chunk_id"),
         "prompts": q("SELECT version, template FROM prompt_versions ORDER BY version"),
         "docs": q("SELECT doc_id, version FROM documents ORDER BY doc_id, version"),
         "inventory": q("SELECT product_id, qty FROM inventory_source ORDER BY product_id"),
@@ -211,14 +216,89 @@ def test_cases_are_deterministic_and_match_the_files_on_disk():
     assert json.loads(json.dumps(cases)) == on_disk
 
 
-def test_twenty_cases_half_with_decoys():
+# context_overflow and model_downgrade have no cases: neither can make an answer wrong
+# repeatably on this stack (see CONTEXT_OVERFLOW / MODEL_DOWNGRADE in injector/make_cases.py).
+NO_CASE_TYPES = {"context_overflow", "model_downgrade"}
+
+
+def test_full_benchmark_ids_and_decoys_are_well_formed():
     cases = make_cases.build_cases()
-    assert len(cases) == 20
-    assert len({c["case_id"] for c in cases}) == 20
-    assert len({c["conversation_id"] for c in cases}) == 20
-    assert sum(1 for c in cases if c["decoy"]) == 10
+    assert len(cases) >= 50
+    assert len({c["case_id"] for c in cases}) == len(cases)
+    assert len({c["conversation_id"] for c in cases}) == len(cases)
+    # roughly half carry a decoy, and never none or all of them
+    with_decoy = sum(1 for c in cases if c["decoy"])
+    assert 0.3 * len(cases) < with_decoy < 0.7 * len(cases)
     types = {c["fault"]["type"] for c in cases}
-    assert types == set(faults.FAULTS) - {"context_overflow"}
+    assert types == set(faults.FAULTS) - NO_CASE_TYPES
+
+
+def test_the_day_three_cases_are_frozen():
+    """Their snapshots are already recorded, so regenerating must not renumber or reword them."""
+    on_disk = {c["case_id"]: c for c in make_cases.load_cases()}
+    for c in make_cases.build_cases():
+        if int(c["case_id"].split("-")[1]) > make_cases.LEGACY_COUNT:
+            continue
+        old = on_disk[c["case_id"]]
+        for key in ("fault", "decoy", "alert", "answer_check", "conversation_id"):
+            assert c[key] == old[key], f"{c['case_id']}.{key} drifted"
+
+
+def test_splits_are_disjoint_and_sized():
+    cases = make_cases.build_cases()
+    by = {}
+    for c in cases:
+        by.setdefault(c["split"], []).append(c)
+    assert set(by) == {"train", "dev", "test"}
+    assert len(by["dev"]) == len(make_cases.DEV_CASES)
+    assert len(by["train"]) >= 15
+    assert len(by["test"]) >= 25
+    # every Day 3 case is train or dev; everything newer is test
+    for c in cases:
+        legacy = int(c["case_id"].split("-")[1]) <= make_cases.LEGACY_COUNT
+        if legacy:
+            assert c["split"] in ("train", "dev")
+        else:
+            assert c["split"] == "test" or c["fault"]["type"] in ("chunking_regression",)
+
+
+def test_held_out_types_appear_only_in_test():
+    """The point of the held-out types: the test run is the first time the prompt meets them."""
+    for c in make_cases.build_cases():
+        if c["fault"]["type"] in make_cases.HELD_OUT_TYPES:
+            assert c["split"] == "test", f"{c['case_id']} leaks a held-out type into {c['split']}"
+    # and all of their cases are present, not silently dropped
+    types = {c["fault"]["type"] for c in make_cases.build_cases() if c["split"] == "test"}
+    assert set(make_cases.HELD_OUT_TYPES) <= types
+
+
+def test_train_covers_every_type_that_is_not_held_out():
+    cases = make_cases.build_cases()
+    have = {c["fault"]["type"] for c in cases}
+    train = {c["fault"]["type"] for c in cases if c["split"] == "train"}
+    expected = have - set(make_cases.HELD_OUT_TYPES) - NO_CASE_TYPES
+    assert expected <= train, f"not covered by train: {sorted(expected - train)}"
+
+
+def test_a_decoy_never_points_at_the_true_root_component():
+    """Otherwise "blamed the decoy" and "got it right" are the same answer and the case cannot
+    be scored either way. The two Day 3 cases that predate the rule are frozen recordings."""
+    legacy_exceptions = {"case-009", "case-015"}
+    for c in make_cases.build_cases():
+        if not c["decoy"] or c["case_id"] in legacy_exceptions:
+            continue
+        root = faults.FAULTS[c["fault"]["type"]].root_component
+        assert make_cases.decoy_component(c["decoy"]["type"]) != root, c["case_id"]
+
+
+def test_quality_drop_alerts_are_broad_faults_in_the_test_split():
+    cases = make_cases.build_cases()
+    drops = [c for c in cases if c["alert"]["type"] == "quality_drop"]
+    assert len(drops) == make_cases.QUALITY_DROP_TARGET
+    for c in drops:
+        assert c["fault"]["type"] in make_cases.BROAD_FAULTS, c["case_id"]
+        assert c["split"] == "test", c["case_id"]
+        assert c["alert"]["metric"] == make_cases.QUALITY_DROP_METRIC
 
 
 def test_decoy_timing_is_mixed_and_never_fixed():
@@ -234,7 +314,7 @@ def test_decoy_timing_is_mixed_and_never_fixed():
 
 def test_every_case_has_a_checkable_answer_and_a_correction():
     for c in make_cases.build_cases():
-        assert c["alert"]["type"] == "flagged_conversation"
+        assert c["alert"]["type"] in ("flagged_conversation", "quality_drop")
         assert c["alert"]["reviewer_correction"]
         assert c["answer_check"]["must_contain"]
         assert not any("fault" in k for k in c["alert"])
@@ -256,6 +336,8 @@ def test_change_ids_are_unique_and_do_not_collide_with_history():
 
 def test_eval_cases_loaded_with_ground_truth(conn):
     from eval.setup_eval import connect_eval
+    expected = make_cases.load_cases()
     with connect_eval() as ev:
         n, decoys_n = ev.execute("SELECT count(*), count(*) FILTER (WHERE has_decoy) FROM eval.cases").fetchone()
-    assert (n, decoys_n) == (20, 10)
+    assert n == len(expected)
+    assert decoys_n == sum(1 for c in expected if c["decoy"])

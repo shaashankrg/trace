@@ -47,7 +47,7 @@ Runtime config lives in the `app_config` table and is read on every request. `py
 
 ```bash
 python -m eval.setup_eval          # `eval` schema + `eval` / `tools` roles (ground truth is unreadable by `tools`)
-python -m injector.make_cases      # 20 cases -> injector/cases/*.json and eval.cases
+python -m injector.make_cases      # 52 cases -> injector/cases/*.json and eval.cases
 python -m eval.run_case case-001   # reset, inject, record, snapshot to eval/runs/case-001/, revert, check recovery
 python -m eval.run_case --all
 python -m eval.baselines b1        # rule-based baseline over the recorded traces
@@ -57,6 +57,50 @@ python -m eval.score eval/diagnoses/b1.jsonl   # -> eval/results/b1.md, b1.csv, 
 Fault types are in `injector/faults.py`, decoys in `injector/decoys.py`. Each fault has `apply()`, an idempotent
 `revert()`, a `change_record()` (or `None` for an outage) and a `ground_truth()`. Real changes and decoys are
 written to the `changes` table in the same format.
+
+Eleven fault types, nine of which produce cases:
+
+| Fault | Component / category | Cases |
+|---|---|---|
+| `stale_document` | `knowledge_base` / `doc_update` | yes |
+| `missing_document` | `knowledge_base` / `doc_delete` | yes |
+| `threshold_too_strict` | `retriever` / `config_change` | yes |
+| `context_overflow` | `retriever` / `config_change` | none: a bigger `top_k` only ever added recall |
+| `silent_tool_failure` | `tool:lookup_order` / `tool_outage` | yes |
+| `stale_tool_data` | `tool:check_inventory` / `stale_data` | yes |
+| `prompt_regression` | `prompt` / `prompt_edit` | yes |
+| `chunking_regression` | `retriever` / `retrieval_failure` | yes (sizes 40-80, per doc) |
+| `embedding_mismatch` | `retriever` / `retrieval_failure` | yes, **held out** |
+| `model_downgrade` | `model` / `model_change` | none: no available smaller model fails silently |
+| `guardrail_misfire` | `guardrail` / `guardrail_error` | yes, **held out** |
+
+The two "none" rows keep their class and their apply/revert tests; a fault that cannot make an answer wrong
+repeatably is not a valid case. The probes behind both calls are in `eval/probes/`.
+
+### Alert types
+
+`flagged_conversation` is one reviewer-flagged answer. `quality_drop` is a metric that fell: `run_case` runs the
+full 60-question canary while healthy and again under the fault, and the alert carries `metric`, `before`, `after`
+and up to 5 `failing_samples` (traces for up to 10 of them are snapshotted). A quality drop is confirmed in replay
+only when one patch fixes at least **2 of 3** sampled failing questions — one lucky fix is not evidence of a broad
+cause (`replay.run_quality_replay`).
+
+### Splits
+
+```bash
+python -m eval.splits --show            # split sizes, test ids, prompt hashes, test-run count
+python -m eval.splits --write-lock      # pin the test split (once)
+python -m eval.splits --check           # verify the lock against the cases on disk
+python -m eval.splits --freeze-prompt   # pin the investigator prompt after tuning on train
+python -m eval.replay_case --split train
+python -m eval.replay_case --split test # refuses unless the lock matches and the prompt is frozen
+```
+
+`train` is for tuning. `dev` is the Day 3 cases that were read during Day 5-7 development, reported separately and
+never as a held-out result. `test` is generated on Day 8 with new questions and holds **every** case of the two
+held-out fault types, so it measures generalization to failures the prompt never met. `eval/test_split.lock` pins
+the test case ids and a hash of their JSON; `eval/results/test_runs.log` gets a line per test-split run (time, git
+commit, prompt hash, run id), which is the honest record of how many times the split was looked at.
 
 ## Investigator tools (MCP)
 
@@ -99,11 +143,13 @@ responses recorded for the alert's trace. A patched tool is re-run against `stor
 | Patch | Targets (set by code, never by the caller) |
 |---|---|
 | `{"kind": "use_doc_version", "doc_id", "version"}`, `{"kind": "restore_doc", "doc_id"}` | `knowledge_base` |
-| `{"kind": "set_config", "key", "value"}` | `retriever` (top_k, threshold, embedding model), `model`, `guardrail`, else `config` |
+| `{"kind": "set_config", "key", "value"}` | `retriever` (top_k, threshold, embedding model, chunk_size), `model`, `guardrail`, else `config` |
 | `{"kind": "set_prompt_version", "version"}` | `prompt` |
 | `{"kind": "rerun_tool", "tool"}`, `{"kind": "bypass_cache", "tool": "check_inventory"}` | `tool:<tool>` |
 
-Versions must exist in the snapshot, and a `set_config` value must appear in the change log or on the trace. The
+Versions must exist in the snapshot, and a `set_config` value must appear in the change log or on the trace.
+`chunk_size` is patchable because a re-chunked doc keeps both chunkings in the table at once, distinguished by a
+chunk-ref suffix (`chunk:refund-policy@v2#3/c80`); switching it moves index flags rather than re-chunking anything. The
 assistant model is not deterministic at temperature 0, so each replay takes 3 samples and the majority counts, and
 every patched replay is compared with an unpatched control: `proves_fix` is true only when the patch fixes the answer
 and the control does not. The answer is checked against the alert's `answer_check` patterns in code, with an LLM

@@ -6,7 +6,7 @@
     "description": "Allow longer replies",
     "diff": "- max_response_tokens: 500\n+ max_response_tokens: 700\n",
     "author": "marco",
-    "created_at": "2026-10-18T03:04:38.129188+00:00"
+    "created_at": "2026-10-24T20:45:58.685963+00:00"
   },
   {
     "change_id": "change:doc-update-1047",

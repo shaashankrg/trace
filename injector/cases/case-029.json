@@ -1,0 +1,38 @@
+{
+  "case_id": "case-029",
+  "conversation_id": "conv-e065df25",
+  "fault": {
+    "type": "threshold_too_strict",
+    "params": {
+      "value": 0.8
+    },
+    "age_min": 22,
+    "author": "ben",
+    "description": "Tune retrieval relevance cutoff",
+    "change_id": "change:config-change-7251"
+  },
+  "decoy": {
+    "type": "unrelated_doc_added",
+    "params": {
+      "doc_id": "camp-skills-workshops"
+    },
+    "age_min": 12,
+    "position": "after",
+    "author": "marco",
+    "change_id": "change:doc-update-9230",
+    "description": "Publish camp-skills-workshops@v1"
+  },
+  "alert": {
+    "type": "quality_drop",
+    "question": "Is there a military discount?",
+    "reviewer_correction": "Yes, military members, veterans and families get 15% off.",
+    "metric": "kestrel_canary_accuracy"
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b15\\s?(?:%|percent)"
+    ],
+    "must_not_contain": []
+  },
+  "split": "test"
+}

@@ -1,0 +1,62 @@
+[
+  {
+    "conversation_id": "conv-1169e5df",
+    "trace_id": "1e029277145c8e258f8e6e00371c8f3a",
+    "span_id": "e2dc766890d564fe",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-032"
+    },
+    "output": [
+      {
+        "qty": 0,
+        "name": "Water Filter Pump",
+        "product_id": "P-032",
+        "refreshed_at": "2026-11-01T02:07:09.418259+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 6.03449999471195,
+    "created_at": "2026-11-01T02:07:09.556793+00:00"
+  },
+  {
+    "conversation_id": "conv-1169e5df",
+    "trace_id": "9e21fe67c7cae65541f41250e191e968",
+    "span_id": "b9ac390bfff40197",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-032"
+    },
+    "output": [
+      {
+        "qty": 17,
+        "name": "Water Filter Pump",
+        "product_id": "P-032",
+        "refreshed_at": "2026-11-01T02:08:48.957439+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 4.946599976392463,
+    "created_at": "2026-11-01T02:08:51.650063+00:00"
+  },
+  {
+    "conversation_id": "conv-1169e5df",
+    "trace_id": "3c97b1105973ff7be3cf7bc3f3d138af",
+    "span_id": "82bc401acfcfab67",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-032"
+    },
+    "output": [
+      {
+        "qty": 0,
+        "name": "Water Filter Pump",
+        "product_id": "P-032",
+        "refreshed_at": "2026-10-29T01:03:52.124713+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 7.990699989022687,
+    "created_at": "2026-11-01T02:08:54.778619+00:00"
+  }
+]

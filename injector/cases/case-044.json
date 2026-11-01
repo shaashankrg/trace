@@ -1,0 +1,28 @@
+{
+  "case_id": "case-044",
+  "conversation_id": "conv-e20abedd",
+  "fault": {
+    "type": "threshold_too_strict",
+    "params": {
+      "value": 0.9
+    },
+    "age_min": 24,
+    "author": "ben",
+    "description": "Reduce low-relevance retrievals",
+    "change_id": "change:config-change-7504"
+  },
+  "decoy": null,
+  "alert": {
+    "type": "quality_drop",
+    "question": "How long will you hold my store pickup order?",
+    "reviewer_correction": "Store pickup orders are held for 7 days.",
+    "metric": "kestrel_canary_accuracy"
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:7|seven)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": []
+  },
+  "split": "test"
+}

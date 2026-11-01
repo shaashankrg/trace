@@ -1,0 +1,180 @@
+[
+  {
+    "conversation_id": "conv-9dd049f3",
+    "trace_id": "aa3bc1d2769b2a7b48f8761c87367903",
+    "span_id": "dd99ac1b1272eebe",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0008"
+    },
+    "output": [
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Canyon Sandal",
+            "product_id": "P-005"
+          },
+          {
+            "qty": 2,
+            "name": "Titanium Cook Pot",
+            "product_id": "P-030"
+          },
+          {
+            "qty": 2,
+            "name": "Dry Bag 20L",
+            "product_id": "P-050"
+          }
+        ],
+        "total": "730.00",
+        "status": "shipped",
+        "order_id": "O-1049",
+        "placed_at": "2026-10-09T12:00:00+00:00",
+        "delivered_at": null
+      },
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Comfort Plus Sleeping Pad",
+            "product_id": "P-022"
+          }
+        ],
+        "total": "370.00",
+        "status": "delivered",
+        "order_id": "O-1008",
+        "placed_at": "2026-09-29T09:00:00+00:00",
+        "delivered_at": "2026-10-03T09:00:00+00:00"
+      },
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Stormshell Rain Jacket",
+            "product_id": "P-006"
+          },
+          {
+            "qty": 2,
+            "name": "Basecamp Insulated Parka",
+            "product_id": "P-009"
+          },
+          {
+            "qty": 1,
+            "name": "Switchback Softshell",
+            "product_id": "P-010"
+          }
+        ],
+        "total": "1405.00",
+        "status": "delivered",
+        "order_id": "O-1055",
+        "placed_at": "2026-09-02T07:00:00+00:00",
+        "delivered_at": "2026-09-07T07:00:00+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 10.053499980131164,
+    "created_at": "2026-11-01T02:06:04.957248+00:00"
+  },
+  {
+    "conversation_id": "conv-9dd049f3",
+    "trace_id": "fee7bad9e520ac5d1260d6d2b6321d99",
+    "span_id": "5cb475d51797cfe9",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0008"
+    },
+    "output": [],
+    "timed_out": true,
+    "latency_ms": 4.870600008871406,
+    "created_at": "2026-11-01T02:06:08.959091+00:00"
+  },
+  {
+    "conversation_id": "conv-9dd049f3",
+    "trace_id": "d129dfdd63c1781986f836222134b864",
+    "span_id": "60a6f8513e755389",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0008"
+    },
+    "output": [
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Canyon Sandal",
+            "product_id": "P-005"
+          },
+          {
+            "qty": 2,
+            "name": "Titanium Cook Pot",
+            "product_id": "P-030"
+          },
+          {
+            "qty": 2,
+            "name": "Dry Bag 20L",
+            "product_id": "P-050"
+          }
+        ],
+        "total": "730.00",
+        "status": "shipped",
+        "order_id": "O-1049",
+        "placed_at": "2026-10-09T12:00:00+00:00",
+        "delivered_at": null
+      },
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Comfort Plus Sleeping Pad",
+            "product_id": "P-022"
+          }
+        ],
+        "total": "370.00",
+        "status": "delivered",
+        "order_id": "O-1008",
+        "placed_at": "2026-09-29T09:00:00+00:00",
+        "delivered_at": "2026-10-03T09:00:00+00:00"
+      },
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Stormshell Rain Jacket",
+            "product_id": "P-006"
+          },
+          {
+            "qty": 2,
+            "name": "Basecamp Insulated Parka",
+            "product_id": "P-009"
+          },
+          {
+            "qty": 1,
+            "name": "Switchback Softshell",
+            "product_id": "P-010"
+          }
+        ],
+        "total": "1405.00",
+        "status": "delivered",
+        "order_id": "O-1055",
+        "placed_at": "2026-09-02T07:00:00+00:00",
+        "delivered_at": "2026-09-07T07:00:00+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 6.438200012780726,
+    "created_at": "2026-11-01T02:07:37.847839+00:00"
+  },
+  {
+    "conversation_id": "conv-9dd049f3",
+    "trace_id": "0c75e98be1960ef5eb42aa6239c5293c",
+    "span_id": "73bbda61a08ea6a3",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0008"
+    },
+    "output": [],
+    "timed_out": true,
+    "latency_ms": 5.263899976853281,
+    "created_at": "2026-11-01T02:07:41.624992+00:00"
+  }
+]

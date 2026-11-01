@@ -1,0 +1,22 @@
+{
+  "alert_id": "alert-case-041",
+  "type": "flagged_conversation",
+  "fired_at": "2026-11-01T01:54:24.139046+00:00",
+  "window": {
+    "start": "2026-11-01T01:53:53.157647+00:00",
+    "end": "2026-11-01T01:54:24.139046+00:00"
+  },
+  "conversation_id": "conv-e9ccb9de",
+  "trace_id": "2e6964588e266a23c808ab81c63e93b4",
+  "question": "Is the Summit GTX Boot (product P-002) in stock, and how many do you have?",
+  "answer": "Yes, the Summit GTX Boot (product P-002) is in stock, and we have 4 units available.\n\nAnswer: Yes",
+  "reviewer_correction": "The Summit GTX Boot is out of stock. There are none left.",
+  "answer_check": {
+    "must_contain": [
+      "out of stock|not in stock|sold out|unavailable|none left|\\b0\\b"
+    ],
+    "must_not_contain": [
+      "\\b4\\b"
+    ]
+  }
+}

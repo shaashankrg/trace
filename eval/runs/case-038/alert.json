@@ -1,0 +1,85 @@
+{
+  "alert_id": "alert-case-038",
+  "type": "quality_drop",
+  "fired_at": "2026-11-01T01:51:55.544419+00:00",
+  "window": {
+    "start": "2026-11-01T01:50:58.746973+00:00",
+    "end": "2026-11-01T01:51:55.544419+00:00"
+  },
+  "conversation_id": "conv-9bdf144c",
+  "trace_id": "d1079c910b7aac10bf0f46dbc03afe00",
+  "question": "How long is the warranty on Kestrel-brand gear?",
+  "answer": "Sorry, I can't help with that topic. For anything else about your Kestrel orders or our policies, I'm happy to help.",
+  "reviewer_correction": "The warranty is 2 years. The assistant refused a question it should have answered.",
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:2|two)[- ]years?\\b"
+    ],
+    "must_not_contain": [
+      "can'?t help with that topic|cannot help with that topic"
+    ]
+  },
+  "metric": "kestrel_canary_accuracy",
+  "before": 1.0,
+  "after": 0.9333,
+  "failing_samples": [
+    {
+      "conversation_id": "canary-d257dce2-q010",
+      "trace_id": "10adc601d3a551cd51e89d962fec1088",
+      "question": "How long is the warranty on Kestrel-brand gear?",
+      "answer": "Sorry, I can't help with that topic. For anything else about your Kestrel orders or our policies, I'm happy to help.",
+      "reviewer_correction": "missing ['\\\\b(?:2|two)[- ]years?\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\b(?:2|two)[- ]years?\\b"
+        ],
+        "must_not_contain": [
+          "\\b(?:1|one)[- ]year\\b"
+        ]
+      }
+    },
+    {
+      "conversation_id": "canary-d257dce2-q023",
+      "trace_id": "f8a9fed70372a19e0c4f9c43ce2935a2",
+      "question": "How much do you charge to assess a repair on gear that's out of warranty?",
+      "answer": "Sorry, I can't help with that topic. For anything else about your Kestrel orders or our policies, I'm happy to help.",
+      "reviewer_correction": "missing ['\\\\$25']",
+      "answer_check": {
+        "must_contain": [
+          "\\$25"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "conversation_id": "canary-d257dce2-q057",
+      "trace_id": "4f5048afc048a0f6e63581c5b92eb788",
+      "question": "I'm customer C-0015. Today is 2026-10-12. A seam failed on the Ultralight 1-Person Tent from order O-1015. Is it still under warranty?",
+      "answer": "Sorry, I can't help with that topic. For anything else about your Kestrel orders or our policies, I'm happy to help.",
+      "reviewer_correction": "missing ['answer:\\\\W*yes\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "answer:\\W*yes\\b"
+        ],
+        "must_not_contain": [
+          "answer:\\W*no\\b"
+        ]
+      }
+    },
+    {
+      "conversation_id": "canary-d257dce2-q058",
+      "trace_id": "d2d060bc569e6beef9e5935c458d05eb",
+      "question": "I'm customer C-0012. Today is 2026-10-12. A seam failed on the Trek Hiking Pants from order O-1012. Is it still under warranty?",
+      "answer": "Sorry, I can't help with that topic. For anything else about your Kestrel orders or our policies, I'm happy to help.",
+      "reviewer_correction": "missing ['answer:\\\\W*no\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "answer:\\W*no\\b"
+        ],
+        "must_not_contain": [
+          "answer:\\W*yes\\b"
+        ]
+      }
+    }
+  ]
+}

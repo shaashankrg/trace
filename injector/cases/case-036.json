@@ -1,0 +1,37 @@
+{
+  "case_id": "case-036",
+  "conversation_id": "conv-13c4b9e7",
+  "fault": {
+    "type": "threshold_too_strict",
+    "params": {
+      "value": 0.88
+    },
+    "age_min": 23,
+    "author": "priya",
+    "description": "Tune retrieval relevance cutoff",
+    "change_id": "change:config-change-5620"
+  },
+  "decoy": {
+    "type": "unrelated_config_change",
+    "params": {
+      "value": 700
+    },
+    "age_min": 33,
+    "position": "before",
+    "author": "priya",
+    "change_id": "change:config-change-6795",
+    "description": "Raise response length limit"
+  },
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "Do Kestrel gift cards expire?",
+    "reviewer_correction": "Gift cards never expire."
+  },
+  "answer_check": {
+    "must_contain": [
+      "never expire|do not expire|don'?t expire"
+    ],
+    "must_not_contain": []
+  },
+  "split": "test"
+}

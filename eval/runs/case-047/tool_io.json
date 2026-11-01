@@ -1,0 +1,285 @@
+[
+  {
+    "conversation_id": "conv-2be6cb51",
+    "trace_id": "7095b00db9e5069ef4b78049e41699fb",
+    "span_id": "1dea00b6ef29e990",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0022"
+    },
+    "output": [
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Cirrus Down Jacket",
+            "product_id": "P-007"
+          },
+          {
+            "qty": 1,
+            "name": "Daybreak 28L Daypack",
+            "product_id": "P-023"
+          },
+          {
+            "qty": 1,
+            "name": "Dry Bag 20L",
+            "product_id": "P-050"
+          }
+        ],
+        "total": "430.00",
+        "status": "shipped",
+        "order_id": "O-1034",
+        "placed_at": "2026-10-10T12:00:00+00:00",
+        "delivered_at": null
+      },
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Camp Chair",
+            "product_id": "P-034"
+          },
+          {
+            "qty": 2,
+            "name": "Trail First Aid Kit",
+            "product_id": "P-037"
+          },
+          {
+            "qty": 2,
+            "name": "Rain Fly Tarp",
+            "product_id": "P-038"
+          }
+        ],
+        "total": "990.00",
+        "status": "delivered",
+        "order_id": "O-1022",
+        "placed_at": "2026-10-02T11:00:00+00:00",
+        "delivered_at": "2026-10-08T11:00:00+00:00"
+      },
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Summit GTX Boot",
+            "product_id": "P-002"
+          }
+        ],
+        "total": "85.00",
+        "status": "delivered",
+        "order_id": "O-1048",
+        "placed_at": "2026-08-24T09:00:00+00:00",
+        "delivered_at": "2026-08-28T09:00:00+00:00"
+      },
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Insulated Water Bottle",
+            "product_id": "P-033"
+          }
+        ],
+        "total": "570.00",
+        "status": "cancelled",
+        "order_id": "O-1070",
+        "placed_at": "2026-08-16T12:00:00+00:00",
+        "delivered_at": null
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 7.3619999748189,
+    "created_at": "2026-11-01T02:04:38.300837+00:00"
+  },
+  {
+    "conversation_id": "conv-2be6cb51",
+    "trace_id": "ee5c645cf5a73113da889329520d46cd",
+    "span_id": "c6f702dec3c6c417",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0022"
+    },
+    "output": [
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Cirrus Down Jacket",
+            "product_id": "P-007"
+          },
+          {
+            "qty": 1,
+            "name": "Daybreak 28L Daypack",
+            "product_id": "P-023"
+          },
+          {
+            "qty": 1,
+            "name": "Dry Bag 20L",
+            "product_id": "P-050"
+          }
+        ],
+        "total": "430.00",
+        "status": "shipped",
+        "order_id": "O-1034",
+        "placed_at": "2026-10-10T12:00:00+00:00",
+        "delivered_at": null
+      },
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Camp Chair",
+            "product_id": "P-034"
+          },
+          {
+            "qty": 2,
+            "name": "Trail First Aid Kit",
+            "product_id": "P-037"
+          },
+          {
+            "qty": 2,
+            "name": "Rain Fly Tarp",
+            "product_id": "P-038"
+          }
+        ],
+        "total": "990.00",
+        "status": "delivered",
+        "order_id": "O-1022",
+        "placed_at": "2026-10-02T11:00:00+00:00",
+        "delivered_at": "2026-10-08T11:00:00+00:00"
+      },
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Summit GTX Boot",
+            "product_id": "P-002"
+          }
+        ],
+        "total": "85.00",
+        "status": "delivered",
+        "order_id": "O-1048",
+        "placed_at": "2026-08-24T09:00:00+00:00",
+        "delivered_at": "2026-08-28T09:00:00+00:00"
+      },
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Insulated Water Bottle",
+            "product_id": "P-033"
+          }
+        ],
+        "total": "570.00",
+        "status": "cancelled",
+        "order_id": "O-1070",
+        "placed_at": "2026-08-16T12:00:00+00:00",
+        "delivered_at": null
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 6.825899996329099,
+    "created_at": "2026-11-01T02:04:41.628225+00:00"
+  },
+  {
+    "conversation_id": "conv-2be6cb51",
+    "trace_id": "91c2cd2a6ab35db90a5a0375e08c1e06",
+    "span_id": "bb242c8fe119b86d",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0022"
+    },
+    "output": [
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Cirrus Down Jacket",
+            "product_id": "P-007"
+          },
+          {
+            "qty": 1,
+            "name": "Daybreak 28L Daypack",
+            "product_id": "P-023"
+          },
+          {
+            "qty": 1,
+            "name": "Dry Bag 20L",
+            "product_id": "P-050"
+          }
+        ],
+        "total": "430.00",
+        "status": "shipped",
+        "order_id": "O-1034",
+        "placed_at": "2026-10-10T12:00:00+00:00",
+        "delivered_at": null
+      },
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Camp Chair",
+            "product_id": "P-034"
+          },
+          {
+            "qty": 2,
+            "name": "Trail First Aid Kit",
+            "product_id": "P-037"
+          },
+          {
+            "qty": 2,
+            "name": "Rain Fly Tarp",
+            "product_id": "P-038"
+          }
+        ],
+        "total": "990.00",
+        "status": "delivered",
+        "order_id": "O-1022",
+        "placed_at": "2026-10-02T11:00:00+00:00",
+        "delivered_at": "2026-10-08T11:00:00+00:00"
+      },
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Summit GTX Boot",
+            "product_id": "P-002"
+          }
+        ],
+        "total": "85.00",
+        "status": "delivered",
+        "order_id": "O-1048",
+        "placed_at": "2026-08-24T09:00:00+00:00",
+        "delivered_at": "2026-08-28T09:00:00+00:00"
+      },
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Insulated Water Bottle",
+            "product_id": "P-033"
+          }
+        ],
+        "total": "570.00",
+        "status": "cancelled",
+        "order_id": "O-1070",
+        "placed_at": "2026-08-16T12:00:00+00:00",
+        "delivered_at": null
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 7.078399998135865,
+    "created_at": "2026-11-01T02:05:24.180001+00:00"
+  },
+  {
+    "conversation_id": "conv-2be6cb51",
+    "trace_id": "f4f9cdcc50847f06c7d46cbd1a9ad0e6",
+    "span_id": "f841a589791162fe",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0022"
+    },
+    "output": [],
+    "timed_out": true,
+    "latency_ms": 5.740299995522946,
+    "created_at": "2026-11-01T02:05:27.561093+00:00"
+  }
+]

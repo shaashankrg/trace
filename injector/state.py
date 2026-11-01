@@ -6,7 +6,7 @@ from pathlib import Path
 
 import psycopg
 
-from assistant.config import reset_config
+from assistant.config import DEFAULTS, reset_config
 from assistant.ingest import DOCS_DIR, latest_versions, parse
 from assistant.prompts import PROMPT_V1, SEED_PROMPTS
 from assistant.store_seed import generate
@@ -154,6 +154,42 @@ def reset_inventory(conn: psycopg.Connection, product_id: str | None = None) -> 
             (pid, qty))
 
 
+
+def rechunk_doc(conn: psycopg.Connection, doc_id: str, size: int, embedding_model: str | None = None) -> int:
+    """Insert an off-size chunking of every version of `doc_id`, chunk ids suffixed `/c<size>`.
+
+    Idempotent: the rows are deleted and rebuilt. They go in unindexed; the fault flips the
+    index over to them, so both chunkings sit in the table and a replay can switch between
+    them in memory. Returns the number of chunks written."""
+    from assistant.db import chunk_id as make_chunk_id
+    from assistant.ingest import chunk
+    from assistant.retrieve import embed
+
+    model = embedding_model or get_config(conn, "embedding_model") or DEFAULTS["embedding_model"]
+    rows = conn.execute(
+        "SELECT version, body FROM documents WHERE doc_id = %s ORDER BY version", (doc_id,)).fetchall()
+    drop_rechunk(conn, doc_id, size)
+    written = 0
+    for version, body in rows:
+        pieces = chunk(body, size)
+        for i, (piece, vec) in enumerate(zip(pieces, embed(pieces, model))):
+            conn.execute(
+                """INSERT INTO chunks (chunk_id, doc_id, version, chunk_index, text, embedding, indexed)
+                   VALUES (%s,%s,%s,%s,%s,%s,FALSE)""",
+                (make_chunk_id(doc_id, version, i, size), doc_id, version, i, piece, vec))
+            written += 1
+    return written
+
+
+def drop_rechunk(conn: psycopg.Connection, doc_id: str, size: int | None = None) -> None:
+    """Remove off-size chunks for `doc_id` (all sizes when `size` is None)."""
+    pattern = f"{doc_id}@%#%/c{size}" if size is not None else f"{doc_id}@%#%/c%"
+    conn.execute("DELETE FROM chunks WHERE doc_id = %s AND chunk_id LIKE %s", (doc_id, pattern))
+
+
+def drop_all_rechunks(conn: psycopg.Connection) -> None:
+    conn.execute("DELETE FROM chunks WHERE chunk_id LIKE %s", ("%/c%",))
+
 def decoy_doc_ids() -> list[str]:
     return [p.name.split("@")[0] for p in sorted(DECOY_DOCS_DIR.glob("*.md"))]
 
@@ -169,6 +205,7 @@ def reset_healthy(conn: psycopg.Connection) -> None:
     ids = decoy_doc_ids()
     conn.execute("DELETE FROM chunks WHERE doc_id = ANY(%s)", (ids,))
     conn.execute("DELETE FROM documents WHERE doc_id = ANY(%s)", (ids,))
+    drop_all_rechunks(conn)
     restore_index_flags(conn)
 
     reset_inventory(conn)

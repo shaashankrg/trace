@@ -31,5 +31,6 @@
       "\\bshipped\\b"
     ],
     "must_not_contain": []
-  }
+  },
+  "split": "train"
 }

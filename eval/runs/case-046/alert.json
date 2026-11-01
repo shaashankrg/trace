@@ -1,0 +1,98 @@
+{
+  "alert_id": "alert-case-046",
+  "type": "quality_drop",
+  "fired_at": "2026-11-01T02:04:38.866950+00:00",
+  "window": {
+    "start": "2026-11-01T02:03:42.232111+00:00",
+    "end": "2026-11-01T02:04:38.866950+00:00"
+  },
+  "conversation_id": "conv-e0eac516",
+  "trace_id": "503b11a86f5c488569a0f2bdd2978ee5",
+  "question": "What's the minimum order for free standard shipping?",
+  "answer": "Sorry, I can't help with that topic. For anything else about your Kestrel orders or our policies, I'm happy to help.",
+  "reviewer_correction": "Free standard shipping starts at $75. The assistant refused a question it should have answered.",
+  "answer_check": {
+    "must_contain": [
+      "\\$75"
+    ],
+    "must_not_contain": [
+      "can'?t help with that topic|cannot help with that topic"
+    ]
+  },
+  "metric": "kestrel_canary_accuracy",
+  "before": 1.0,
+  "after": 0.9167,
+  "failing_samples": [
+    {
+      "conversation_id": "canary-be2804a1-q003",
+      "trace_id": "24cc944eaa532cade47c0480634520d1",
+      "question": "Do I have to pay for return shipping?",
+      "answer": "Sorry, I can't help with that topic. For anything else about your Kestrel orders or our policies, I'm happy to help.",
+      "reviewer_correction": "missing ['\\\\bfree\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\bfree\\b"
+        ],
+        "must_not_contain": [
+          "\\$7\\.95"
+        ]
+      }
+    },
+    {
+      "conversation_id": "canary-be2804a1-q005",
+      "trace_id": "584b9d56ed0f2ce12dc3e04b67c096ad",
+      "question": "What's the minimum order for free standard shipping?",
+      "answer": "Sorry, I can't help with that topic. For anything else about your Kestrel orders or our policies, I'm happy to help.",
+      "reviewer_correction": "missing ['\\\\$75']",
+      "answer_check": {
+        "must_contain": [
+          "\\$75"
+        ],
+        "must_not_contain": [
+          "\\$50"
+        ]
+      }
+    },
+    {
+      "conversation_id": "canary-be2804a1-q006",
+      "trace_id": "2cd9a15350cf76579a02eedc16480c5b",
+      "question": "How much does standard shipping cost on a small order?",
+      "answer": "Sorry, I can't help with that topic. For anything else about your Kestrel orders or our policies, I'm happy to help.",
+      "reviewer_correction": "missing ['\\\\$6\\\\.95']",
+      "answer_check": {
+        "must_contain": [
+          "\\$6\\.95"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "conversation_id": "canary-be2804a1-q007",
+      "trace_id": "395a90e500ad21cd2a9e89ee48ef4f68",
+      "question": "How much is express shipping?",
+      "answer": "Sorry, I can't help with that topic. For anything else about your Kestrel orders or our policies, I'm happy to help.",
+      "reviewer_correction": "missing ['\\\\$19\\\\.95']",
+      "answer_check": {
+        "must_contain": [
+          "\\$19\\.95"
+        ],
+        "must_not_contain": [
+          "\\$24\\.95"
+        ]
+      }
+    },
+    {
+      "conversation_id": "canary-be2804a1-q008",
+      "trace_id": "cab5f56cff37ee1dcbc092585e63b9e7",
+      "question": "How much does overnight shipping cost?",
+      "answer": "Sorry, I can't help with that topic. For anything else about your Kestrel orders or our policies, I'm happy to help.",
+      "reviewer_correction": "missing ['\\\\$39\\\\.95']",
+      "answer_check": {
+        "must_contain": [
+          "\\$39\\.95"
+        ],
+        "must_not_contain": []
+      }
+    }
+  ]
+}

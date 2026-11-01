@@ -1,0 +1,5216 @@
+{
+  "data": [
+    {
+      "traceID": "e3c1f4465b72722cf557eb3590a645a2",
+      "spans": [
+        {
+          "traceID": "e3c1f4465b72722cf557eb3590a645a2",
+          "spanID": "b46fb51408779397",
+          "operationName": "retrieve",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "e3c1f4465b72722cf557eb3590a645a2",
+              "spanID": "c4de828aa13d8ad0"
+            }
+          ],
+          "startTime": 1793496810108133,
+          "duration": 26108,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "conv-d05c9f9b"
+            },
+            {
+              "key": "kestrel.embedding.model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.retrieval.chunk_ids",
+              "type": "string",
+              "value": "[]"
+            },
+            {
+              "key": "kestrel.retrieval.result_count",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "kestrel.retrieval.scores",
+              "type": "string",
+              "value": "[]"
+            },
+            {
+              "key": "kestrel.retrieval.threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.retrieval.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "e3c1f4465b72722cf557eb3590a645a2",
+          "spanID": "c4de828aa13d8ad0",
+          "operationName": "POST /chat",
+          "references": [],
+          "startTime": 1793496810059573,
+          "duration": 870610,
+          "tags": [
+            {
+              "key": "http.flavor",
+              "type": "string",
+              "value": "1.1"
+            },
+            {
+              "key": "http.host",
+              "type": "string",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "http.method",
+              "type": "string",
+              "value": "POST"
+            },
+            {
+              "key": "http.route",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.scheme",
+              "type": "string",
+              "value": "http"
+            },
+            {
+              "key": "http.server_name",
+              "type": "string",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 200
+            },
+            {
+              "key": "http.target",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.url",
+              "type": "string",
+              "value": "http://localhost:8000/chat"
+            },
+            {
+              "key": "http.user_agent",
+              "type": "string",
+              "value": "Python-urllib/3.11"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.config.chunk_size",
+              "type": "int64",
+              "value": 300
+            },
+            {
+              "key": "kestrel.config.embedding_model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.config.guardrail_blocked_topics",
+              "type": "string",
+              "value": "[\"lawsuit\",\"legal advice\",\"medical advice\",\"weapon\",\"firearm\",\"social security number\",\"hack\"]"
+            },
+            {
+              "key": "kestrel.config.max_response_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "kestrel.config.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "kestrel.config.prompt_version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "kestrel.config.similarity_threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.config.tool_timeout_ms",
+              "type": "int64",
+              "value": 2000
+            },
+            {
+              "key": "kestrel.config.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "conv-d05c9f9b"
+            },
+            {
+              "key": "net.host.port",
+              "type": "int64",
+              "value": 8000
+            },
+            {
+              "key": "net.peer.ip",
+              "type": "string",
+              "value": "127.0.0.1"
+            },
+            {
+              "key": "net.peer.port",
+              "type": "int64",
+              "value": 52079
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "opentelemetry.instrumentation.fastapi"
+            },
+            {
+              "key": "otel.scope.version",
+              "type": "string",
+              "value": "0.66b1"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "server"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "e3c1f4465b72722cf557eb3590a645a2",
+          "spanID": "1a2065d0b20861fe",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "e3c1f4465b72722cf557eb3590a645a2",
+              "spanID": "c4de828aa13d8ad0"
+            }
+          ],
+          "startTime": 1793496810135468,
+          "duration": 791687,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"end_turn\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "6pbmarmYDPShz7IPj4-l-A0"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 392
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 94
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "e3c1f4465b72722cf557eb3590a645a2",
+          "spanID": "2062ea044639c257",
+          "operationName": "guardrail",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "e3c1f4465b72722cf557eb3590a645a2",
+              "spanID": "c4de828aa13d8ad0"
+            }
+          ],
+          "startTime": 1793496810108133,
+          "duration": 0,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.guardrail.decision",
+              "type": "string",
+              "value": "allow"
+            },
+            {
+              "key": "kestrel.guardrail.matched_rule",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "kestrel-assistant",
+          "tags": [
+            {
+              "key": "service.instance.id",
+              "type": "string",
+              "value": "6d0d8405-0831-414d-a377-30d5b058bb3d"
+            },
+            {
+              "key": "telemetry.sdk.language",
+              "type": "string",
+              "value": "python"
+            },
+            {
+              "key": "telemetry.sdk.name",
+              "type": "string",
+              "value": "opentelemetry"
+            },
+            {
+              "key": "telemetry.sdk.version",
+              "type": "string",
+              "value": "1.45.1"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "7c56e65ec11560eddbb0d4d6a7d2bf5b",
+      "spans": [
+        {
+          "traceID": "7c56e65ec11560eddbb0d4d6a7d2bf5b",
+          "spanID": "a62aed7f92093089",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "7c56e65ec11560eddbb0d4d6a7d2bf5b",
+              "spanID": "d2ffa53921b4f935"
+            }
+          ],
+          "startTime": 1793496846659942,
+          "duration": 548017,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"tool_use\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "DpfmaomBLKyez7IPjvPY2A0"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 455
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 22
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "7c56e65ec11560eddbb0d4d6a7d2bf5b",
+          "spanID": "0a1a114a4ed8f96c",
+          "operationName": "tool.check_inventory",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "7c56e65ec11560eddbb0d4d6a7d2bf5b",
+              "spanID": "d2ffa53921b4f935"
+            }
+          ],
+          "startTime": 1793496847207960,
+          "duration": 13684,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "execute_tool"
+            },
+            {
+              "key": "gen_ai.tool.name",
+              "type": "string",
+              "value": "check_inventory"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.tool.latency_ms",
+              "type": "float64",
+              "value": 8
+            },
+            {
+              "key": "kestrel.tool.result_count",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "7c56e65ec11560eddbb0d4d6a7d2bf5b",
+          "spanID": "c551d6df2d73f674",
+          "operationName": "guardrail",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "7c56e65ec11560eddbb0d4d6a7d2bf5b",
+              "spanID": "d2ffa53921b4f935"
+            }
+          ],
+          "startTime": 1793496846639142,
+          "duration": 0,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.guardrail.decision",
+              "type": "string",
+              "value": "allow"
+            },
+            {
+              "key": "kestrel.guardrail.matched_rule",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "7c56e65ec11560eddbb0d4d6a7d2bf5b",
+          "spanID": "b84e039a81fcd3a7",
+          "operationName": "retrieve",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "7c56e65ec11560eddbb0d4d6a7d2bf5b",
+              "spanID": "d2ffa53921b4f935"
+            }
+          ],
+          "startTime": 1793496846639142,
+          "duration": 19801,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "canary-71b5fffe-q049"
+            },
+            {
+              "key": "kestrel.embedding.model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.retrieval.chunk_ids",
+              "type": "string",
+              "value": "[\"accounts@v1#1\"]"
+            },
+            {
+              "key": "kestrel.retrieval.result_count",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.retrieval.scores",
+              "type": "string",
+              "value": "[0.3214]"
+            },
+            {
+              "key": "kestrel.retrieval.threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.retrieval.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "7c56e65ec11560eddbb0d4d6a7d2bf5b",
+          "spanID": "9cdde704960bc6f6",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "7c56e65ec11560eddbb0d4d6a7d2bf5b",
+              "spanID": "d2ffa53921b4f935"
+            }
+          ],
+          "startTime": 1793496847222195,
+          "duration": 519685,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"end_turn\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "D5fmaqqGEdfpz7IP5MXYsAk"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 491
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 33
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "7c56e65ec11560eddbb0d4d6a7d2bf5b",
+          "spanID": "d2ffa53921b4f935",
+          "operationName": "POST /chat",
+          "references": [],
+          "startTime": 1793496846595904,
+          "duration": 1149006,
+          "tags": [
+            {
+              "key": "http.flavor",
+              "type": "string",
+              "value": "1.1"
+            },
+            {
+              "key": "http.host",
+              "type": "string",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "http.method",
+              "type": "string",
+              "value": "POST"
+            },
+            {
+              "key": "http.route",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.scheme",
+              "type": "string",
+              "value": "http"
+            },
+            {
+              "key": "http.server_name",
+              "type": "string",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 200
+            },
+            {
+              "key": "http.target",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.url",
+              "type": "string",
+              "value": "http://localhost:8000/chat"
+            },
+            {
+              "key": "http.user_agent",
+              "type": "string",
+              "value": "Python-urllib/3.11"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.config.chunk_size",
+              "type": "int64",
+              "value": 300
+            },
+            {
+              "key": "kestrel.config.embedding_model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.config.guardrail_blocked_topics",
+              "type": "string",
+              "value": "[\"lawsuit\",\"legal advice\",\"medical advice\",\"weapon\",\"firearm\",\"social security number\",\"hack\"]"
+            },
+            {
+              "key": "kestrel.config.max_response_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "kestrel.config.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "kestrel.config.prompt_version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "kestrel.config.similarity_threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.config.tool_timeout_ms",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.config.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "canary-71b5fffe-q049"
+            },
+            {
+              "key": "net.host.port",
+              "type": "int64",
+              "value": 8000
+            },
+            {
+              "key": "net.peer.ip",
+              "type": "string",
+              "value": "127.0.0.1"
+            },
+            {
+              "key": "net.peer.port",
+              "type": "int64",
+              "value": 52347
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "opentelemetry.instrumentation.fastapi"
+            },
+            {
+              "key": "otel.scope.version",
+              "type": "string",
+              "value": "0.66b1"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "server"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "kestrel-assistant",
+          "tags": [
+            {
+              "key": "service.instance.id",
+              "type": "string",
+              "value": "6d0d8405-0831-414d-a377-30d5b058bb3d"
+            },
+            {
+              "key": "telemetry.sdk.language",
+              "type": "string",
+              "value": "python"
+            },
+            {
+              "key": "telemetry.sdk.name",
+              "type": "string",
+              "value": "opentelemetry"
+            },
+            {
+              "key": "telemetry.sdk.version",
+              "type": "string",
+              "value": "1.45.1"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "dd6bdac82746c748a81ef2ee44fa03eb",
+      "spans": [
+        {
+          "traceID": "dd6bdac82746c748a81ef2ee44fa03eb",
+          "spanID": "7ba8ca54c5e09817",
+          "operationName": "retrieve",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "dd6bdac82746c748a81ef2ee44fa03eb",
+              "spanID": "a2cc1ec02ec0d96b"
+            }
+          ],
+          "startTime": 1793496847135999,
+          "duration": 57190,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "canary-71b5fffe-q050"
+            },
+            {
+              "key": "kestrel.embedding.model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.retrieval.chunk_ids",
+              "type": "string",
+              "value": "[\"corporate-orders@v1#0\",\"returns-process@v2#1\",\"contact-support@v1#0\",\"accounts@v1#1\"]"
+            },
+            {
+              "key": "kestrel.retrieval.result_count",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "kestrel.retrieval.scores",
+              "type": "string",
+              "value": "[0.432,0.3778,0.3724,0.3586]"
+            },
+            {
+              "key": "kestrel.retrieval.threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.retrieval.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "dd6bdac82746c748a81ef2ee44fa03eb",
+          "spanID": "1c725c6d2f05a8b7",
+          "operationName": "tool.lookup_order",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "dd6bdac82746c748a81ef2ee44fa03eb",
+              "spanID": "a2cc1ec02ec0d96b"
+            }
+          ],
+          "startTime": 1793496847749458,
+          "duration": 10146,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "execute_tool"
+            },
+            {
+              "key": "gen_ai.tool.name",
+              "type": "string",
+              "value": "lookup_order"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.tool.latency_ms",
+              "type": "float64",
+              "value": 5.8
+            },
+            {
+              "key": "kestrel.tool.result_count",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "dd6bdac82746c748a81ef2ee44fa03eb",
+          "spanID": "4e55ebf7459ee290",
+          "operationName": "guardrail",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "dd6bdac82746c748a81ef2ee44fa03eb",
+              "spanID": "a2cc1ec02ec0d96b"
+            }
+          ],
+          "startTime": 1793496847135999,
+          "duration": 0,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.guardrail.decision",
+              "type": "string",
+              "value": "allow"
+            },
+            {
+              "key": "kestrel.guardrail.matched_rule",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "dd6bdac82746c748a81ef2ee44fa03eb",
+          "spanID": "a2e4c733aac86209",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "dd6bdac82746c748a81ef2ee44fa03eb",
+              "spanID": "a2cc1ec02ec0d96b"
+            }
+          ],
+          "startTime": 1793496847195724,
+          "duration": 553733,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"tool_use\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "D5fmap6vEN_Uz7IPq7TuiA4"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 651
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 23
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "dd6bdac82746c748a81ef2ee44fa03eb",
+          "spanID": "405d5112b9a778e6",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "dd6bdac82746c748a81ef2ee44fa03eb",
+              "spanID": "a2cc1ec02ec0d96b"
+            }
+          ],
+          "startTime": 1793496847759604,
+          "duration": 498850,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"end_turn\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "D5fmasC1MYXqz7IP-prRoAk"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 688
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 9
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "dd6bdac82746c748a81ef2ee44fa03eb",
+          "spanID": "a2cc1ec02ec0d96b",
+          "operationName": "POST /chat",
+          "references": [],
+          "startTime": 1793496847094085,
+          "duration": 1166896,
+          "tags": [
+            {
+              "key": "http.flavor",
+              "type": "string",
+              "value": "1.1"
+            },
+            {
+              "key": "http.host",
+              "type": "string",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "http.method",
+              "type": "string",
+              "value": "POST"
+            },
+            {
+              "key": "http.route",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.scheme",
+              "type": "string",
+              "value": "http"
+            },
+            {
+              "key": "http.server_name",
+              "type": "string",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 200
+            },
+            {
+              "key": "http.target",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.url",
+              "type": "string",
+              "value": "http://localhost:8000/chat"
+            },
+            {
+              "key": "http.user_agent",
+              "type": "string",
+              "value": "Python-urllib/3.11"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.config.chunk_size",
+              "type": "int64",
+              "value": 300
+            },
+            {
+              "key": "kestrel.config.embedding_model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.config.guardrail_blocked_topics",
+              "type": "string",
+              "value": "[\"lawsuit\",\"legal advice\",\"medical advice\",\"weapon\",\"firearm\",\"social security number\",\"hack\"]"
+            },
+            {
+              "key": "kestrel.config.max_response_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "kestrel.config.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "kestrel.config.prompt_version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "kestrel.config.similarity_threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.config.tool_timeout_ms",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.config.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "canary-71b5fffe-q050"
+            },
+            {
+              "key": "net.host.port",
+              "type": "int64",
+              "value": 8000
+            },
+            {
+              "key": "net.peer.ip",
+              "type": "string",
+              "value": "127.0.0.1"
+            },
+            {
+              "key": "net.peer.port",
+              "type": "int64",
+              "value": 52349
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "opentelemetry.instrumentation.fastapi"
+            },
+            {
+              "key": "otel.scope.version",
+              "type": "string",
+              "value": "0.66b1"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "server"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "kestrel-assistant",
+          "tags": [
+            {
+              "key": "service.instance.id",
+              "type": "string",
+              "value": "6d0d8405-0831-414d-a377-30d5b058bb3d"
+            },
+            {
+              "key": "telemetry.sdk.language",
+              "type": "string",
+              "value": "python"
+            },
+            {
+              "key": "telemetry.sdk.name",
+              "type": "string",
+              "value": "opentelemetry"
+            },
+            {
+              "key": "telemetry.sdk.version",
+              "type": "string",
+              "value": "1.45.1"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "224ab32592d68a3880e1f20dd69a8393",
+      "spans": [
+        {
+          "traceID": "224ab32592d68a3880e1f20dd69a8393",
+          "spanID": "704e36cbcfbb48b8",
+          "operationName": "guardrail",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "224ab32592d68a3880e1f20dd69a8393",
+              "spanID": "e7e9195f17e69913"
+            }
+          ],
+          "startTime": 1793496847340703,
+          "duration": 0,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.guardrail.decision",
+              "type": "string",
+              "value": "allow"
+            },
+            {
+              "key": "kestrel.guardrail.matched_rule",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "224ab32592d68a3880e1f20dd69a8393",
+          "spanID": "a8aab4ff806647a9",
+          "operationName": "retrieve",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "224ab32592d68a3880e1f20dd69a8393",
+              "spanID": "e7e9195f17e69913"
+            }
+          ],
+          "startTime": 1793496847340703,
+          "duration": 33732,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "canary-71b5fffe-q051"
+            },
+            {
+              "key": "kestrel.embedding.model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.retrieval.chunk_ids",
+              "type": "string",
+              "value": "[\"holiday-returns@v1#0\",\"refund-policy@v2#1\",\"refund-policy@v2#0\",\"exchanges@v2#1\"]"
+            },
+            {
+              "key": "kestrel.retrieval.result_count",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "kestrel.retrieval.scores",
+              "type": "string",
+              "value": "[0.5447,0.5149,0.4821,0.4722]"
+            },
+            {
+              "key": "kestrel.retrieval.threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.retrieval.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "224ab32592d68a3880e1f20dd69a8393",
+          "spanID": "7d7a497ae7a33ed0",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "224ab32592d68a3880e1f20dd69a8393",
+              "spanID": "e7e9195f17e69913"
+            }
+          ],
+          "startTime": 1793496847376435,
+          "duration": 490001,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"tool_use\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "D5fmap_IGojZqtsPva32iQ0"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 699
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 23
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "224ab32592d68a3880e1f20dd69a8393",
+          "spanID": "1de6c50a3167c232",
+          "operationName": "tool.lookup_order",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "224ab32592d68a3880e1f20dd69a8393",
+              "spanID": "e7e9195f17e69913"
+            }
+          ],
+          "startTime": 1793496847866437,
+          "duration": 12753,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "execute_tool"
+            },
+            {
+              "key": "gen_ai.tool.name",
+              "type": "string",
+              "value": "lookup_order"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.tool.latency_ms",
+              "type": "float64",
+              "value": 8.3
+            },
+            {
+              "key": "kestrel.tool.result_count",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "224ab32592d68a3880e1f20dd69a8393",
+          "spanID": "84e7e120c1ffc556",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "224ab32592d68a3880e1f20dd69a8393",
+              "spanID": "e7e9195f17e69913"
+            }
+          ],
+          "startTime": 1793496847879191,
+          "duration": 621076,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"end_turn\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "D5fmatvJOdiUmtkP2cmUoQ0"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 736
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 63
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "224ab32592d68a3880e1f20dd69a8393",
+          "spanID": "e7e9195f17e69913",
+          "operationName": "POST /chat",
+          "references": [],
+          "startTime": 1793496847295103,
+          "duration": 1208220,
+          "tags": [
+            {
+              "key": "http.flavor",
+              "type": "string",
+              "value": "1.1"
+            },
+            {
+              "key": "http.host",
+              "type": "string",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "http.method",
+              "type": "string",
+              "value": "POST"
+            },
+            {
+              "key": "http.route",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.scheme",
+              "type": "string",
+              "value": "http"
+            },
+            {
+              "key": "http.server_name",
+              "type": "string",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 200
+            },
+            {
+              "key": "http.target",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.url",
+              "type": "string",
+              "value": "http://localhost:8000/chat"
+            },
+            {
+              "key": "http.user_agent",
+              "type": "string",
+              "value": "Python-urllib/3.11"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.config.chunk_size",
+              "type": "int64",
+              "value": 300
+            },
+            {
+              "key": "kestrel.config.embedding_model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.config.guardrail_blocked_topics",
+              "type": "string",
+              "value": "[\"lawsuit\",\"legal advice\",\"medical advice\",\"weapon\",\"firearm\",\"social security number\",\"hack\"]"
+            },
+            {
+              "key": "kestrel.config.max_response_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "kestrel.config.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "kestrel.config.prompt_version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "kestrel.config.similarity_threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.config.tool_timeout_ms",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.config.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "canary-71b5fffe-q051"
+            },
+            {
+              "key": "net.host.port",
+              "type": "int64",
+              "value": 8000
+            },
+            {
+              "key": "net.peer.ip",
+              "type": "string",
+              "value": "127.0.0.1"
+            },
+            {
+              "key": "net.peer.port",
+              "type": "int64",
+              "value": 52351
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "opentelemetry.instrumentation.fastapi"
+            },
+            {
+              "key": "otel.scope.version",
+              "type": "string",
+              "value": "0.66b1"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "server"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "kestrel-assistant",
+          "tags": [
+            {
+              "key": "service.instance.id",
+              "type": "string",
+              "value": "6d0d8405-0831-414d-a377-30d5b058bb3d"
+            },
+            {
+              "key": "telemetry.sdk.language",
+              "type": "string",
+              "value": "python"
+            },
+            {
+              "key": "telemetry.sdk.name",
+              "type": "string",
+              "value": "opentelemetry"
+            },
+            {
+              "key": "telemetry.sdk.version",
+              "type": "string",
+              "value": "1.45.1"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "73ae1a3b487ba312a08d2cf6ae03f5cf",
+      "spans": [
+        {
+          "traceID": "73ae1a3b487ba312a08d2cf6ae03f5cf",
+          "spanID": "8f05e6fac75c0ade",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "73ae1a3b487ba312a08d2cf6ae03f5cf",
+              "spanID": "add85cd6a82b78b6"
+            }
+          ],
+          "startTime": 1793496848407736,
+          "duration": 658622,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"end_turn\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "EJfmatPiHPGfz7IP39nE6Q0"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 791
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 68
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "73ae1a3b487ba312a08d2cf6ae03f5cf",
+          "spanID": "add85cd6a82b78b6",
+          "operationName": "POST /chat",
+          "references": [],
+          "startTime": 1793496847889762,
+          "duration": 1180123,
+          "tags": [
+            {
+              "key": "http.flavor",
+              "type": "string",
+              "value": "1.1"
+            },
+            {
+              "key": "http.host",
+              "type": "string",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "http.method",
+              "type": "string",
+              "value": "POST"
+            },
+            {
+              "key": "http.route",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.scheme",
+              "type": "string",
+              "value": "http"
+            },
+            {
+              "key": "http.server_name",
+              "type": "string",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 200
+            },
+            {
+              "key": "http.target",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.url",
+              "type": "string",
+              "value": "http://localhost:8000/chat"
+            },
+            {
+              "key": "http.user_agent",
+              "type": "string",
+              "value": "Python-urllib/3.11"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.config.chunk_size",
+              "type": "int64",
+              "value": 300
+            },
+            {
+              "key": "kestrel.config.embedding_model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.config.guardrail_blocked_topics",
+              "type": "string",
+              "value": "[\"lawsuit\",\"legal advice\",\"medical advice\",\"weapon\",\"firearm\",\"social security number\",\"hack\"]"
+            },
+            {
+              "key": "kestrel.config.max_response_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "kestrel.config.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "kestrel.config.prompt_version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "kestrel.config.similarity_threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.config.tool_timeout_ms",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.config.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "canary-71b5fffe-q052"
+            },
+            {
+              "key": "net.host.port",
+              "type": "int64",
+              "value": 8000
+            },
+            {
+              "key": "net.peer.ip",
+              "type": "string",
+              "value": "127.0.0.1"
+            },
+            {
+              "key": "net.peer.port",
+              "type": "int64",
+              "value": 52356
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "opentelemetry.instrumentation.fastapi"
+            },
+            {
+              "key": "otel.scope.version",
+              "type": "string",
+              "value": "0.66b1"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "server"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "73ae1a3b487ba312a08d2cf6ae03f5cf",
+          "spanID": "e42925311c6a7de4",
+          "operationName": "guardrail",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "73ae1a3b487ba312a08d2cf6ae03f5cf",
+              "spanID": "add85cd6a82b78b6"
+            }
+          ],
+          "startTime": 1793496847935776,
+          "duration": 1015,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.guardrail.decision",
+              "type": "string",
+              "value": "allow"
+            },
+            {
+              "key": "kestrel.guardrail.matched_rule",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "73ae1a3b487ba312a08d2cf6ae03f5cf",
+          "spanID": "91a1d0674d0fe81b",
+          "operationName": "retrieve",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "73ae1a3b487ba312a08d2cf6ae03f5cf",
+              "spanID": "add85cd6a82b78b6"
+            }
+          ],
+          "startTime": 1793496847936791,
+          "duration": 31787,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "canary-71b5fffe-q052"
+            },
+            {
+              "key": "kestrel.embedding.model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.retrieval.chunk_ids",
+              "type": "string",
+              "value": "[\"refund-policy@v2#0\",\"holiday-returns@v1#0\",\"refund-policy@v2#1\",\"returns-process@v2#0\"]"
+            },
+            {
+              "key": "kestrel.retrieval.result_count",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "kestrel.retrieval.scores",
+              "type": "string",
+              "value": "[0.6367,0.5808,0.5747,0.4856]"
+            },
+            {
+              "key": "kestrel.retrieval.threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.retrieval.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "73ae1a3b487ba312a08d2cf6ae03f5cf",
+          "spanID": "c678cf5a48f9e994",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "73ae1a3b487ba312a08d2cf6ae03f5cf",
+              "spanID": "add85cd6a82b78b6"
+            }
+          ],
+          "startTime": 1793496847970590,
+          "duration": 426390,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"tool_use\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "EJfmapyyAYXqz7IP-prRoAk"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 754
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 23
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "73ae1a3b487ba312a08d2cf6ae03f5cf",
+          "spanID": "8078e9a806288cba",
+          "operationName": "tool.lookup_order",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "73ae1a3b487ba312a08d2cf6ae03f5cf",
+              "spanID": "add85cd6a82b78b6"
+            }
+          ],
+          "startTime": 1793496848396980,
+          "duration": 10245,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "execute_tool"
+            },
+            {
+              "key": "gen_ai.tool.name",
+              "type": "string",
+              "value": "lookup_order"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.tool.latency_ms",
+              "type": "float64",
+              "value": 6.2
+            },
+            {
+              "key": "kestrel.tool.result_count",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "kestrel-assistant",
+          "tags": [
+            {
+              "key": "service.instance.id",
+              "type": "string",
+              "value": "6d0d8405-0831-414d-a377-30d5b058bb3d"
+            },
+            {
+              "key": "telemetry.sdk.language",
+              "type": "string",
+              "value": "python"
+            },
+            {
+              "key": "telemetry.sdk.name",
+              "type": "string",
+              "value": "opentelemetry"
+            },
+            {
+              "key": "telemetry.sdk.version",
+              "type": "string",
+              "value": "1.45.1"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "5292aa13cf86f11c89f9ceb42d2c8f01",
+      "spans": [
+        {
+          "traceID": "5292aa13cf86f11c89f9ceb42d2c8f01",
+          "spanID": "e5ff74b17db54527",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "5292aa13cf86f11c89f9ceb42d2c8f01",
+              "spanID": "01069e8561002a07"
+            }
+          ],
+          "startTime": 1793496849893531,
+          "duration": 508200,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"tool_use\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "EZfmauWPOr_pz7IPyqCn0Qg"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 699
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 23
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "5292aa13cf86f11c89f9ceb42d2c8f01",
+          "spanID": "c96d98e610c5fd2d",
+          "operationName": "guardrail",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "5292aa13cf86f11c89f9ceb42d2c8f01",
+              "spanID": "01069e8561002a07"
+            }
+          ],
+          "startTime": 1793496849850516,
+          "duration": 0,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.guardrail.decision",
+              "type": "string",
+              "value": "allow"
+            },
+            {
+              "key": "kestrel.guardrail.matched_rule",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "5292aa13cf86f11c89f9ceb42d2c8f01",
+          "spanID": "53bba3a2c79c8cf9",
+          "operationName": "retrieve",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "5292aa13cf86f11c89f9ceb42d2c8f01",
+              "spanID": "01069e8561002a07"
+            }
+          ],
+          "startTime": 1793496849850516,
+          "duration": 40501,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "canary-71b5fffe-q053"
+            },
+            {
+              "key": "kestrel.embedding.model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.retrieval.chunk_ids",
+              "type": "string",
+              "value": "[\"holiday-returns@v1#0\",\"refund-policy@v2#1\",\"refund-policy@v2#0\",\"exchanges@v2#1\"]"
+            },
+            {
+              "key": "kestrel.retrieval.result_count",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "kestrel.retrieval.scores",
+              "type": "string",
+              "value": "[0.5371,0.5166,0.4865,0.4792]"
+            },
+            {
+              "key": "kestrel.retrieval.threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.retrieval.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "5292aa13cf86f11c89f9ceb42d2c8f01",
+          "spanID": "ca9c97b7e3533d53",
+          "operationName": "tool.lookup_order",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "5292aa13cf86f11c89f9ceb42d2c8f01",
+              "spanID": "01069e8561002a07"
+            }
+          ],
+          "startTime": 1793496850401732,
+          "duration": 11475,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "execute_tool"
+            },
+            {
+              "key": "gen_ai.tool.name",
+              "type": "string",
+              "value": "lookup_order"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.tool.latency_ms",
+              "type": "float64",
+              "value": 6.8
+            },
+            {
+              "key": "kestrel.tool.result_count",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "5292aa13cf86f11c89f9ceb42d2c8f01",
+          "spanID": "bc737aad136e5836",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "5292aa13cf86f11c89f9ceb42d2c8f01",
+              "spanID": "01069e8561002a07"
+            }
+          ],
+          "startTime": 1793496850413207,
+          "duration": 605387,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"end_turn\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "Epfmav6oHq7mz7IPnqvF2Q4"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 736
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 71
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "5292aa13cf86f11c89f9ceb42d2c8f01",
+          "spanID": "01069e8561002a07",
+          "operationName": "POST /chat",
+          "references": [],
+          "startTime": 1793496849814361,
+          "duration": 1206239,
+          "tags": [
+            {
+              "key": "http.flavor",
+              "type": "string",
+              "value": "1.1"
+            },
+            {
+              "key": "http.host",
+              "type": "string",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "http.method",
+              "type": "string",
+              "value": "POST"
+            },
+            {
+              "key": "http.route",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.scheme",
+              "type": "string",
+              "value": "http"
+            },
+            {
+              "key": "http.server_name",
+              "type": "string",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 200
+            },
+            {
+              "key": "http.target",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.url",
+              "type": "string",
+              "value": "http://localhost:8000/chat"
+            },
+            {
+              "key": "http.user_agent",
+              "type": "string",
+              "value": "Python-urllib/3.11"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.config.chunk_size",
+              "type": "int64",
+              "value": 300
+            },
+            {
+              "key": "kestrel.config.embedding_model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.config.guardrail_blocked_topics",
+              "type": "string",
+              "value": "[\"lawsuit\",\"legal advice\",\"medical advice\",\"weapon\",\"firearm\",\"social security number\",\"hack\"]"
+            },
+            {
+              "key": "kestrel.config.max_response_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "kestrel.config.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "kestrel.config.prompt_version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "kestrel.config.similarity_threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.config.tool_timeout_ms",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.config.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "canary-71b5fffe-q053"
+            },
+            {
+              "key": "net.host.port",
+              "type": "int64",
+              "value": 8000
+            },
+            {
+              "key": "net.peer.ip",
+              "type": "string",
+              "value": "127.0.0.1"
+            },
+            {
+              "key": "net.peer.port",
+              "type": "int64",
+              "value": 52365
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "opentelemetry.instrumentation.fastapi"
+            },
+            {
+              "key": "otel.scope.version",
+              "type": "string",
+              "value": "0.66b1"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "server"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "kestrel-assistant",
+          "tags": [
+            {
+              "key": "service.instance.id",
+              "type": "string",
+              "value": "6d0d8405-0831-414d-a377-30d5b058bb3d"
+            },
+            {
+              "key": "telemetry.sdk.language",
+              "type": "string",
+              "value": "python"
+            },
+            {
+              "key": "telemetry.sdk.name",
+              "type": "string",
+              "value": "opentelemetry"
+            },
+            {
+              "key": "telemetry.sdk.version",
+              "type": "string",
+              "value": "1.45.1"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "c9aa9036e536363a73194e789ced1523",
+      "spans": [
+        {
+          "traceID": "c9aa9036e536363a73194e789ced1523",
+          "spanID": "62a6985733085ae7",
+          "operationName": "guardrail",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "c9aa9036e536363a73194e789ced1523",
+              "spanID": "67c10592d3bb7df5"
+            }
+          ],
+          "startTime": 1793496850377918,
+          "duration": 512,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.guardrail.decision",
+              "type": "string",
+              "value": "allow"
+            },
+            {
+              "key": "kestrel.guardrail.matched_rule",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "c9aa9036e536363a73194e789ced1523",
+          "spanID": "eb36b253c032108f",
+          "operationName": "tool.lookup_order",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "c9aa9036e536363a73194e789ced1523",
+              "spanID": "67c10592d3bb7df5"
+            }
+          ],
+          "startTime": 1793496850909658,
+          "duration": 42086,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "execute_tool"
+            },
+            {
+              "key": "gen_ai.tool.name",
+              "type": "string",
+              "value": "lookup_order"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.tool.latency_ms",
+              "type": "float64",
+              "value": 5.6
+            },
+            {
+              "key": "kestrel.tool.result_count",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "c9aa9036e536363a73194e789ced1523",
+          "spanID": "f367ac4583ed6b74",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "c9aa9036e536363a73194e789ced1523",
+              "spanID": "67c10592d3bb7df5"
+            }
+          ],
+          "startTime": 1793496850418776,
+          "duration": 490881,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"tool_use\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "EpfmauOdHf-hz7IPpNav8Q0"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 756
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 23
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "c9aa9036e536363a73194e789ced1523",
+          "spanID": "d179f6001b2c567e",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "c9aa9036e536363a73194e789ced1523",
+              "spanID": "67c10592d3bb7df5"
+            }
+          ],
+          "startTime": 1793496850951744,
+          "duration": 708245,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"end_turn\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "E5fmaugEzKHPsg-9xqSADg"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 793
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 68
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "c9aa9036e536363a73194e789ced1523",
+          "spanID": "67c10592d3bb7df5",
+          "operationName": "POST /chat",
+          "references": [],
+          "startTime": 1793496850326285,
+          "duration": 1336724,
+          "tags": [
+            {
+              "key": "http.flavor",
+              "type": "string",
+              "value": "1.1"
+            },
+            {
+              "key": "http.host",
+              "type": "string",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "http.method",
+              "type": "string",
+              "value": "POST"
+            },
+            {
+              "key": "http.route",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.scheme",
+              "type": "string",
+              "value": "http"
+            },
+            {
+              "key": "http.server_name",
+              "type": "string",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 200
+            },
+            {
+              "key": "http.target",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.url",
+              "type": "string",
+              "value": "http://localhost:8000/chat"
+            },
+            {
+              "key": "http.user_agent",
+              "type": "string",
+              "value": "Python-urllib/3.11"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.config.chunk_size",
+              "type": "int64",
+              "value": 300
+            },
+            {
+              "key": "kestrel.config.embedding_model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.config.guardrail_blocked_topics",
+              "type": "string",
+              "value": "[\"lawsuit\",\"legal advice\",\"medical advice\",\"weapon\",\"firearm\",\"social security number\",\"hack\"]"
+            },
+            {
+              "key": "kestrel.config.max_response_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "kestrel.config.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "kestrel.config.prompt_version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "kestrel.config.similarity_threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.config.tool_timeout_ms",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.config.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "canary-71b5fffe-q054"
+            },
+            {
+              "key": "net.host.port",
+              "type": "int64",
+              "value": 8000
+            },
+            {
+              "key": "net.peer.ip",
+              "type": "string",
+              "value": "127.0.0.1"
+            },
+            {
+              "key": "net.peer.port",
+              "type": "int64",
+              "value": 52367
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "opentelemetry.instrumentation.fastapi"
+            },
+            {
+              "key": "otel.scope.version",
+              "type": "string",
+              "value": "0.66b1"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "server"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "c9aa9036e536363a73194e789ced1523",
+          "spanID": "46f5767f92374e49",
+          "operationName": "retrieve",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "c9aa9036e536363a73194e789ced1523",
+              "spanID": "67c10592d3bb7df5"
+            }
+          ],
+          "startTime": 1793496850378430,
+          "duration": 33247,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "canary-71b5fffe-q054"
+            },
+            {
+              "key": "kestrel.embedding.model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.retrieval.chunk_ids",
+              "type": "string",
+              "value": "[\"refund-policy@v2#0\",\"holiday-returns@v1#0\",\"refund-policy@v2#1\",\"damaged-items@v1#0\"]"
+            },
+            {
+              "key": "kestrel.retrieval.result_count",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "kestrel.retrieval.scores",
+              "type": "string",
+              "value": "[0.6374,0.5935,0.5722,0.5075]"
+            },
+            {
+              "key": "kestrel.retrieval.threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.retrieval.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "kestrel-assistant",
+          "tags": [
+            {
+              "key": "service.instance.id",
+              "type": "string",
+              "value": "6d0d8405-0831-414d-a377-30d5b058bb3d"
+            },
+            {
+              "key": "telemetry.sdk.language",
+              "type": "string",
+              "value": "python"
+            },
+            {
+              "key": "telemetry.sdk.name",
+              "type": "string",
+              "value": "opentelemetry"
+            },
+            {
+              "key": "telemetry.sdk.version",
+              "type": "string",
+              "value": "1.45.1"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "bfc79555e143763b586fcb0aab0b8364",
+      "spans": [
+        {
+          "traceID": "bfc79555e143763b586fcb0aab0b8364",
+          "spanID": "21baa658f6c668fa",
+          "operationName": "POST /chat",
+          "references": [],
+          "startTime": 1793496853080789,
+          "duration": 1306492,
+          "tags": [
+            {
+              "key": "http.flavor",
+              "type": "string",
+              "value": "1.1"
+            },
+            {
+              "key": "http.host",
+              "type": "string",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "http.method",
+              "type": "string",
+              "value": "POST"
+            },
+            {
+              "key": "http.route",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.scheme",
+              "type": "string",
+              "value": "http"
+            },
+            {
+              "key": "http.server_name",
+              "type": "string",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 200
+            },
+            {
+              "key": "http.target",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.url",
+              "type": "string",
+              "value": "http://localhost:8000/chat"
+            },
+            {
+              "key": "http.user_agent",
+              "type": "string",
+              "value": "Python-urllib/3.11"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.config.chunk_size",
+              "type": "int64",
+              "value": 300
+            },
+            {
+              "key": "kestrel.config.embedding_model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.config.guardrail_blocked_topics",
+              "type": "string",
+              "value": "[\"lawsuit\",\"legal advice\",\"medical advice\",\"weapon\",\"firearm\",\"social security number\",\"hack\"]"
+            },
+            {
+              "key": "kestrel.config.max_response_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "kestrel.config.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "kestrel.config.prompt_version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "kestrel.config.similarity_threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.config.tool_timeout_ms",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.config.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "canary-71b5fffe-q057"
+            },
+            {
+              "key": "net.host.port",
+              "type": "int64",
+              "value": 8000
+            },
+            {
+              "key": "net.peer.ip",
+              "type": "string",
+              "value": "127.0.0.1"
+            },
+            {
+              "key": "net.peer.port",
+              "type": "int64",
+              "value": 52392
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "opentelemetry.instrumentation.fastapi"
+            },
+            {
+              "key": "otel.scope.version",
+              "type": "string",
+              "value": "0.66b1"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "server"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "bfc79555e143763b586fcb0aab0b8364",
+          "spanID": "e35afc003848f298",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "bfc79555e143763b586fcb0aab0b8364",
+              "spanID": "21baa658f6c668fa"
+            }
+          ],
+          "startTime": 1793496853795949,
+          "duration": 589659,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"end_turn\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "FZfmaoTVNL2fz7IPxrGBsQk"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 757
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 47
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "bfc79555e143763b586fcb0aab0b8364",
+          "spanID": "c26a7b73177d2e06",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "bfc79555e143763b586fcb0aab0b8364",
+              "spanID": "21baa658f6c668fa"
+            }
+          ],
+          "startTime": 1793496853166775,
+          "duration": 620128,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"tool_use\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "FZfmav6XDsDAz7IPxe7j-Q0"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 720
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 23
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "bfc79555e143763b586fcb0aab0b8364",
+          "spanID": "473d15fafad7e07d",
+          "operationName": "tool.lookup_order",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "bfc79555e143763b586fcb0aab0b8364",
+              "spanID": "21baa658f6c668fa"
+            }
+          ],
+          "startTime": 1793496853786903,
+          "duration": 9045,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "execute_tool"
+            },
+            {
+              "key": "gen_ai.tool.name",
+              "type": "string",
+              "value": "lookup_order"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.tool.latency_ms",
+              "type": "float64",
+              "value": 5.3
+            },
+            {
+              "key": "kestrel.tool.result_count",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "bfc79555e143763b586fcb0aab0b8364",
+          "spanID": "442e0845311277cc",
+          "operationName": "guardrail",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "bfc79555e143763b586fcb0aab0b8364",
+              "spanID": "21baa658f6c668fa"
+            }
+          ],
+          "startTime": 1793496853132194,
+          "duration": 0,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.guardrail.decision",
+              "type": "string",
+              "value": "allow"
+            },
+            {
+              "key": "kestrel.guardrail.matched_rule",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "bfc79555e143763b586fcb0aab0b8364",
+          "spanID": "9ec08edd13096e63",
+          "operationName": "retrieve",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "bfc79555e143763b586fcb0aab0b8364",
+              "spanID": "21baa658f6c668fa"
+            }
+          ],
+          "startTime": 1793496853132194,
+          "duration": 33582,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "canary-71b5fffe-q057"
+            },
+            {
+              "key": "kestrel.embedding.model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.retrieval.chunk_ids",
+              "type": "string",
+              "value": "[\"lost-packages@v1#1\",\"warranty@v2#0\",\"warranty@v2#1\",\"repairs@v1#0\"]"
+            },
+            {
+              "key": "kestrel.retrieval.result_count",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "kestrel.retrieval.scores",
+              "type": "string",
+              "value": "[0.3781,0.3723,0.3651,0.3633]"
+            },
+            {
+              "key": "kestrel.retrieval.threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.retrieval.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "kestrel-assistant",
+          "tags": [
+            {
+              "key": "service.instance.id",
+              "type": "string",
+              "value": "6d0d8405-0831-414d-a377-30d5b058bb3d"
+            },
+            {
+              "key": "telemetry.sdk.language",
+              "type": "string",
+              "value": "python"
+            },
+            {
+              "key": "telemetry.sdk.name",
+              "type": "string",
+              "value": "opentelemetry"
+            },
+            {
+              "key": "telemetry.sdk.version",
+              "type": "string",
+              "value": "1.45.1"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "a12aa131b43eac4d9827621b8b11df6d",
+      "spans": [
+        {
+          "traceID": "a12aa131b43eac4d9827621b8b11df6d",
+          "spanID": "dbfc1482c3515822",
+          "operationName": "retrieve",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "a12aa131b43eac4d9827621b8b11df6d",
+              "spanID": "cb4fd95de4d4a8e0"
+            }
+          ],
+          "startTime": 1793496853804376,
+          "duration": 24894,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "canary-71b5fffe-q059"
+            },
+            {
+              "key": "kestrel.embedding.model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.retrieval.chunk_ids",
+              "type": "string",
+              "value": "[\"exchanges@v2#0\",\"personalization@v1#0\"]"
+            },
+            {
+              "key": "kestrel.retrieval.result_count",
+              "type": "int64",
+              "value": 2
+            },
+            {
+              "key": "kestrel.retrieval.scores",
+              "type": "string",
+              "value": "[0.3324,0.3183]"
+            },
+            {
+              "key": "kestrel.retrieval.threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.retrieval.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "a12aa131b43eac4d9827621b8b11df6d",
+          "spanID": "0ec540ab8f15b09d",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "a12aa131b43eac4d9827621b8b11df6d",
+              "spanID": "cb4fd95de4d4a8e0"
+            }
+          ],
+          "startTime": 1793496853830778,
+          "duration": 584874,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"tool_use\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "FZfmasWSN_usz7IPmrHu4A4"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 603
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 23
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "a12aa131b43eac4d9827621b8b11df6d",
+          "spanID": "c684f75ae6036746",
+          "operationName": "tool.lookup_order",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "a12aa131b43eac4d9827621b8b11df6d",
+              "spanID": "cb4fd95de4d4a8e0"
+            }
+          ],
+          "startTime": 1793496854415652,
+          "duration": 9462,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "execute_tool"
+            },
+            {
+              "key": "gen_ai.tool.name",
+              "type": "string",
+              "value": "lookup_order"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.tool.latency_ms",
+              "type": "float64",
+              "value": 6
+            },
+            {
+              "key": "kestrel.tool.result_count",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "a12aa131b43eac4d9827621b8b11df6d",
+          "spanID": "8c8ae2dd65ded6a9",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "a12aa131b43eac4d9827621b8b11df6d",
+              "spanID": "cb4fd95de4d4a8e0"
+            }
+          ],
+          "startTime": 1793496854425115,
+          "duration": 584651,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"end_turn\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "FpfmaoapHryez7IP4anQiA0"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 640
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 35
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "a12aa131b43eac4d9827621b8b11df6d",
+          "spanID": "cb4fd95de4d4a8e0",
+          "operationName": "POST /chat",
+          "references": [],
+          "startTime": 1793496853751700,
+          "duration": 1260580,
+          "tags": [
+            {
+              "key": "http.flavor",
+              "type": "string",
+              "value": "1.1"
+            },
+            {
+              "key": "http.host",
+              "type": "string",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "http.method",
+              "type": "string",
+              "value": "POST"
+            },
+            {
+              "key": "http.route",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.scheme",
+              "type": "string",
+              "value": "http"
+            },
+            {
+              "key": "http.server_name",
+              "type": "string",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 200
+            },
+            {
+              "key": "http.target",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.url",
+              "type": "string",
+              "value": "http://localhost:8000/chat"
+            },
+            {
+              "key": "http.user_agent",
+              "type": "string",
+              "value": "Python-urllib/3.11"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.config.chunk_size",
+              "type": "int64",
+              "value": 300
+            },
+            {
+              "key": "kestrel.config.embedding_model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.config.guardrail_blocked_topics",
+              "type": "string",
+              "value": "[\"lawsuit\",\"legal advice\",\"medical advice\",\"weapon\",\"firearm\",\"social security number\",\"hack\"]"
+            },
+            {
+              "key": "kestrel.config.max_response_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "kestrel.config.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "kestrel.config.prompt_version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "kestrel.config.similarity_threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.config.tool_timeout_ms",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.config.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "canary-71b5fffe-q059"
+            },
+            {
+              "key": "net.host.port",
+              "type": "int64",
+              "value": 8000
+            },
+            {
+              "key": "net.peer.ip",
+              "type": "string",
+              "value": "127.0.0.1"
+            },
+            {
+              "key": "net.peer.port",
+              "type": "int64",
+              "value": 52404
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "opentelemetry.instrumentation.fastapi"
+            },
+            {
+              "key": "otel.scope.version",
+              "type": "string",
+              "value": "0.66b1"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "server"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "a12aa131b43eac4d9827621b8b11df6d",
+          "spanID": "d94e90161cdf5878",
+          "operationName": "guardrail",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "a12aa131b43eac4d9827621b8b11df6d",
+              "spanID": "cb4fd95de4d4a8e0"
+            }
+          ],
+          "startTime": 1793496853804376,
+          "duration": 0,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.guardrail.decision",
+              "type": "string",
+              "value": "allow"
+            },
+            {
+              "key": "kestrel.guardrail.matched_rule",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "kestrel-assistant",
+          "tags": [
+            {
+              "key": "service.instance.id",
+              "type": "string",
+              "value": "6d0d8405-0831-414d-a377-30d5b058bb3d"
+            },
+            {
+              "key": "telemetry.sdk.language",
+              "type": "string",
+              "value": "python"
+            },
+            {
+              "key": "telemetry.sdk.name",
+              "type": "string",
+              "value": "opentelemetry"
+            },
+            {
+              "key": "telemetry.sdk.version",
+              "type": "string",
+              "value": "1.45.1"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "31ec27a03d7c6cf6044ebc0d211dce1a",
+      "spans": [
+        {
+          "traceID": "31ec27a03d7c6cf6044ebc0d211dce1a",
+          "spanID": "1437f8cebc663c0c",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "31ec27a03d7c6cf6044ebc0d211dce1a",
+              "spanID": "7a01ae75e93eaee7"
+            }
+          ],
+          "startTime": 1793496854624699,
+          "duration": 470491,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"tool_use\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "FpfmaqXgKZ6tmtkPkvHY4A8"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 742
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 23
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "31ec27a03d7c6cf6044ebc0d211dce1a",
+          "spanID": "25209dada6faee16",
+          "operationName": "llm.chat",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "31ec27a03d7c6cf6044ebc0d211dce1a",
+              "spanID": "7a01ae75e93eaee7"
+            }
+          ],
+          "startTime": 1793496855107476,
+          "duration": 620165,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "chat"
+            },
+            {
+              "key": "gen_ai.provider.name",
+              "type": "string",
+              "value": "gcp.gemini"
+            },
+            {
+              "key": "gen_ai.request.max_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "gen_ai.request.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.request.temperature",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "gen_ai.response.finish_reasons",
+              "type": "string",
+              "value": "[\"end_turn\"]"
+            },
+            {
+              "key": "gen_ai.response.id",
+              "type": "string",
+              "value": "F5fmaovXCsPXz7IP9ZD0mQ0"
+            },
+            {
+              "key": "gen_ai.response.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "gen_ai.usage.input_tokens",
+              "type": "int64",
+              "value": 779
+            },
+            {
+              "key": "gen_ai.usage.output_tokens",
+              "type": "int64",
+              "value": 40
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.llm.turn",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.prompt.version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "31ec27a03d7c6cf6044ebc0d211dce1a",
+          "spanID": "26e1914592b86f96",
+          "operationName": "guardrail",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "31ec27a03d7c6cf6044ebc0d211dce1a",
+              "spanID": "7a01ae75e93eaee7"
+            }
+          ],
+          "startTime": 1793496854589117,
+          "duration": 0,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.guardrail.decision",
+              "type": "string",
+              "value": "allow"
+            },
+            {
+              "key": "kestrel.guardrail.matched_rule",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "31ec27a03d7c6cf6044ebc0d211dce1a",
+          "spanID": "7a01ae75e93eaee7",
+          "operationName": "POST /chat",
+          "references": [],
+          "startTime": 1793496854551232,
+          "duration": 1179299,
+          "tags": [
+            {
+              "key": "http.flavor",
+              "type": "string",
+              "value": "1.1"
+            },
+            {
+              "key": "http.host",
+              "type": "string",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "http.method",
+              "type": "string",
+              "value": "POST"
+            },
+            {
+              "key": "http.route",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.scheme",
+              "type": "string",
+              "value": "http"
+            },
+            {
+              "key": "http.server_name",
+              "type": "string",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 200
+            },
+            {
+              "key": "http.target",
+              "type": "string",
+              "value": "/chat"
+            },
+            {
+              "key": "http.url",
+              "type": "string",
+              "value": "http://localhost:8000/chat"
+            },
+            {
+              "key": "http.user_agent",
+              "type": "string",
+              "value": "Python-urllib/3.11"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.config.chunk_size",
+              "type": "int64",
+              "value": 300
+            },
+            {
+              "key": "kestrel.config.embedding_model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.config.guardrail_blocked_topics",
+              "type": "string",
+              "value": "[\"lawsuit\",\"legal advice\",\"medical advice\",\"weapon\",\"firearm\",\"social security number\",\"hack\"]"
+            },
+            {
+              "key": "kestrel.config.max_response_tokens",
+              "type": "int64",
+              "value": 500
+            },
+            {
+              "key": "kestrel.config.model",
+              "type": "string",
+              "value": "gemini-3.5-flash-lite"
+            },
+            {
+              "key": "kestrel.config.prompt_version",
+              "type": "string",
+              "value": "v2"
+            },
+            {
+              "key": "kestrel.config.similarity_threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.config.tool_timeout_ms",
+              "type": "int64",
+              "value": 1
+            },
+            {
+              "key": "kestrel.config.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "canary-71b5fffe-q060"
+            },
+            {
+              "key": "net.host.port",
+              "type": "int64",
+              "value": 8000
+            },
+            {
+              "key": "net.peer.ip",
+              "type": "string",
+              "value": "127.0.0.1"
+            },
+            {
+              "key": "net.peer.port",
+              "type": "int64",
+              "value": 52410
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "opentelemetry.instrumentation.fastapi"
+            },
+            {
+              "key": "otel.scope.version",
+              "type": "string",
+              "value": "0.66b1"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "server"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "31ec27a03d7c6cf6044ebc0d211dce1a",
+          "spanID": "fc824b44d8e3f8b2",
+          "operationName": "tool.lookup_order",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "31ec27a03d7c6cf6044ebc0d211dce1a",
+              "spanID": "7a01ae75e93eaee7"
+            }
+          ],
+          "startTime": 1793496855095191,
+          "duration": 12285,
+          "tags": [
+            {
+              "key": "gen_ai.operation.name",
+              "type": "string",
+              "value": "execute_tool"
+            },
+            {
+              "key": "gen_ai.tool.name",
+              "type": "string",
+              "value": "lookup_order"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.tool.latency_ms",
+              "type": "float64",
+              "value": 6.1
+            },
+            {
+              "key": "kestrel.tool.result_count",
+              "type": "int64",
+              "value": 0
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "31ec27a03d7c6cf6044ebc0d211dce1a",
+          "spanID": "057cd6700fb1f9d9",
+          "operationName": "retrieve",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "31ec27a03d7c6cf6044ebc0d211dce1a",
+              "spanID": "7a01ae75e93eaee7"
+            }
+          ],
+          "startTime": 1793496854589117,
+          "duration": 33529,
+          "tags": [
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            },
+            {
+              "key": "kestrel.conversation_id",
+              "type": "string",
+              "value": "canary-71b5fffe-q060"
+            },
+            {
+              "key": "kestrel.embedding.model",
+              "type": "string",
+              "value": "sentence-transformers/all-MiniLM-L6-v2"
+            },
+            {
+              "key": "kestrel.retrieval.chunk_ids",
+              "type": "string",
+              "value": "[\"exchanges@v2#0\",\"price-matching@v2#0\",\"personalization@v1#0\",\"refund-policy@v2#1\"]"
+            },
+            {
+              "key": "kestrel.retrieval.result_count",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "kestrel.retrieval.scores",
+              "type": "string",
+              "value": "[0.4678,0.3868,0.3577,0.3323]"
+            },
+            {
+              "key": "kestrel.retrieval.threshold",
+              "type": "float64",
+              "value": 0.3
+            },
+            {
+              "key": "kestrel.retrieval.top_k",
+              "type": "int64",
+              "value": 4
+            },
+            {
+              "key": "otel.scope.name",
+              "type": "string",
+              "value": "kestrel.assistant"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "internal"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "kestrel-assistant",
+          "tags": [
+            {
+              "key": "service.instance.id",
+              "type": "string",
+              "value": "6d0d8405-0831-414d-a377-30d5b058bb3d"
+            },
+            {
+              "key": "telemetry.sdk.language",
+              "type": "string",
+              "value": "python"
+            },
+            {
+              "key": "telemetry.sdk.name",
+              "type": "string",
+              "value": "opentelemetry"
+            },
+            {
+              "key": "telemetry.sdk.version",
+              "type": "string",
+              "value": "1.45.1"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    }
+  ]
+}

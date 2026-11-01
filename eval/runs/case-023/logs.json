@@ -1,0 +1,462 @@
+[
+  {
+    "log_id": "1294d013-2680-4713-acec-03573185d865",
+    "timestamp": "2026-11-01T01:34:58.141+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "f468f97740ac3851f4b71204c79f3c6e",
+    "span_id": "246e796989641ecf",
+    "conversation_id": "canary-6806f162-q010",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "aa5dffad-a4d1-497a-935e-f1ac96586fe0",
+    "timestamp": "2026-11-01T01:34:58.276+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "1bb8db69c7d3352cf4bb4ce34673abfb",
+    "span_id": "e368b50f8b354210",
+    "conversation_id": "canary-6806f162-q012",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "ae937f9d-2c24-4a3a-a196-3a1e2a28db76",
+    "timestamp": "2026-11-01T01:34:58.303+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "cc853d204f9681b3a2172c5abacac664",
+    "span_id": "d48d1b5f3fad6ef8",
+    "conversation_id": "canary-6806f162-q011",
+    "message": "chat answered (chunks=1, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "9add0f5f-cc05-414b-a654-f0ef78b1ae98",
+    "timestamp": "2026-11-01T01:34:58.337+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "f7416db41d7f67dd21c1aad93742aff7",
+    "span_id": "ba2b51655847cb82",
+    "conversation_id": "canary-6806f162-q018",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "82138850-fecc-4892-899d-f5a2f5ba6506",
+    "timestamp": "2026-11-01T01:34:58.632+00:00",
+    "level": "WARN",
+    "component": "tool.lookup_order",
+    "trace_id": "bb7cb21aa9d09eb10cddcd4edbb47e42",
+    "span_id": "4adb3234ad37d79d",
+    "conversation_id": "conv-14ae2438",
+    "message": "lookup_order timed out after 1ms; returning empty result"
+  },
+  {
+    "log_id": "1884d4cb-9ef4-43bb-8697-59c6c3e5bb87",
+    "timestamp": "2026-11-01T01:34:59.204+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "bb7cb21aa9d09eb10cddcd4edbb47e42",
+    "span_id": "80aef7a5ebd2d569",
+    "conversation_id": "conv-14ae2438",
+    "message": "chat answered (chunks=4, tools=lookup_order, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "c1235025-af6c-42c3-ac1f-6161b2219b5b",
+    "timestamp": "2026-11-01T01:35:00.752+00:00",
+    "level": "WARN",
+    "component": "tool.lookup_order",
+    "trace_id": "12aa0abca5709b25534b2b10121ce536",
+    "span_id": "12253f6d7a46e43b",
+    "conversation_id": "canary-6806f162-q036",
+    "message": "lookup_order timed out after 1ms; returning empty result"
+  },
+  {
+    "log_id": "9ce4c0f4-a62e-496f-8036-13c07b5ac4a7",
+    "timestamp": "2026-11-01T01:35:00.998+00:00",
+    "level": "WARN",
+    "component": "tool.check_inventory",
+    "trace_id": "3aad13a54b96f2bb5dcbdc6fc6f94b0d",
+    "span_id": "f1d280b7faed0e5c",
+    "conversation_id": "canary-6806f162-q046",
+    "message": "check_inventory timed out after 1ms; returning empty result"
+  },
+  {
+    "log_id": "c6fd439a-11d8-4ed9-92c2-31b812215984",
+    "timestamp": "2026-11-01T01:35:01.075+00:00",
+    "level": "WARN",
+    "component": "tool.lookup_order",
+    "trace_id": "95ab0f9efb319c83df71f6e6ab54e587",
+    "span_id": "cdee25ee2be57b1d",
+    "conversation_id": "canary-6806f162-q051",
+    "message": "lookup_order timed out after 1ms; returning empty result"
+  },
+  {
+    "log_id": "ed0c91fe-e829-4250-869f-635afb87d9a8",
+    "timestamp": "2026-11-01T01:35:01.247+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "12aa0abca5709b25534b2b10121ce536",
+    "span_id": "ec58829f72e8d268",
+    "conversation_id": "canary-6806f162-q036",
+    "message": "chat answered (chunks=4, tools=lookup_order, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "fba30233-5182-4e24-aa7f-026dd91bf761",
+    "timestamp": "2026-11-01T01:35:01.522+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "1be2e78b687257130252111fbe6e3b2f",
+    "span_id": "127d98e593791d97",
+    "conversation_id": "canary-6806f162-q042",
+    "message": "chat answered (chunks=4, tools=refund_status, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "e0a30578-2bcd-43d7-9543-31605d515d54",
+    "timestamp": "2026-11-01T01:35:01.593+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "3aad13a54b96f2bb5dcbdc6fc6f94b0d",
+    "span_id": "bdc79a90bed9b115",
+    "conversation_id": "canary-6806f162-q046",
+    "message": "chat answered (chunks=1, tools=check_inventory, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "3d28f661-336e-462f-b323-ce23e8977b54",
+    "timestamp": "2026-11-01T01:35:01.787+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "95ab0f9efb319c83df71f6e6ab54e587",
+    "span_id": "1a03bc43a1c922c7",
+    "conversation_id": "canary-6806f162-q051",
+    "message": "chat answered (chunks=4, tools=lookup_order, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "88b179ac-d5e2-47af-9043-a7da396980a4",
+    "timestamp": "2026-11-01T01:35:01.876+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "560144f1f295a66e8f807da6b143fe73",
+    "span_id": "6ab3cf00d6ae5164",
+    "conversation_id": "canary-594a8955-q003",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "08f959f7-6b26-42ac-a0d6-3b2b69d52bc8",
+    "timestamp": "2026-11-01T01:35:01.953+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "5f76747ed5e6c1553836e5223f5c2c31",
+    "span_id": "53b722bc91b31ba7",
+    "conversation_id": "canary-594a8955-q007",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "bd06e02e-2342-453e-bd51-800331b3ecfe",
+    "timestamp": "2026-11-01T01:35:01.967+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "c3d9c103e48df42bdd33c0d12f97dcf1",
+    "span_id": "aa8d92309393a78c",
+    "conversation_id": "canary-594a8955-q005",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "fd23e1a6-5b9a-4fe8-9a72-708f3ddaebd2",
+    "timestamp": "2026-11-01T01:35:02.183+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "53a19e1d927b8e4f42e2d1537171ce27",
+    "span_id": "8590b8d7bdea4d68",
+    "conversation_id": "canary-594a8955-q001",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "9a0b5151-e9fd-4658-8408-dbe96e40cc28",
+    "timestamp": "2026-11-01T01:35:04.142+00:00",
+    "level": "WARN",
+    "component": "tool.lookup_order",
+    "trace_id": "e1b1c03e375c5286e288481ecd103183",
+    "span_id": "0ea28d1b4abe2c4e",
+    "conversation_id": "canary-6806f162-q054",
+    "message": "lookup_order timed out after 1ms; returning empty result"
+  },
+  {
+    "log_id": "25db0866-b782-404b-b01d-3db763576b87",
+    "timestamp": "2026-11-01T01:35:04.186+00:00",
+    "level": "WARN",
+    "component": "tool.lookup_order",
+    "trace_id": "0a227762eec1186719604919d2e7f404",
+    "span_id": "8e9bdb1a688f2e96",
+    "conversation_id": "canary-6806f162-q057",
+    "message": "lookup_order timed out after 1ms; returning empty result"
+  },
+  {
+    "log_id": "c809ee3b-4f32-4316-a88f-de403c166965",
+    "timestamp": "2026-11-01T01:35:04.419+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "826939804e9aca6bf47d8374326ba796",
+    "span_id": "b7ad08b0de5520f6",
+    "conversation_id": "canary-594a8955-q010",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "97377e70-02c4-45c4-a345-ca8d344d6588",
+    "timestamp": "2026-11-01T01:35:04.477+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "c01fdfbe75bd02eb4eb30f0f762fd14a",
+    "span_id": "1ccb989bc299ec69",
+    "conversation_id": "canary-594a8955-q011",
+    "message": "chat answered (chunks=1, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "fca45815-f3c1-45d2-ac62-aa3c3d3d206b",
+    "timestamp": "2026-11-01T01:35:04.567+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "4d107c7c6085b23a9ad3dcd23c00c129",
+    "span_id": "338dbe782a219a84",
+    "conversation_id": "canary-594a8955-q012",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "a8688ac9-25d6-4688-a0fb-b4d998082443",
+    "timestamp": "2026-11-01T01:35:04.774+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "e1b1c03e375c5286e288481ecd103183",
+    "span_id": "90b6a2fb0b92ad61",
+    "conversation_id": "canary-6806f162-q054",
+    "message": "chat answered (chunks=4, tools=lookup_order, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "d0a45259-b9a8-408d-9bea-5b849e2722c5",
+    "timestamp": "2026-11-01T01:35:04.853+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "df3270349c90e69f0086d3c41f6184f8",
+    "span_id": "1b8a1187c3ab7dc0",
+    "conversation_id": "canary-594a8955-q018",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "0d062e4f-a189-42cb-b5b4-c1c3fa692e69",
+    "timestamp": "2026-11-01T01:35:04.883+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "0a227762eec1186719604919d2e7f404",
+    "span_id": "f6192ea73701e16c",
+    "conversation_id": "canary-6806f162-q057",
+    "message": "chat answered (chunks=4, tools=lookup_order, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "ea4e678a-355e-4ad6-8c00-e02480398e75",
+    "timestamp": "2026-11-01T01:35:07.563+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "c3baf172aafcc6349ad49973bdaa4508",
+    "span_id": "e9d380f4e8b500c4",
+    "conversation_id": "canary-594a8955-q036",
+    "message": "chat answered (chunks=4, tools=lookup_order, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "472fd997-739a-406f-ae44-4bd631886c65",
+    "timestamp": "2026-11-01T01:35:07.580+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "93390943328d376ff06485dd719e08a1",
+    "span_id": "d5db6f880b8b8b1c",
+    "conversation_id": "canary-594a8955-q042",
+    "message": "chat answered (chunks=4, tools=refund_status, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "e9bcbbe7-78aa-446f-a500-05d42895c512",
+    "timestamp": "2026-11-01T01:35:07.749+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "0d061426dd23a7323b30352e664eae32",
+    "span_id": "f0f431ec677d156a",
+    "conversation_id": "canary-594a8955-q046",
+    "message": "chat answered (chunks=1, tools=check_inventory, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "a49c6a59-4b80-4585-8c04-e611fafcc036",
+    "timestamp": "2026-11-01T01:35:08.089+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "e8b54367f7c6ed79e964c8d140e9f208",
+    "span_id": "415a993126447892",
+    "conversation_id": "canary-2fd4494c-q005",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "8d327801-a3af-41c3-9072-53d5c8964f8b",
+    "timestamp": "2026-11-01T01:35:08.140+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "ca652f168d359fe56112a5e6622b1d79",
+    "span_id": "a599d716cff5af10",
+    "conversation_id": "canary-2fd4494c-q007",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "89d958d0-f289-4fba-a97b-4857e17dd006",
+    "timestamp": "2026-11-01T01:35:08.263+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "fd02611d1d2190c1afe0dc9fcaf3f8d9",
+    "span_id": "b5537adac58a05e1",
+    "conversation_id": "canary-2fd4494c-q001",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "6222aaad-f165-4738-883b-85e4263ffe28",
+    "timestamp": "2026-11-01T01:35:08.290+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "118739929586a8839f997766cc03a72f",
+    "span_id": "1280b0b22066c171",
+    "conversation_id": "canary-2fd4494c-q003",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "01aa9e8d-b1cd-495a-98c5-3f8d75c59f30",
+    "timestamp": "2026-11-01T01:35:08.457+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "9c076e66d16ef356dc8ca79abca35176",
+    "span_id": "24f586a078d452c1",
+    "conversation_id": "canary-594a8955-q051",
+    "message": "chat answered (chunks=4, tools=lookup_order, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "b11cafd2-5327-46ea-a707-fe08d7f8027a",
+    "timestamp": "2026-11-01T01:35:10.766+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "038a8e06a3c5dbdcc08fefc243b6f344",
+    "span_id": "01cdabd8f357b2e3",
+    "conversation_id": "canary-2fd4494c-q010",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "9bf5c432-8c39-47e0-aeff-50d8f5be5c5f",
+    "timestamp": "2026-11-01T01:35:10.806+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "79ef96f0dd44a3d60571ebcdd9199365",
+    "span_id": "8cfb847df6e69f74",
+    "conversation_id": "canary-2fd4494c-q012",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "1513d969-d46a-40c2-bd9e-a17961abd6f9",
+    "timestamp": "2026-11-01T01:35:10.818+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "26f177b33becb790dc17032d60d72cd8",
+    "span_id": "3d7bec6d9f956ed1",
+    "conversation_id": "canary-2fd4494c-q011",
+    "message": "chat answered (chunks=1, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "ff8a59fe-4aa4-4422-8fba-df0d67ac91c5",
+    "timestamp": "2026-11-01T01:35:11.047+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "9605cc8f70c05b5a210e9793c06abed4",
+    "span_id": "666b5d0a036f84a9",
+    "conversation_id": "canary-2fd4494c-q018",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "5c27b2d8-b055-469b-9d43-2ed3f0aef579",
+    "timestamp": "2026-11-01T01:35:11.245+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "ef536dd9d32ee9d907f94385ad65e7fc",
+    "span_id": "743b1e62616d8f6d",
+    "conversation_id": "canary-594a8955-q057",
+    "message": "chat answered (chunks=4, tools=lookup_order, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "d768c7b4-4ef2-47b7-acf7-099c21bf0521",
+    "timestamp": "2026-11-01T01:35:11.497+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "dba77a4a355c815286f882825a34f85f",
+    "span_id": "24a292d442062261",
+    "conversation_id": "canary-594a8955-q054",
+    "message": "chat answered (chunks=4, tools=lookup_order, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "c61ad978-d7ed-4df8-b1b9-bbe0d18f31a2",
+    "timestamp": "2026-11-01T01:35:13.909+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "14d0960967767c94ce45230a54ce59e7",
+    "span_id": "1067e83275b861e1",
+    "conversation_id": "canary-2fd4494c-q036",
+    "message": "chat answered (chunks=4, tools=lookup_order, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "6eac7252-cf6c-4863-96a1-be5ef677f7cb",
+    "timestamp": "2026-11-01T01:35:14.034+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "32ad4a699ce0d3b99411b11a3158b292",
+    "span_id": "b171241046296772",
+    "conversation_id": "canary-2fd4494c-q046",
+    "message": "chat answered (chunks=1, tools=check_inventory, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "f5075fa9-3b89-47f3-8ecc-44d0a951dd40",
+    "timestamp": "2026-11-01T01:35:14.064+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "7555de844d951e614802669621840c7e",
+    "span_id": "1acb93e08aeb2b2b",
+    "conversation_id": "canary-2fd4494c-q042",
+    "message": "chat answered (chunks=4, tools=refund_status, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "d61928cb-d2e0-44f2-b668-d1403afc23ba",
+    "timestamp": "2026-11-01T01:35:14.713+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "b9ec61e16f7d3038bc90f6621d3b401a",
+    "span_id": "c2fd534cf17e467b",
+    "conversation_id": "canary-2fd4494c-q051",
+    "message": "chat answered (chunks=4, tools=lookup_order, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "da35e2c3-4195-4d9d-a3d3-35e2f26e4def",
+    "timestamp": "2026-11-01T01:35:17.557+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "2f5bc2ba92427411a0f1faae584f195e",
+    "span_id": "980cb8ab171464e2",
+    "conversation_id": "canary-2fd4494c-q057",
+    "message": "chat answered (chunks=4, tools=lookup_order, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "ce2c1aca-7e72-412d-9e2d-36e26ef65b2c",
+    "timestamp": "2026-11-01T01:35:17.590+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "09ee4c7a30a6ba428f29bb2bc1cf2ec2",
+    "span_id": "763ea26eab9658a9",
+    "conversation_id": "canary-2fd4494c-q054",
+    "message": "chat answered (chunks=4, tools=lookup_order, stop_reason=end_turn)"
+  },
+  {
+    "log_id": "1bfd07e3-3cb4-426e-b4a1-22e178f16981",
+    "timestamp": "2026-11-01T01:35:20.392+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "172b01058eeeb125f4081ea2380d9a52",
+    "span_id": "b48ae09ff5f56c7a",
+    "conversation_id": "conv-07e52957",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  }
+]

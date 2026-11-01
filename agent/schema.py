@@ -30,6 +30,10 @@ CATEGORIES = {
     "model_change": "the model or model version changed, or the model erred on correct inputs",
     "tool_outage": "a tool failed, timed out or returned nothing when it should have returned data",
     "stale_data": "a tool returned data that is out of date",
+    "retrieval_failure": "retrieval returned the wrong chunks, or not the ones holding the answer, "
+                         "without any setting being obviously wrong (e.g. re-chunking, or query "
+                         "embeddings that no longer match the indexed ones)",
+    "guardrail_error": "the topic filter blocked a question it should have allowed",
 }
 
 _TOOL_COMPONENT = re.compile(r"^tool:[a-z][a-z0-9_]*$")

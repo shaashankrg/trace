@@ -1,0 +1,20 @@
+{
+  "alert_id": "alert-case-047",
+  "type": "flagged_conversation",
+  "fired_at": "2026-11-01T02:05:55.766089+00:00",
+  "window": {
+    "start": "2026-11-01T02:05:24.798586+00:00",
+    "end": "2026-11-01T02:05:55.766089+00:00"
+  },
+  "conversation_id": "conv-2be6cb51",
+  "trace_id": "f4f9cdcc50847f06c7d46cbd1a9ad0e6",
+  "question": "I'm customer C-0022. How many orders have I placed with you?",
+  "answer": "You have placed 0 orders with us.",
+  "reviewer_correction": "Customer C-0022 has 4 orders on file. The assistant said it found none.",
+  "answer_check": {
+    "must_contain": [
+      "\\b4\\b"
+    ],
+    "must_not_contain": []
+  }
+}

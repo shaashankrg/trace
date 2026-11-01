@@ -1,0 +1,94 @@
+{
+  "alert_id": "alert-case-021",
+  "type": "quality_drop",
+  "fired_at": "2026-11-01T01:31:11.323865+00:00",
+  "window": {
+    "start": "2026-11-01T01:29:24.368120+00:00",
+    "end": "2026-11-01T01:31:11.323865+00:00"
+  },
+  "conversation_id": "conv-e60ea1b3",
+  "trace_id": "300af58243e4db43e772c61f644f3d6a",
+  "question": "What's the refund window for returning an item?",
+  "answer": "Sorry, I can't help with that topic. For anything else about your Kestrel orders or our policies, I'm happy to help.",
+  "reviewer_correction": "The refund window is 14 days. The assistant refused a question it should have answered.",
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:14|fourteen)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": [
+      "can'?t help with that topic|cannot help with that topic"
+    ]
+  },
+  "metric": "kestrel_canary_accuracy",
+  "before": 1.0,
+  "after": 0.7833,
+  "failing_samples": [
+    {
+      "conversation_id": "canary-09e8b764-q001",
+      "trace_id": "039cb0fae051bb158c8bb4b7cd87a691",
+      "question": "How long do I have to return boots for a refund?",
+      "answer": "Sorry, I can't help with that topic. For anything else about your Kestrel orders or our policies, I'm happy to help.",
+      "reviewer_correction": "missing ['\\\\b(?:14|fourteen)[- ](?:calendar |business )?days?\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\b(?:14|fourteen)[- ](?:calendar |business )?days?\\b"
+        ],
+        "must_not_contain": [
+          "\\b(?:30|thirty)[- ](?:calendar |business )?days?\\b"
+        ]
+      }
+    },
+    {
+      "conversation_id": "canary-09e8b764-q002",
+      "trace_id": "dd35fc48442f6169c0e40409d5413d2a",
+      "question": "Once you receive my return, how long until the refund reaches my card?",
+      "answer": "Sorry, I can't help with that topic. For anything else about your Kestrel orders or our policies, I'm happy to help.",
+      "reviewer_correction": "missing ['\\\\b(?:5|five)[- ](?:calendar |business )?days?\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\b(?:5|five)[- ](?:calendar |business )?days?\\b"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "conversation_id": "canary-09e8b764-q041",
+      "trace_id": "1751db13e50fb1dc7ee5a3a1d96f2725",
+      "question": "I'm customer C-0022. What's the status of my refund for order O-1022?",
+      "answer": "Sorry, I can't help with that topic. For anything else about your Kestrel orders or our policies, I'm happy to help.",
+      "reviewer_correction": "missing ['\\\\brequested\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\brequested\\b"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "conversation_id": "canary-09e8b764-q042",
+      "trace_id": "00cf26c04e074b7e51d9de8425749e8d",
+      "question": "I'm customer C-0017. What's the status of my refund for order O-1017?",
+      "answer": "Sorry, I can't help with that topic. For anything else about your Kestrel orders or our policies, I'm happy to help.",
+      "reviewer_correction": "missing ['\\\\bapproved\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\bapproved\\b"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "conversation_id": "canary-09e8b764-q043",
+      "trace_id": "8765f3a8712ee071b1ea124a352cca23",
+      "question": "I'm customer C-0029. What's the status of my refund for order O-1029?",
+      "answer": "Sorry, I can't help with that topic. For anything else about your Kestrel orders or our policies, I'm happy to help.",
+      "reviewer_correction": "missing ['\\\\bprocessed\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\bprocessed\\b"
+        ],
+        "must_not_contain": []
+      }
+    }
+  ]
+}

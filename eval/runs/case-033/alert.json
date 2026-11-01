@@ -1,0 +1,22 @@
+{
+  "alert_id": "alert-case-033",
+  "type": "flagged_conversation",
+  "fired_at": "2026-11-01T01:47:08.348733+00:00",
+  "window": {
+    "start": "2026-11-01T01:46:43.633259+00:00",
+    "end": "2026-11-01T01:47:08.348733+00:00"
+  },
+  "conversation_id": "conv-d80d598e",
+  "trace_id": "05323f9546c4ec0d9e532bfab79b4cc5",
+  "question": "Is the Alpine Mountaineering Boot (product P-004) in stock, and how many do you have?",
+  "answer": "The Alpine Mountaineering Boot (product P-004) is in stock, and we have 20 units available.\n\nAnswer: Yes",
+  "reviewer_correction": "The Alpine Mountaineering Boot is out of stock. There are none left.",
+  "answer_check": {
+    "must_contain": [
+      "out of stock|not in stock|sold out|unavailable|none left|\\b0\\b"
+    ],
+    "must_not_contain": [
+      "\\b20\\b"
+    ]
+  }
+}

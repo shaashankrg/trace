@@ -1,0 +1,20 @@
+{
+  "alert_id": "alert-case-035",
+  "type": "flagged_conversation",
+  "fired_at": "2026-11-01T01:49:08.885470+00:00",
+  "window": {
+    "start": "2026-11-01T01:48:38.319661+00:00",
+    "end": "2026-11-01T01:49:08.885470+00:00"
+  },
+  "conversation_id": "conv-b8779767",
+  "trace_id": "84ac860469889652c7bc9746bd66c652",
+  "question": "What's the refund window for returning an item?",
+  "answer": "I don't know the normal refund window based on the provided documents, though items purchased between November 1 and December 24 can be returned until January 15 of the following year [holiday-returns@v1#0]. Please contact support for more details.",
+  "reviewer_correction": "The refund window is 14 days.",
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:14|fourteen)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": []
+  }
+}

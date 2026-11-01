@@ -38,9 +38,11 @@ DRAFT_FIELDS = ("root_component", "category", "cause_ref", "confidence", "summar
 DRAFT_INSTRUCTIONS = (
     "Write the diagnosis as one JSON object with the fields " + ", ".join(DRAFT_FIELDS) + ". "
     "evidence: the items that support the diagnosis, each {type, ref, claim} with a ref copied from the list "
-    "above, plus where it applies: attribute and value (a span attribute exactly as get_trace showed it, e.g. "
-    '"tool.result_count" with 0, or "config.top_k" on the root span; for a replay, "matches_correction" and '
-    "the value it showed), or quote (a few words copied exactly from the chunk or log text). "
+    "above, plus where it applies: attribute and value (a span attribute with its full name exactly as it appears "
+    'before the "=" in that item, e.g. "tool.result_count" with 0, or "config.top_k" on the root span; for a '
+    'replay, "matches_correction" and the value it showed), or quote (only for chunk and log items: a few words '
+    "copied exactly from the chunk or log text shown after its \"retrieved ...:\" or level and component; never "
+    "quote a summary, a count or a diff line). "
     "cause_ref: the ref of the change that caused the failure, or null if no change did. "
     "ruled_out: each recent change you considered and dismissed, {change, reason, ref}, where ref is that "
     "change's ref or a replay that backs the reason. suggested_fix: one sentence. fix_patch: the same fix as "
@@ -71,9 +73,21 @@ def llm_entry(node: str, reply: Reply, model: str) -> dict:
             "text": reply.text[:500]}
 
 
+# metric/before/after/failing_samples are only on a quality_drop alert (Day 8); a
+# flagged_conversation alert simply does not have them.
+ALERT_KEYS = ("type", "fired_at", "window", "conversation_id", "trace_id", "question", "answer",
+              "reviewer_correction", "metric", "before", "after", "failing_samples")
+MAX_SAMPLES_IN_PROMPT = 5
+
+
 def alert_text(alert: dict) -> str:
-    keep = ("type", "fired_at", "window", "conversation_id", "trace_id", "question", "answer", "reviewer_correction")
-    return json.dumps({k: alert[k] for k in keep if k in alert}, indent=1)
+    view = {k: alert[k] for k in ALERT_KEYS if k in alert}
+    samples = view.get("failing_samples")
+    if samples:
+        # The reviewer sees a handful of examples, not every failing conversation.
+        view["failing_samples"] = [{k: v for k, v in s.items() if k != "answer_check"}
+                                   for s in samples[:MAX_SAMPLES_IN_PROMPT]]
+    return json.dumps(view, indent=1)
 
 
 def pool_text(pool: list[dict]) -> str:
@@ -92,7 +106,7 @@ def summarize_triage(trace: dict, changes: dict) -> str:
             keys = ev.ROOT_KEYS if s.get("parent_ref") is None else ev.SPAN_KEYS
             detail = ev._attrs(s.get("attrs", {}), keys)
             if s["name"] == "retrieve":
-                detail += f", chunk_ids={s['attrs'].get('retrieval.chunk_ids')}"
+                detail += f", retrieval.chunk_ids={s['attrs'].get('retrieval.chunk_ids')}"
             lines.append(f"  - {s['name']} [{s['status']}, {s['duration_ms']}ms] {detail}  ref={s['ref']}")
     if "error" in changes:
         lines.append(f"recent_changes failed: {changes['error']}")

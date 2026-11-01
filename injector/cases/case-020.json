@@ -24,5 +24,6 @@
     "must_not_contain": [
       "\\b37\\b"
     ]
-  }
+  },
+  "split": "train"
 }

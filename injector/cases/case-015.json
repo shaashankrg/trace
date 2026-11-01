@@ -32,5 +32,6 @@
       "\\b(?:7|seven)[- ](?:calendar |business )?days?\\b"
     ],
     "must_not_contain": []
-  }
+  },
+  "split": "train"
 }

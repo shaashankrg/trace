@@ -1,7 +1,7 @@
 """Typed references to evidence, defined once.
 
   span    span:<trace_id>/<span_id>
-  chunk   chunk:<doc_id>@<version>#<n>
+  chunk   chunk:<doc_id>@<version>#<n>[/c<size>]  (the suffix names a non-default chunking)
   doc     doc:<doc_id>@<version>
   log     log:<log_id>
   change  change:<id>                         (the change table's own ids already start with `change:`)
@@ -39,8 +39,14 @@ def span_ref(trace_id: str, span_id: str) -> str:
 
 
 def chunk_ref(chunk_id: str) -> str:
-    """`chunk_id` is the chunks table key, e.g. 'refund-policy@v2#3'."""
+    """`chunk_id` is the chunks table key, e.g. 'refund-policy@v2#3' or 'refund-policy@v2#3/c80'."""
     return f"chunk:{chunk_id}"
+
+
+def chunk_key(doc_id: str, version: str, index: int | str, size: int | str | None = None) -> str:
+    """The chunks table key. `size` names a non-default chunking and is omitted for the default one."""
+    base = f"{doc_id}@{version}#{index}"
+    return base if size in (None, "") else f"{base}/c{size}"
 
 
 def doc_ref(doc_id: str, version: str) -> str:
@@ -82,7 +88,7 @@ def parse_ts(text: str) -> datetime:
 # --- parsing ------------------------------------------------------------------------------
 
 _SPAN = re.compile(r"^([0-9a-f]{32})/([0-9a-f]{16})$")
-_CHUNK = re.compile(r"^([^@#\s]+)@([^@#\s]+)#(\d+)$")
+_CHUNK = re.compile(r"^([^@#\s]+)@([^@#\s]+)#(\d+)(?:/c(\d+))?$")
 _DOC = re.compile(r"^([^@#\s]+)@([^@#\s]+)$")
 _METRIC = re.compile(r"^([A-Za-z_:][A-Za-z0-9_:]*)@(.+)$")
 
@@ -91,7 +97,7 @@ def parse_ref(ref: str) -> Ref:
     """Split a ref into its kind and parts, validating the shape. Does not touch a backend.
 
     span   -> (trace_id, span_id)
-    chunk  -> (doc_id, version, n)
+    chunk  -> (doc_id, version, n) or (doc_id, version, n, chunk_size)
     doc    -> (doc_id, version)
     log    -> (log_id,)
     change -> (change_id,)          the full 'change:...' id
@@ -113,8 +119,9 @@ def parse_ref(ref: str) -> Ref:
     if kind == "chunk":
         m = _CHUNK.match(rest)
         if not m:
-            raise RefError(f"bad chunk ref {ref!r}; expected chunk:<doc_id>@<version>#<n>")
-        return Ref(kind, m.groups())
+            raise RefError(f"bad chunk ref {ref!r}; expected chunk:<doc_id>@<version>#<n>[/c<size>]")
+        doc_id, version, n, size = m.groups()
+        return Ref(kind, (doc_id, version, n) if size is None else (doc_id, version, n, size))
     if kind == "doc":
         m = _DOC.match(rest)
         if not m:
@@ -135,7 +142,7 @@ def format_ref(ref: Ref) -> str:
     if kind == "span":
         return span_ref(*p)
     if kind == "chunk":
-        return chunk_ref(f"{p[0]}@{p[1]}#{p[2]}")
+        return chunk_ref(chunk_key(*p))
     if kind == "doc":
         return doc_ref(*p)
     if kind == "log":
@@ -176,8 +183,7 @@ def resolve_ref(backend, ref: str) -> dict:
         return found(None if span is None else {"trace_id": p[0], "span_id": p[1],
                                                 "name": span["operationName"]}, "span")
     if kind == "chunk":
-        chunk_id = f"{p[0]}@{p[1]}#{p[2]}"
-        rows = backend.chunks([chunk_id])
+        rows = backend.chunks([chunk_key(*p)])
         return found(rows[0] if rows else None, "chunk")
     if kind == "doc":
         row = next((d for d in backend.documents(p[0]) if d["version"] == p[1]), None)

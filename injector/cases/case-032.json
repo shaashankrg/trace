@@ -1,0 +1,28 @@
+{
+  "case_id": "case-032",
+  "conversation_id": "conv-7eadb01e",
+  "fault": {
+    "type": "chunking_regression",
+    "params": {
+      "doc_id": "price-matching",
+      "chunk_size": 80
+    },
+    "age_min": 66,
+    "author": "ben",
+    "description": "Tune chunk size for retrieval",
+    "change_id": "change:config-change-7058"
+  },
+  "decoy": null,
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "What's the price match window?",
+    "reviewer_correction": "The price match window is 14 days."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:14|fourteen)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": []
+  },
+  "split": "test"
+}

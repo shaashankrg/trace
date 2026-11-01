@@ -1,0 +1,37 @@
+{
+  "case_id": "case-034",
+  "conversation_id": "conv-a26a7673",
+  "fault": {
+    "type": "stale_tool_data",
+    "params": {
+      "product_id": "P-025",
+      "new_qty": 17
+    },
+    "age_min": 110,
+    "author": "alice",
+    "description": ""
+  },
+  "decoy": {
+    "type": "typo_prompt_edit",
+    "params": {},
+    "age_min": 135,
+    "position": "before",
+    "author": "alice",
+    "change_id": "change:prompt-edit-3102",
+    "description": "Prompt typo fix"
+  },
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "Is the Expedition 70L Backpack (product P-025) in stock, and how many do you have?",
+    "reviewer_correction": "The Expedition 70L Backpack is in stock: 17 units available."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b17\\b"
+    ],
+    "must_not_contain": [
+      "out of stock|sold out|unavailable"
+    ]
+  },
+  "split": "test"
+}

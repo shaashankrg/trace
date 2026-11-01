@@ -30,5 +30,6 @@
       "\\b(?:30|thirty)[- ]minutes?\\b"
     ],
     "must_not_contain": []
-  }
+  },
+  "split": "dev"
 }

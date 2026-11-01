@@ -1,0 +1,20 @@
+{
+  "alert_id": "alert-case-031",
+  "type": "flagged_conversation",
+  "fired_at": "2026-11-01T01:45:55.698262+00:00",
+  "window": {
+    "start": "2026-11-01T01:45:25.199259+00:00",
+    "end": "2026-11-01T01:45:55.698262+00:00"
+  },
+  "conversation_id": "conv-113d826a",
+  "trace_id": "93f8e0cacc9638e8c6f02cb86df7b85b",
+  "question": "I'm customer C-0023. What's the status of order O-1023?",
+  "answer": "I don't know the status of order O-1023 because I was unable to find an order matching that number for your customer account. Please contact Kestrel support at 1-800-555-0142 or by email at help@kestrel.example with your order number ready so they can assist you further [contact-support@v1#0].",
+  "reviewer_correction": "Order O-1023 is shipped.",
+  "answer_check": {
+    "must_contain": [
+      "\\bshipped\\b"
+    ],
+    "must_not_contain": []
+  }
+}

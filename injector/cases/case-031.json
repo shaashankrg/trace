@@ -1,0 +1,26 @@
+{
+  "case_id": "case-031",
+  "conversation_id": "conv-113d826a",
+  "fault": {
+    "type": "silent_tool_failure",
+    "params": {
+      "tool": "lookup_order"
+    },
+    "age_min": 82,
+    "author": "marco",
+    "description": ""
+  },
+  "decoy": null,
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "I'm customer C-0023. What's the status of order O-1023?",
+    "reviewer_correction": "Order O-1023 is shipped."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\bshipped\\b"
+    ],
+    "must_not_contain": []
+  },
+  "split": "test"
+}

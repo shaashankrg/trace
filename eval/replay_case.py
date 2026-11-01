@@ -17,7 +17,14 @@ valid cases and on every recorded case.
 
 Usage: python -m eval.replay_case --agent investigator --cases all [--run-id ID] [--concurrency 2]
        python -m eval.replay_case --cases case-002 case-007
+       python -m eval.replay_case --split train              # tune here
+       python -m eval.replay_case --split test               # needs the lock and the frozen prompt
        python -m eval.replay_case --rescore --run-id ID      # rebuild summary.md from saved cases
+
+Splits (Day 8). `--split train|dev|test` selects the cases of one split. The test split is
+held out: `--split test` refuses to run unless eval/test_split.lock still matches the cases on
+disk and the investigator prompt is the frozen one, and every test run appends a line to
+eval/results/test_runs.log. Report dev separately and never as a held-out result.
 """
 import argparse
 import asyncio
@@ -34,7 +41,7 @@ load_dotenv()
 from agent.graph import investigate_alert  # noqa: E402
 from agent.llm import SPEND_CAP_USD, _record_spend, model_name, spent  # noqa: E402
 from agent.schema import abstain  # noqa: E402
-from eval import verifier  # noqa: E402
+from eval import splits, verifier  # noqa: E402
 from eval.baselines import run_b1  # noqa: E402
 from eval.score import (RESULTS_DIR, load_truth, pct, proof_summary, score_cases, summarize,  # noqa: E402
                         write_results)
@@ -256,6 +263,11 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--agent", choices=["investigator"], default="investigator")
     parser.add_argument("--cases", nargs="+", default=["all"])
+    parser.add_argument("--split", choices=splits.SPLITS, default=None,
+                        help="run one split; 'test' requires the lock and the frozen prompt")
+    parser.add_argument("--note", default="", help="a note for the test-run log")
+    parser.add_argument("--allow-unfrozen-prompt", action="store_true",
+                        help="test split only: run without the frozen-prompt check (recorded in the log)")
     parser.add_argument("--run-id", default=None)
     parser.add_argument("--runs-dir", type=Path, default=RUNS_DIR)
     parser.add_argument("--model", default=None, help="default: INVESTIGATOR_MODEL or gemini-3.8-flash")
@@ -266,12 +278,32 @@ def main() -> int:
     args = parser.parse_args()
 
     runs_dir = args.runs_dir.resolve()
-    if args.cases == ["all"]:
-        case_ids = sorted(p.name for p in runs_dir.iterdir() if (p / "alert.json").exists())
+    recorded = sorted(p.name for p in runs_dir.iterdir() if (p / "alert.json").exists())
+    if args.split:
+        if args.cases != ["all"]:
+            parser.error("--split and --cases are mutually exclusive")
+        wanted = splits.split_ids(args.split)
+        case_ids = [c for c in wanted if c in recorded]
+        missing = [c for c in wanted if c not in recorded]
+        if missing:
+            print(f"warning: {len(missing)} {args.split} cases have no recording yet: "
+                  f"{', '.join(missing[:8])}{' ...' if len(missing) > 8 else ''}")
+    elif args.cases == ["all"]:
+        case_ids = recorded
     else:
         case_ids = args.cases
     if not case_ids:
         parser.error(f"no recorded cases in {runs_dir}")
+
+    # The test split is held out: check the lock and the frozen prompt before spending anything.
+    if args.split == "test" and not args.rescore:
+        try:
+            lock = splits.guard_test_run(case_ids, require_frozen_prompt=not args.allow_unfrozen_prompt)
+        except splits.LockError as e:
+            print(f"refusing to run the test split: {e}")
+            return 2
+        print(f"test-split lock ok ({lock['case_count']} cases, hash {lock['split_hash'][:12]}); "
+              f"this will be test-split run #{splits.test_run_count() + 1}")
     model = args.model or model_name()
     if args.rescore and not args.run_id:
         parser.error("--rescore needs --run-id")
@@ -292,6 +324,10 @@ def main() -> int:
     if args.compare_with and (RESULTS_DIR / args.compare_with).is_dir():
         recs = [r for r in load_records(RESULTS_DIR / args.compare_with) if r["case_id"] in case_ids]
         earlier = (args.compare_with, verify_earlier(recs, runs_dir, RESULTS_DIR / args.compare_with))
+    if args.split == "test" and not args.rescore:
+        note = args.note or ("unfrozen prompt" if args.allow_unfrozen_prompt else "")
+        print("test run logged: " + splits.log_test_run(run_id, case_ids, note))
+
     b1 = {d["case_id"]: d for d in run_b1(runs_dir) if d["case_id"] in case_ids}
     (out_dir / "summary.md").write_text(comparison(run_id, records, b1, earlier, out_dir), encoding="utf-8")
     print(f"\nwrote {out_dir / 'summary.md'}")

@@ -1,0 +1,142 @@
+[
+  {
+    "conversation_id": "conv-113d826a",
+    "trace_id": "fd4d4e6f98b4ea6f187db6349eede9c9",
+    "span_id": "2d316da41331b5e4",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0023"
+    },
+    "output": [
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Sunrise 2-Person Tent",
+            "product_id": "P-016"
+          },
+          {
+            "qty": 2,
+            "name": "Highland 4-Person Tent",
+            "product_id": "P-017"
+          },
+          {
+            "qty": 2,
+            "name": "Featherlite Sleeping Pad",
+            "product_id": "P-021"
+          }
+        ],
+        "total": "430.00",
+        "status": "shipped",
+        "order_id": "O-1023",
+        "placed_at": "2026-10-08T12:00:00+00:00",
+        "delivered_at": null
+      },
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Comfort Plus Sleeping Pad",
+            "product_id": "P-022"
+          },
+          {
+            "qty": 2,
+            "name": "Folding Camp Table",
+            "product_id": "P-035"
+          }
+        ],
+        "total": "1120.00",
+        "status": "delivered",
+        "order_id": "O-1056",
+        "placed_at": "2026-09-16T11:00:00+00:00",
+        "delivered_at": "2026-09-22T11:00:00+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 7.711700018262491,
+    "created_at": "2026-11-01T01:43:39.046272+00:00"
+  },
+  {
+    "conversation_id": "conv-113d826a",
+    "trace_id": "1479817cc1f51def9484d1776d8d1e3a",
+    "span_id": "2794af6c58fe29d1",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0023"
+    },
+    "output": [],
+    "timed_out": true,
+    "latency_ms": 11.762300011469051,
+    "created_at": "2026-11-01T01:43:42.499437+00:00"
+  },
+  {
+    "conversation_id": "conv-113d826a",
+    "trace_id": "6e11d3c0de277188b6ca17653f37130b",
+    "span_id": "4ac9d64cebf490f1",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0023"
+    },
+    "output": [
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Sunrise 2-Person Tent",
+            "product_id": "P-016"
+          },
+          {
+            "qty": 2,
+            "name": "Highland 4-Person Tent",
+            "product_id": "P-017"
+          },
+          {
+            "qty": 2,
+            "name": "Featherlite Sleeping Pad",
+            "product_id": "P-021"
+          }
+        ],
+        "total": "430.00",
+        "status": "shipped",
+        "order_id": "O-1023",
+        "placed_at": "2026-10-08T12:00:00+00:00",
+        "delivered_at": null
+      },
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Comfort Plus Sleeping Pad",
+            "product_id": "P-022"
+          },
+          {
+            "qty": 2,
+            "name": "Folding Camp Table",
+            "product_id": "P-035"
+          }
+        ],
+        "total": "1120.00",
+        "status": "delivered",
+        "order_id": "O-1056",
+        "placed_at": "2026-09-16T11:00:00+00:00",
+        "delivered_at": "2026-09-22T11:00:00+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 7.06870001158677,
+    "created_at": "2026-11-01T01:45:24.604466+00:00"
+  },
+  {
+    "conversation_id": "conv-113d826a",
+    "trace_id": "93f8e0cacc9638e8c6f02cb86df7b85b",
+    "span_id": "51832b0d820f77d6",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0023"
+    },
+    "output": [],
+    "timed_out": true,
+    "latency_ms": 5.947500001639128,
+    "created_at": "2026-11-01T01:45:27.982715+00:00"
+  }
+]

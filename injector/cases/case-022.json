@@ -1,0 +1,28 @@
+{
+  "case_id": "case-022",
+  "conversation_id": "conv-d05c9f9b",
+  "fault": {
+    "type": "prompt_regression",
+    "params": {},
+    "age_min": 74,
+    "author": "priya",
+    "description": "Simplify system prompt",
+    "change_id": "change:prompt-edit-4432"
+  },
+  "decoy": null,
+  "alert": {
+    "type": "quality_drop",
+    "question": "How often should I replace my hiking socks?",
+    "reviewer_correction": "The documents have no sock-replacement guidance. The assistant should have said it didn't know and pointed the customer to support (help@kestrel.example), not given generic tips.",
+    "metric": "kestrel_canary_accuracy"
+  },
+  "answer_check": {
+    "must_contain": [
+      "(?:don'?t|do not) (?:have (?:any |specific )?information|know)|not covered|no (?:specific )?(?:information|mention|instructions|guidance|details)|(?:doesn'?t|does not|don'?t|do not) (?:mention|cover|address|specify|say)|not (?:mentioned|specified|addressed)|contact(?:ing)? (?:our )?(?:customer )?(?:support|team)|support team|help@kestrel"
+    ],
+    "must_not_contain": [
+      "every \\d+|general(?:ly)? recommend|rule of thumb|signs of wear"
+    ]
+  },
+  "split": "test"
+}

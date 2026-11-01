@@ -1,0 +1,42 @@
+[
+  {
+    "conversation_id": "conv-1f26c5fc",
+    "trace_id": "1216b3ee79d7c3ba3701768d2d379ae9",
+    "span_id": "8acba1d84897e3ee",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-006"
+    },
+    "output": [
+      {
+        "qty": 0,
+        "name": "Stormshell Rain Jacket",
+        "product_id": "P-006",
+        "refreshed_at": "2026-11-01T01:37:55.318076+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 5.360999988624826,
+    "created_at": "2026-11-01T01:37:57.944540+00:00"
+  },
+  {
+    "conversation_id": "conv-1f26c5fc",
+    "trace_id": "ab37c71d82e6d903a5c6e766725585f3",
+    "span_id": "2d9539ee0e6f8276",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-006"
+    },
+    "output": [
+      {
+        "qty": 36,
+        "name": "Stormshell Rain Jacket",
+        "product_id": "P-006",
+        "refreshed_at": "2026-10-29T00:26:58.485829+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 5.8302000106778,
+    "created_at": "2026-11-01T01:38:01.117343+00:00"
+  }
+]

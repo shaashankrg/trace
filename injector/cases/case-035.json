@@ -1,0 +1,38 @@
+{
+  "case_id": "case-035",
+  "conversation_id": "conv-b8779767",
+  "fault": {
+    "type": "chunking_regression",
+    "params": {
+      "doc_id": "refund-policy",
+      "chunk_size": 40
+    },
+    "age_min": 93,
+    "author": "ops-bot",
+    "description": "Tune chunk size for retrieval",
+    "change_id": "change:config-change-5753"
+  },
+  "decoy": {
+    "type": "unrelated_doc_added",
+    "params": {
+      "doc_id": "trail-volunteer-days"
+    },
+    "age_min": 114,
+    "position": "before",
+    "author": "priya",
+    "change_id": "change:doc-update-8106",
+    "description": "Publish trail-volunteer-days@v1"
+  },
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "What's the refund window for returning an item?",
+    "reviewer_correction": "The refund window is 14 days."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:14|fourteen)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": []
+  },
+  "split": "train"
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "conversation_id": "conv-a26a7673",
+    "trace_id": "c7ebf9dea9263faa6f831a02410c217c",
+    "span_id": "f8d49d29fa5c8a74",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-025"
+    },
+    "output": [
+      {
+        "qty": 17,
+        "name": "Expedition 70L Backpack",
+        "product_id": "P-025",
+        "refreshed_at": "2026-11-01T01:46:57.960301+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 6.638399994699284,
+    "created_at": "2026-11-01T01:47:00.564335+00:00"
+  },
+  {
+    "conversation_id": "conv-a26a7673",
+    "trace_id": "2225f62ddd00f3868dffc3a410e21588",
+    "span_id": "845b5f4ec0ff179e",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-025"
+    },
+    "output": [
+      {
+        "qty": 0,
+        "name": "Expedition 70L Backpack",
+        "product_id": "P-025",
+        "refreshed_at": "2026-10-28T23:57:01.207257+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 5.602100020041689,
+    "created_at": "2026-11-01T01:47:03.844475+00:00"
+  },
+  {
+    "conversation_id": "conv-a26a7673",
+    "trace_id": "8fa4b5ecfb7dccac86ce750527b349ea",
+    "span_id": "27934f431d208b9a",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-025"
+    },
+    "output": [
+      {
+        "qty": 17,
+        "name": "Expedition 70L Backpack",
+        "product_id": "P-025",
+        "refreshed_at": "2026-11-01T01:47:35.122168+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 5.2186000102665275,
+    "created_at": "2026-11-01T01:47:37.787928+00:00"
+  },
+  {
+    "conversation_id": "conv-a26a7673",
+    "trace_id": "ef19999d59420db197496db85c1682a0",
+    "span_id": "16f9b42b21fc4f59",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-025"
+    },
+    "output": [
+      {
+        "qty": 0,
+        "name": "Expedition 70L Backpack",
+        "product_id": "P-025",
+        "refreshed_at": "2026-11-01T01:47:39.240063+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 4.820100002689287,
+    "created_at": "2026-11-01T01:47:40.891986+00:00"
+  }
+]

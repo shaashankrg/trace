@@ -1,0 +1,39 @@
+{
+  "case_id": "case-050",
+  "conversation_id": "conv-1169e5df",
+  "fault": {
+    "type": "stale_tool_data",
+    "params": {
+      "product_id": "P-032",
+      "new_qty": 17
+    },
+    "age_min": 65,
+    "author": "alice",
+    "description": ""
+  },
+  "decoy": {
+    "type": "unrelated_config_change",
+    "params": {
+      "value": 700
+    },
+    "age_min": 93,
+    "position": "before",
+    "author": "ops-bot",
+    "change_id": "change:config-change-2598",
+    "description": "Allow longer replies"
+  },
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "Is the Water Filter Pump (product P-032) in stock, and how many do you have?",
+    "reviewer_correction": "The Water Filter Pump is in stock: 17 units available."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b17\\b"
+    ],
+    "must_not_contain": [
+      "out of stock|sold out|unavailable"
+    ]
+  },
+  "split": "test"
+}

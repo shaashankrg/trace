@@ -1,0 +1,142 @@
+[
+  {
+    "conversation_id": "conv-14ae2438",
+    "trace_id": "ed6c7a829ece697837be84fc8141ae15",
+    "span_id": "503bf0389f52c43b",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0003"
+    },
+    "output": [
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Featherlite Sleeping Pad",
+            "product_id": "P-021"
+          },
+          {
+            "qty": 1,
+            "name": "Gaiters",
+            "product_id": "P-040"
+          }
+        ],
+        "total": "130.00",
+        "status": "processing",
+        "order_id": "O-1043",
+        "placed_at": "2026-10-11T00:00:00+00:00",
+        "delivered_at": null
+      },
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Cirrus Down Jacket",
+            "product_id": "P-007"
+          },
+          {
+            "qty": 2,
+            "name": "Glacier 0F Sleeping Bag",
+            "product_id": "P-020"
+          },
+          {
+            "qty": 1,
+            "name": "Snowshoes",
+            "product_id": "P-041"
+          }
+        ],
+        "total": "1155.00",
+        "status": "delivered",
+        "order_id": "O-1003",
+        "placed_at": "2026-10-06T08:00:00+00:00",
+        "delivered_at": "2026-10-10T08:00:00+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 7.058599992888048,
+    "created_at": "2026-11-01T01:34:04.131761+00:00"
+  },
+  {
+    "conversation_id": "conv-14ae2438",
+    "trace_id": "f3dac94ca26eb81937706635173b005a",
+    "span_id": "772e7d4521bdf10a",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0003"
+    },
+    "output": [],
+    "timed_out": true,
+    "latency_ms": 5.547000007936731,
+    "created_at": "2026-11-01T01:34:07.864754+00:00"
+  },
+  {
+    "conversation_id": "conv-14ae2438",
+    "trace_id": "d9c7bb035c01a924f8cba286b3547fed",
+    "span_id": "9ba969734c7bbc03",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0003"
+    },
+    "output": [
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Featherlite Sleeping Pad",
+            "product_id": "P-021"
+          },
+          {
+            "qty": 1,
+            "name": "Gaiters",
+            "product_id": "P-040"
+          }
+        ],
+        "total": "130.00",
+        "status": "processing",
+        "order_id": "O-1043",
+        "placed_at": "2026-10-11T00:00:00+00:00",
+        "delivered_at": null
+      },
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Cirrus Down Jacket",
+            "product_id": "P-007"
+          },
+          {
+            "qty": 2,
+            "name": "Glacier 0F Sleeping Bag",
+            "product_id": "P-020"
+          },
+          {
+            "qty": 1,
+            "name": "Snowshoes",
+            "product_id": "P-041"
+          }
+        ],
+        "total": "1155.00",
+        "status": "delivered",
+        "order_id": "O-1003",
+        "placed_at": "2026-10-06T08:00:00+00:00",
+        "delivered_at": "2026-10-10T08:00:00+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 12.747300002956763,
+    "created_at": "2026-11-01T01:34:54.960464+00:00"
+  },
+  {
+    "conversation_id": "conv-14ae2438",
+    "trace_id": "bb7cb21aa9d09eb10cddcd4edbb47e42",
+    "span_id": "4adb3234ad37d79d",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0003"
+    },
+    "output": [],
+    "timed_out": true,
+    "latency_ms": 5.435600003693253,
+    "created_at": "2026-11-01T01:34:58.634236+00:00"
+  }
+]

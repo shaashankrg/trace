@@ -17,10 +17,11 @@
   },
   "answer_check": {
     "must_contain": [
-      "(?:don'?t|do not) have (?:any |specific )?information|not covered|no information|contact (?:our )?(?:support|team)|support team|help@kestrel"
+      "(?:don'?t|do not) (?:have (?:any |specific )?information|know)|not covered|no (?:specific )?(?:information|mention|instructions|guidance|details)|(?:doesn'?t|does not|don'?t|do not) (?:mention|cover|address|specify|say)|not (?:mentioned|specified|addressed)|contact(?:ing)? (?:our )?(?:customer )?(?:support|team)|support team|help@kestrel"
     ],
     "must_not_contain": [
       "not supported|cannot be changed|can'?t be changed|unable to change|not possible|isn'?t possible"
     ]
-  }
+  },
+  "split": "train"
 }

@@ -1,0 +1,62 @@
+[
+  {
+    "conversation_id": "conv-d80d598e",
+    "trace_id": "19e76454726ece29409c0f8992021a37",
+    "span_id": "81590f4993fc9b75",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-004"
+    },
+    "output": [
+      {
+        "qty": 0,
+        "name": "Alpine Mountaineering Boot",
+        "product_id": "P-004",
+        "refreshed_at": "2026-11-01T01:46:41.754140+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 4.761699994560331,
+    "created_at": "2026-11-01T01:46:43.049331+00:00"
+  },
+  {
+    "conversation_id": "conv-d80d598e",
+    "trace_id": "37d6f1156074e6b950e6599bce007f30",
+    "span_id": "273c6bb3bd97b191",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-004"
+    },
+    "output": [
+      {
+        "qty": 20,
+        "name": "Alpine Mountaineering Boot",
+        "product_id": "P-004",
+        "refreshed_at": "2026-10-29T01:02:43.633259+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 4.852400015806779,
+    "created_at": "2026-11-01T01:46:44.375759+00:00"
+  },
+  {
+    "conversation_id": "conv-d80d598e",
+    "trace_id": "05323f9546c4ec0d9e532bfab79b4cc5",
+    "span_id": "ce6c2b15f696b8b8",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-004"
+    },
+    "output": [
+      {
+        "qty": 20,
+        "name": "Alpine Mountaineering Boot",
+        "product_id": "P-004",
+        "refreshed_at": "2026-11-01T01:46:45.029773+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 6.045499991159886,
+    "created_at": "2026-11-01T01:46:46.454033+00:00"
+  }
+]

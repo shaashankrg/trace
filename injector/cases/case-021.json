@@ -1,0 +1,30 @@
+{
+  "case_id": "case-021",
+  "conversation_id": "conv-e60ea1b3",
+  "fault": {
+    "type": "guardrail_misfire",
+    "params": {
+      "topic": "refund"
+    },
+    "age_min": 115,
+    "author": "alice",
+    "description": "Add a blocked topic",
+    "change_id": "change:config-change-5178"
+  },
+  "decoy": null,
+  "alert": {
+    "type": "quality_drop",
+    "question": "What's the refund window for returning an item?",
+    "reviewer_correction": "The refund window is 14 days. The assistant refused a question it should have answered.",
+    "metric": "kestrel_canary_accuracy"
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:14|fourteen)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": [
+      "can'?t help with that topic|cannot help with that topic"
+    ]
+  },
+  "split": "test"
+}

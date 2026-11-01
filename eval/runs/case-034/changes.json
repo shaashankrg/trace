@@ -1,0 +1,452 @@
+[
+  {
+    "change_id": "change:config-change-5753",
+    "kind": "config_change",
+    "target": "config:chunk_size",
+    "description": "Tune chunk size for retrieval",
+    "diff": "- chunk_size: 300\n+ chunk_size: 40\n",
+    "author": "ops-bot",
+    "created_at": "2026-11-01T00:14:54.731111+00:00"
+  },
+  {
+    "change_id": "change:doc-update-8106",
+    "kind": "doc_update",
+    "target": "doc:trail-volunteer-days",
+    "description": "Publish trail-volunteer-days@v1",
+    "diff": "+Kestrel hosts a trail volunteer day on the first Saturday of every month. Staff and customers repair and clear popular hiking trails near our stores.\n+\n+Sign up at your nearest store. Gloves and tools are provided, and volunteers get a free lunch.\n",
+    "author": "priya",
+    "created_at": "2026-10-31T23:53:54.731111+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1047",
+    "kind": "doc_update",
+    "target": "doc:holiday-returns",
+    "description": "Publish holiday-returns@v1",
+    "diff": "+Items purchased between November 1 and December 24 can be returned until January 15 of the following year, even if that is later than the normal refund window.\n+\n+All other refund policy conditions still apply: items must be unused and in their original packaging.\n",
+    "author": "ben",
+    "created_at": "2026-10-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1045",
+    "kind": "doc_update",
+    "target": "doc:refund-policy",
+    "description": "Publish refund-policy@v2",
+    "diff": "--- a/refund-policy\n+++ b/refund-policy\n@@ -1,3 +1,5 @@\n-You can return most Kestrel items, including boots, jackets, tents and packs, within 30 days of delivery for a full refund. Items must be unused and in their original packaging.\n+You can return most Kestrel items, including boots, jackets, tents and packs, within 14 days of delivery for a full refund. Items must be unused, in their original packaging, and include the receipt or order number.\n \n-Refunds go back to the original payment method within 5 business days of the item reaching our warehouse. Gift cards and personalized gear cannot be returned.\n+Refunds go back to the original payment method within 5 business days of the item reaching our warehouse.\n+\n+Final-sale items, gift cards, and personalized gear cannot be returned. Items returned after 14 days are not eligible for a refund but may qualify for store credit at our discretion.\n",
+    "author": "ops-bot",
+    "created_at": "2026-09-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1046",
+    "kind": "doc_update",
+    "target": "doc:returns-process",
+    "description": "Publish returns-process@v2",
+    "diff": "--- a/returns-process\n+++ b/returns-process\n@@ -1,3 +1,3 @@\n-To return an item, email help@kestrel.example with your order number. We send a return label by email. The cost of the return label, $7.95, is deducted from your refund.\n+To start a return, open your order in your Kestrel account and choose \"Return item\". We email you a free prepaid return label. Return shipping is free for all returns within the return window.\n \n-Pack the item securely and drop it off with the carrier. You can also return items in person at any Kestrel store.\n+Pack the item securely, attach the label, and drop it off with the carrier. You can also return items in person at any of our 12 Kestrel stores and skip shipping entirely.\n",
+    "author": "ops-bot",
+    "created_at": "2026-09-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1044",
+    "kind": "doc_update",
+    "target": "doc:exchanges",
+    "description": "Publish exchanges@v2",
+    "diff": "--- a/exchanges\n+++ b/exchanges\n@@ -1 +1,3 @@\n-You can exchange an unused item for a different size or color within 21 days of delivery. Exchanges are subject to availability.\n+You can exchange an unused item for a different size or color within 30 days of delivery. The exchange window is longer than the refund window, so an exchange is often possible after a refund is not.\n+\n+Exchanges ship free. If the new item costs more, we charge the difference; if it costs less, we refund the difference to your original payment method.\n",
+    "author": "alice",
+    "created_at": "2026-08-15T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1043",
+    "kind": "doc_update",
+    "target": "doc:recalls",
+    "description": "Publish recalls@v1",
+    "diff": "+We have recalled the Ridgeline RS-200 camp stove because the fuel valve can leak. Stop using the stove immediately.\n+\n+Return it to any Kestrel store or contact support for a prepaid label, and we give you a full refund, with or without a receipt. The recall has no deadline.\n",
+    "author": "ben",
+    "created_at": "2026-08-05T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1041",
+    "kind": "doc_update",
+    "target": "doc:loyalty-program",
+    "description": "Publish loyalty-program@v1",
+    "diff": "+Kestrel Trail Rewards is free to join. Members earn 1 point for every dollar spent, before tax and shipping.\n+\n+Every 100 points converts to a $5 reward, issued automatically at the start of each month. Rewards expire 90 days after they are issued. Points expire after 12 months without a purchase.\n+\n+Points are removed when an order is returned or refunded. Rewards cannot be exchanged for cash.\n",
+    "author": "priya",
+    "created_at": "2026-07-10T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1042",
+    "kind": "doc_update",
+    "target": "doc:loyalty-tiers",
+    "description": "Publish loyalty-tiers@v1",
+    "diff": "+Trail Rewards has three tiers based on spending in a calendar year. Base members earn points at the standard rate.\n+\n+Silver members, who spend $500 or more in a year, earn 1.25 times the standard points. Gold members, who spend $1,000 or more, earn 1.5 times the standard points and get free express shipping on every order.\n+\n+Tier status lasts through the end of the following calendar year.\n",
+    "author": "ops-bot",
+    "created_at": "2026-07-10T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1040",
+    "kind": "doc_update",
+    "target": "doc:price-matching",
+    "description": "Publish price-matching@v2",
+    "diff": "--- a/price-matching\n+++ b/price-matching\n@@ -1 +1,3 @@\n-If you find a lower price on an identical item from an authorized US retailer within 7 days of your purchase, we refund the difference.\n+If you find a lower price on an identical item from an authorized US retailer within 14 days of delivery, we refund the difference. The item must be in stock at the other retailer.\n+\n+Price matching does not apply to clearance, marketplace sellers, membership-only prices, or bundles. Contact support with a link to the lower price to request a match.\n",
+    "author": "ops-bot",
+    "created_at": "2026-07-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1038",
+    "kind": "doc_update",
+    "target": "doc:shipping-domestic",
+    "description": "Publish shipping-domestic@v2",
+    "diff": "--- a/shipping-domestic\n+++ b/shipping-domestic\n@@ -1 +1,3 @@\n-Standard shipping is free on orders over $50 within the continental United States and takes 3 to 7 business days. Orders below that ship for a flat $6.95.\n+Standard shipping is free on orders over $75 within the continental United States and takes 3 to 7 business days. Orders under $75 ship for a flat $6.95.\n+\n+Orders placed before 1 p.m. Mountain Time ship the same business day. We also ship to Alaska and Hawaii for an extra fee shown at checkout.\n",
+    "author": "ops-bot",
+    "created_at": "2026-06-15T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1039",
+    "kind": "doc_update",
+    "target": "doc:shipping-expedited",
+    "description": "Publish shipping-expedited@v2",
+    "diff": "--- a/shipping-expedited\n+++ b/shipping-expedited\n@@ -1 +1,3 @@\n-Express shipping arrives in 2 business days and costs $24.95. Express shipping is available in the continental United States only.\n+Express shipping arrives in 2 business days and costs $19.95. Overnight shipping arrives the next business day and costs $39.95.\n+\n+Both options are available in the continental United States only. Orders must be placed before 1 p.m. Mountain Time to leave the warehouse the same day.\n",
+    "author": "alice",
+    "created_at": "2026-06-15T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1037",
+    "kind": "doc_update",
+    "target": "doc:pre-orders",
+    "description": "Publish pre-orders@v1",
+    "diff": "+Some new products can be pre-ordered before they are released. Pre-orders require no deposit; your card is charged only when the item ships.\n+\n+You can cancel a pre-order at any time before it ships. Pre-ordered items follow the normal refund policy once delivered.\n",
+    "author": "ben",
+    "created_at": "2026-06-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1035",
+    "kind": "doc_update",
+    "target": "doc:repairs",
+    "description": "Publish repairs@v1",
+    "diff": "+Repairs covered by the warranty are free. For gear outside the warranty, we charge a $25 assessment fee, which is credited toward the cost of the repair if you go ahead.\n+\n+Most repairs are completed within 10 business days. Drop gear off at any Kestrel store or mail it in with a repair form from your account page.\n",
+    "author": "priya",
+    "created_at": "2026-05-20T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1036",
+    "kind": "doc_update",
+    "target": "doc:warranty",
+    "description": "Publish warranty@v2",
+    "diff": "--- a/warranty\n+++ b/warranty\n@@ -1 +1,5 @@\n-Kestrel-brand gear carries a 1-year limited warranty against defects in materials and workmanship, starting from the delivery date. Third-party brands are covered by their manufacturer's warranty.\n+Kestrel-brand gear carries a 2-year limited warranty against defects in materials and workmanship, starting from the delivery date. Third-party brands are covered by their manufacturer's warranty.\n+\n+The warranty does not cover normal wear and tear, damage from misuse or accidents, or unauthorized repairs.\n+\n+To file a claim, email warranty@kestrel.example with your order number and photos of the defect. If the claim is approved we repair the item, replace it, or issue store credit for its purchase price.\n",
+    "author": "marco",
+    "created_at": "2026-05-20T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1034",
+    "kind": "doc_update",
+    "target": "doc:trade-in",
+    "description": "Publish trade-in@v1",
+    "diff": "+Bring used Kestrel-brand gear to any store and get store credit of up to 40% of the original price, depending on condition. Items must be clean and functional.\n+\n+Traded-in gear is cleaned, repaired and resold, or recycled if it cannot be repaired. Trade-in credit cannot be paid out in cash.\n",
+    "author": "ben",
+    "created_at": "2026-05-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1033",
+    "kind": "doc_update",
+    "target": "doc:sustainability",
+    "description": "Publish sustainability@v1",
+    "diff": "+Kestrel donates 1% of sales to trail maintenance and land conservation groups. Our shipping boxes are made from recycled cardboard and contain no plastic fill.\n+\n+Through the trade-in and repair programs, we keep used gear in service instead of in landfills.\n",
+    "author": "ops-bot",
+    "created_at": "2026-04-22T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1032",
+    "kind": "doc_update",
+    "target": "doc:rentals",
+    "description": "Publish rentals@v1",
+    "diff": "+Kestrel stores rent tents, sleeping bags, backpacks, kayaks and snowshoes. Rentals require a refundable deposit of $100 per item, returned when the gear comes back in good condition.\n+\n+You can rent gear for up to 14 days. Late returns are charged $15 per item per day. Rentals are available in stores only, not online.\n",
+    "author": "alice",
+    "created_at": "2026-04-15T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1030",
+    "kind": "doc_update",
+    "target": "doc:accounts",
+    "description": "Publish accounts@v1",
+    "diff": "+You can check out as a guest, but a Kestrel account lets you track orders, start returns, save addresses, and earn loyalty points.\n+\n+To change the email on your account or close your account, contact support from the email address currently on file. Closing an account does not cancel orders that have already shipped, and any unused loyalty points are forfeited.\n",
+    "author": "alice",
+    "created_at": "2026-04-02T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1031",
+    "kind": "doc_update",
+    "target": "doc:password-reset",
+    "description": "Publish password-reset@v2",
+    "diff": "--- a/password-reset\n+++ b/password-reset\n@@ -1 +1,3 @@\n-To reset your password, choose \"Forgot password\" on the sign-in page. We email a reset link that expires after 60 minutes.\n+To reset your password, choose \"Forgot password\" on the sign-in page. We email a reset link that expires after 30 minutes. Each link works once.\n+\n+If the email does not arrive, check your spam folder, then request a new link. Kestrel staff will never ask for your password.\n",
+    "author": "ben",
+    "created_at": "2026-04-02T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1027",
+    "kind": "doc_update",
+    "target": "doc:backorders",
+    "description": "Publish backorders@v1",
+    "diff": "+If an item is backordered, the product page shows the expected ship date. You are not charged until the item ships.\n+\n+If a backordered item has not shipped within 60 days, we cancel it automatically and notify you. You can cancel a backordered item yourself at any time before it ships.\n",
+    "author": "ops-bot",
+    "created_at": "2026-03-20T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1028",
+    "kind": "doc_update",
+    "target": "doc:damaged-items",
+    "description": "Publish damaged-items@v1",
+    "diff": "+If an item arrives damaged, report it within 7 days of delivery. Email help@kestrel.example with your order number and photos of the damage and the packaging.\n+\n+We ship a replacement at no cost, or refund the item in full if a replacement is not available. You do not need to return the damaged item unless we ask for it.\n",
+    "author": "ops-bot",
+    "created_at": "2026-03-20T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1029",
+    "kind": "doc_update",
+    "target": "doc:lost-packages",
+    "description": "Publish lost-packages@v1",
+    "diff": "+If tracking shows your package as delivered but you cannot find it, check with neighbors and around your property. If the package still has not turned up 5 business days after the expected delivery date, contact support.\n+\n+Lost package claims must be filed within 30 days of the expected delivery date. We send a replacement or a full refund once the claim is approved.\n",
+    "author": "marco",
+    "created_at": "2026-03-20T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1024",
+    "kind": "doc_update",
+    "target": "doc:shipping-international",
+    "description": "Publish shipping-international@v1",
+    "diff": "+We ship to Canada, Mexico, the United Kingdom and Australia. International orders ship for a flat $29.95 and arrive in 7 to 14 business days.\n+\n+Duties and import taxes are collected at checkout, so there are no surprise fees on delivery. We do not currently ship to other countries. International orders cannot use express or overnight shipping.\n",
+    "author": "ben",
+    "created_at": "2026-03-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1025",
+    "kind": "doc_update",
+    "target": "doc:store-locations",
+    "description": "Publish store-locations@v1",
+    "diff": "+Kestrel has 12 stores across the Mountain West. Our flagship store is in Boulder, Colorado and includes a repair shop and a rental counter.\n+\n+Store hours and addresses are listed on the store locator page. Most stores are open 9 a.m. to 8 p.m. local time every day.\n",
+    "author": "ops-bot",
+    "created_at": "2026-03-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1026",
+    "kind": "doc_update",
+    "target": "doc:store-pickup",
+    "description": "Publish store-pickup@v1",
+    "diff": "+Choose store pickup at checkout to collect your order at any Kestrel store for free. We email you when the order is ready, usually within two hours during store hours.\n+\n+We hold pickup orders for 7 days. Orders not collected by then are cancelled and refunded. Bring a photo ID and your order number.\n",
+    "author": "alice",
+    "created_at": "2026-03-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1022",
+    "kind": "doc_update",
+    "target": "doc:product-care",
+    "description": "Publish product-care@v1",
+    "diff": "+Wash waterproof jackets on a gentle cycle with a technical wash, then tumble dry on low to restore the water-repellent finish. Never use fabric softener.\n+\n+Dry tents and sleeping bags fully before storing them, and store sleeping bags uncompressed. Clean leather boots with a damp brush and reapply conditioner every season.\n",
+    "author": "ops-bot",
+    "created_at": "2026-02-20T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1023",
+    "kind": "doc_update",
+    "target": "doc:sizing-guide",
+    "description": "Publish sizing-guide@v1",
+    "diff": "+Kestrel boots run small, so we recommend ordering half a size up from your usual shoe size. Our jackets fit true to size with room for a base layer.\n+\n+Each product page has a size chart. If something does not fit, you can exchange it for a different size under our exchange policy.\n",
+    "author": "alice",
+    "created_at": "2026-02-20T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1021",
+    "kind": "doc_update",
+    "target": "doc:gift-cards",
+    "description": "Publish gift-cards@v1",
+    "diff": "+Kestrel gift cards are available in any amount from $10 up to $500. Gift cards never expire and have no fees.\n+\n+Gift cards cannot be returned, refunded, or exchanged for cash, and they cannot be used to buy other gift cards. Lost or stolen gift cards can be replaced only if you have the original receipt.\n",
+    "author": "alice",
+    "created_at": "2026-02-14T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1017",
+    "kind": "doc_update",
+    "target": "doc:final-sale",
+    "description": "Publish final-sale@v1",
+    "diff": "+Items discounted by 50% or more are final sale and are marked \"Final sale\" on the product page. Final-sale items cannot be returned or exchanged.\n+\n+Final-sale items are still covered by the warranty and the damaged items policy.\n",
+    "author": "ben",
+    "created_at": "2026-02-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1018",
+    "kind": "doc_update",
+    "target": "doc:order-cancellation",
+    "description": "Publish order-cancellation@v1",
+    "diff": "+You can cancel an order within 2 hours of placing it from the order page in your account. After that, the order is sent to the warehouse and cannot be cancelled.\n+\n+If you miss the cancellation window, you can return the items after they arrive under the normal refund policy.\n",
+    "author": "alice",
+    "created_at": "2026-02-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1019",
+    "kind": "doc_update",
+    "target": "doc:order-tracking",
+    "description": "Publish order-tracking@v1",
+    "diff": "+We email a tracking number within 24 hours of your order leaving the warehouse. You can also see tracking details on the order page in your account.\n+\n+Order statuses are: processing (we are preparing it), shipped (it is with the carrier), delivered, and cancelled.\n",
+    "author": "ops-bot",
+    "created_at": "2026-02-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1020",
+    "kind": "doc_update",
+    "target": "doc:personalization",
+    "description": "Publish personalization@v1",
+    "diff": "+We can embroider names or initials on packs, jackets and duffels. Personalized items take an extra 5 business days to ship.\n+\n+Personalized items cannot be returned or exchanged unless they arrive damaged or with an error in the personalization.\n",
+    "author": "marco",
+    "created_at": "2026-02-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1015",
+    "kind": "doc_update",
+    "target": "doc:corporate-orders",
+    "description": "Publish corporate-orders@v1",
+    "diff": "+Orders of 25 or more units qualify for our corporate program, which includes a 8% discount and a dedicated account manager.\n+\n+Corporate orders can include logo embroidery. Contact support to request a quote.\n",
+    "author": "marco",
+    "created_at": "2026-01-20T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1016",
+    "kind": "doc_update",
+    "target": "doc:tax-exempt",
+    "description": "Publish tax-exempt@v1",
+    "diff": "+Tax-exempt organizations can apply for a tax-exempt account by sending their exemption certificate to support. We review certificates within 3 business days.\n+\n+Once approved, sales tax is removed from orders placed while signed in to the approved account. Tax cannot be refunded on orders placed before approval.\n",
+    "author": "alice",
+    "created_at": "2026-01-20T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1011",
+    "kind": "doc_update",
+    "target": "doc:military-discount",
+    "description": "Publish military-discount@v1",
+    "diff": "+Active-duty service members, veterans and their immediate families get 15% off full-price items. Verify your status once in your account and the discount is applied automatically.\n",
+    "author": "ben",
+    "created_at": "2026-01-10T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1012",
+    "kind": "doc_update",
+    "target": "doc:payment-methods",
+    "description": "Publish payment-methods@v1",
+    "diff": "+We accept Visa, Mastercard, American Express, Discover, PayPal, Apple Pay and Kestrel gift cards.\n+\n+Orders of $150 or more can be paid in installments through Affirm. Your card is charged when the order ships, not when it is placed.\n",
+    "author": "alice",
+    "created_at": "2026-01-10T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1013",
+    "kind": "doc_update",
+    "target": "doc:promo-codes",
+    "description": "Publish promo-codes@v1",
+    "diff": "+You can use 1 promo code per order. Enter it at checkout before payment; codes cannot be applied after an order is placed.\n+\n+Promo codes cannot be combined with student or military discounts, and they do not apply to gift cards.\n",
+    "author": "alice",
+    "created_at": "2026-01-10T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1014",
+    "kind": "doc_update",
+    "target": "doc:student-discount",
+    "description": "Publish student-discount@v1",
+    "diff": "+Students get 10% off full-price items after verifying their enrollment through our verification partner. The discount applies online and in stores.\n",
+    "author": "marco",
+    "created_at": "2026-01-10T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1008",
+    "kind": "doc_update",
+    "target": "doc:contact-support",
+    "description": "Publish contact-support@v1",
+    "diff": "+You can reach Kestrel support by phone at 1-800-555-0142 or by email at help@kestrel.example. Phone support is open 7 a.m. to 7 p.m. Mountain Time, Monday through Saturday.\n+\n+Email replies usually arrive within one business day. Have your order number ready to speed things up.\n",
+    "author": "ops-bot",
+    "created_at": "2026-01-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1009",
+    "kind": "doc_update",
+    "target": "doc:email-preferences",
+    "description": "Publish email-preferences@v1",
+    "diff": "+You can unsubscribe from marketing email with the link at the bottom of any message, or from the email preferences page in your account. Unsubscribe requests take effect within 10 business days.\n+\n+Order confirmations, shipping updates and account security messages are always sent, even if you unsubscribe from marketing email.\n",
+    "author": "alice",
+    "created_at": "2026-01-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1010",
+    "kind": "doc_update",
+    "target": "doc:privacy-policy",
+    "description": "Publish privacy-policy@v1",
+    "diff": "+We use your personal data only to process orders, run your account and loyalty membership, and send email you have opted into. We never sell your data.\n+\n+You can ask us to delete your data by contacting support. Deletion requests are completed within 30 days. Order records we must keep for tax purposes are retained as required by law.\n",
+    "author": "ops-bot",
+    "created_at": "2026-01-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1007",
+    "kind": "doc_update",
+    "target": "doc:price-matching",
+    "description": "Publish price-matching@v1",
+    "diff": "+If you find a lower price on an identical item from an authorized US retailer within 7 days of your purchase, we refund the difference.\n",
+    "author": "priya",
+    "created_at": "2025-05-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1006",
+    "kind": "doc_update",
+    "target": "doc:password-reset",
+    "description": "Publish password-reset@v1",
+    "diff": "+To reset your password, choose \"Forgot password\" on the sign-in page. We email a reset link that expires after 60 minutes.\n",
+    "author": "alice",
+    "created_at": "2025-04-02T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1005",
+    "kind": "doc_update",
+    "target": "doc:exchanges",
+    "description": "Publish exchanges@v1",
+    "diff": "+You can exchange an unused item for a different size or color within 21 days of delivery. Exchanges are subject to availability.\n",
+    "author": "ops-bot",
+    "created_at": "2025-03-10T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1003",
+    "kind": "doc_update",
+    "target": "doc:refund-policy",
+    "description": "Publish refund-policy@v1",
+    "diff": "+You can return most Kestrel items, including boots, jackets, tents and packs, within 30 days of delivery for a full refund. Items must be unused and in their original packaging.\n+\n+Refunds go back to the original payment method within 5 business days of the item reaching our warehouse. Gift cards and personalized gear cannot be returned.\n",
+    "author": "alice",
+    "created_at": "2025-02-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1004",
+    "kind": "doc_update",
+    "target": "doc:returns-process",
+    "description": "Publish returns-process@v1",
+    "diff": "+To return an item, email help@kestrel.example with your order number. We send a return label by email. The cost of the return label, $7.95, is deducted from your refund.\n+\n+Pack the item securely and drop it off with the carrier. You can also return items in person at any Kestrel store.\n",
+    "author": "alice",
+    "created_at": "2025-02-01T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1001",
+    "kind": "doc_update",
+    "target": "doc:shipping-domestic",
+    "description": "Publish shipping-domestic@v1",
+    "diff": "+Standard shipping is free on orders over $50 within the continental United States and takes 3 to 7 business days. Orders below that ship for a flat $6.95.\n",
+    "author": "ben",
+    "created_at": "2025-01-15T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1002",
+    "kind": "doc_update",
+    "target": "doc:shipping-expedited",
+    "description": "Publish shipping-expedited@v1",
+    "diff": "+Express shipping arrives in 2 business days and costs $24.95. Express shipping is available in the continental United States only.\n",
+    "author": "marco",
+    "created_at": "2025-01-15T09:00:00+00:00"
+  },
+  {
+    "change_id": "change:doc-update-1000",
+    "kind": "doc_update",
+    "target": "doc:warranty",
+    "description": "Publish warranty@v1",
+    "diff": "+Kestrel-brand gear carries a 1-year limited warranty against defects in materials and workmanship, starting from the delivery date. Third-party brands are covered by their manufacturer's warranty.\n",
+    "author": "priya",
+    "created_at": "2024-11-01T09:00:00+00:00"
+  }
+]

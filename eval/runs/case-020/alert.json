@@ -1,15 +1,15 @@
 {
   "alert_id": "alert-case-020",
   "type": "flagged_conversation",
-  "fired_at": "2026-10-18T04:03:09.416546+00:00",
+  "fired_at": "2026-10-24T21:38:26.430407+00:00",
   "window": {
-    "start": "2026-10-18T04:02:38.914438+00:00",
-    "end": "2026-10-18T04:03:09.416546+00:00"
+    "start": "2026-10-24T21:37:52.501919+00:00",
+    "end": "2026-10-24T21:38:26.430407+00:00"
   },
   "conversation_id": "conv-6eef659e",
-  "trace_id": "fc88601c7f777c3a48bf6cf8ee4c3d0a",
+  "trace_id": "4bb3659b6c76d74019432e18d36ed8b6",
   "question": "Is the Ridgeline Hiking Boot (product P-001) in stock, and how many do you have?",
-  "answer": "Yes, the Ridgeline Hiking Boot (product P-001) is in stock, and we have 37 of them.\n\nAnswer: Yes",
+  "answer": "Yes, the Ridgeline Hiking Boot (product P-001) is in stock, and we have 37 units available.\n\nAnswer: Yes",
   "reviewer_correction": "The Ridgeline Hiking Boot is out of stock. There are none left.",
   "answer_check": {
     "must_contain": [

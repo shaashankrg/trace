@@ -1,0 +1,20 @@
+{
+  "alert_id": "alert-case-043",
+  "type": "flagged_conversation",
+  "fired_at": "2026-11-01T01:57:55.445688+00:00",
+  "window": {
+    "start": "2026-11-01T01:57:24.748221+00:00",
+    "end": "2026-11-01T01:57:55.445688+00:00"
+  },
+  "conversation_id": "conv-4a084b03",
+  "trace_id": "78ee4ae685f8f219a50830abf2246899",
+  "question": "Is there a military discount?",
+  "answer": "<documents>\n<document id=\"military-discount@v1#0/c60\">\nActive-duty service members, veterans and their immediate\n</document>\n<document id=\"military-discount@v1#2/c60\">\nonce in your account and the discount is applied\n</document>\n</documents>\n\nYes, there is a military discount available for active-duty service members, veterans, and their immediate families [military-discount@v1#0/c60, military-discount@v1#2/c60].\n\nAnswer: Yes",
+  "reviewer_correction": "Yes, military members, veterans and families get 15% off.",
+  "answer_check": {
+    "must_contain": [
+      "\\b15\\s?(?:%|percent)"
+    ],
+    "must_not_contain": []
+  }
+}

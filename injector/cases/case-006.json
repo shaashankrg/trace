@@ -22,5 +22,6 @@
       "never expire|do not expire|don't expire|no expiration"
     ],
     "must_not_contain": []
-  }
+  },
+  "split": "train"
 }

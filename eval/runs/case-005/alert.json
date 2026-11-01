@@ -1,15 +1,15 @@
 {
   "alert_id": "alert-case-005",
   "type": "flagged_conversation",
-  "fired_at": "2026-10-18T03:50:10.405993+00:00",
+  "fired_at": "2026-10-24T21:35:27.094337+00:00",
   "window": {
-    "start": "2026-10-18T03:49:39.533385+00:00",
-    "end": "2026-10-18T03:50:10.405993+00:00"
+    "start": "2026-10-24T21:34:57.301782+00:00",
+    "end": "2026-10-24T21:35:27.094337+00:00"
   },
   "conversation_id": "conv-ac598e70",
-  "trace_id": "4615982dd8aba219baf8a5b891ed5064",
+  "trace_id": "551ba0007528f9179040484f9d582971",
   "question": "Is the Canyon Sandal (product P-005) in stock, and how many do you have?",
-  "answer": "The Canyon Sandal (product P-005) is currently out of stock, with a quantity of 0 available.\n\nAnswer: No",
+  "answer": "The Canyon Sandal (product P-005) is currently out of stock, and we have 0 in stock.\n\nAnswer: No",
   "reviewer_correction": "The Canyon Sandal is in stock: 18 units available.",
   "answer_check": {
     "must_contain": [

@@ -1,0 +1,138 @@
+[
+  {
+    "conversation_id": "conv-9a7b3af7",
+    "trace_id": "5762793b2586df806d2d22d6545acabc",
+    "span_id": "8eb15264262645f9",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0012"
+    },
+    "output": [
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Ultralight 1-Person Tent",
+            "product_id": "P-018"
+          },
+          {
+            "qty": 2,
+            "name": "Comfort Plus Sleeping Pad",
+            "product_id": "P-022"
+          }
+        ],
+        "total": "900.00",
+        "status": "processing",
+        "order_id": "O-1075",
+        "placed_at": "2026-10-10T22:00:00+00:00",
+        "delivered_at": null
+      },
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Sunrise 2-Person Tent",
+            "product_id": "P-016"
+          }
+        ],
+        "total": "70.00",
+        "status": "delivered",
+        "order_id": "O-1064",
+        "placed_at": "2026-09-13T11:00:00+00:00",
+        "delivered_at": "2026-09-16T11:00:00+00:00"
+      },
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Folding Camp Table",
+            "product_id": "P-035"
+          },
+          {
+            "qty": 1,
+            "name": "Compression Stuff Sack",
+            "product_id": "P-039"
+          },
+          {
+            "qty": 1,
+            "name": "Duffel Bag 60L",
+            "product_id": "P-048"
+          }
+        ],
+        "total": "765.00",
+        "status": "delivered",
+        "order_id": "O-1058",
+        "placed_at": "2026-08-22T06:00:00+00:00",
+        "delivered_at": "2026-08-28T06:00:00+00:00"
+      },
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Talus Fleece Pullover",
+            "product_id": "P-008"
+          }
+        ],
+        "total": "160.00",
+        "status": "delivered",
+        "order_id": "O-1039",
+        "placed_at": "2026-03-21T04:00:00+00:00",
+        "delivered_at": "2026-03-26T04:00:00+00:00"
+      },
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Talus Fleece Pullover",
+            "product_id": "P-008"
+          },
+          {
+            "qty": 1,
+            "name": "Wool Hiking Socks 3-Pack",
+            "product_id": "P-015"
+          }
+        ],
+        "total": "190.00",
+        "status": "delivered",
+        "order_id": "O-1079",
+        "placed_at": "2025-05-25T08:00:00+00:00",
+        "delivered_at": "2025-05-30T08:00:00+00:00"
+      },
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Cirrus Down Jacket",
+            "product_id": "P-007"
+          },
+          {
+            "qty": 1,
+            "name": "Trek Hiking Pants",
+            "product_id": "P-013"
+          }
+        ],
+        "total": "485.00",
+        "status": "delivered",
+        "order_id": "O-1012",
+        "placed_at": "2024-07-28T09:00:00+00:00",
+        "delivered_at": "2024-08-03T09:00:00+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 6.560700014233589,
+    "created_at": "2026-11-01T02:08:22.768025+00:00"
+  },
+  {
+    "conversation_id": "conv-9a7b3af7",
+    "trace_id": "2f9af1dd156f456c3b4ffa1ddd877c40",
+    "span_id": "cfee254a08f542f8",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0012"
+    },
+    "output": [],
+    "timed_out": true,
+    "latency_ms": 5.627300008200109,
+    "created_at": "2026-11-01T02:08:26.236706+00:00"
+  }
+]

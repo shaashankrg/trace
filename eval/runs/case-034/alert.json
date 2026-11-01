@@ -1,0 +1,22 @@
+{
+  "alert_id": "alert-case-034",
+  "type": "flagged_conversation",
+  "fired_at": "2026-11-01T01:48:09.173297+00:00",
+  "window": {
+    "start": "2026-11-01T01:47:38.250753+00:00",
+    "end": "2026-11-01T01:48:09.173297+00:00"
+  },
+  "conversation_id": "conv-a26a7673",
+  "trace_id": "ef19999d59420db197496db85c1682a0",
+  "question": "Is the Expedition 70L Backpack (product P-025) in stock, and how many do you have?",
+  "answer": "The Expedition 70L Backpack (product P-025) is not in stock; we currently have 0 in stock.\n\nAnswer: No",
+  "reviewer_correction": "The Expedition 70L Backpack is in stock: 17 units available.",
+  "answer_check": {
+    "must_contain": [
+      "\\b17\\b"
+    ],
+    "must_not_contain": [
+      "out of stock|sold out|unavailable"
+    ]
+  }
+}

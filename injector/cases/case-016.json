@@ -21,5 +21,6 @@
       "\\b4\\b"
     ],
     "must_not_contain": []
-  }
+  },
+  "split": "train"
 }

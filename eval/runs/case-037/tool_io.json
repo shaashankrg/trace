@@ -1,0 +1,62 @@
+[
+  {
+    "conversation_id": "conv-3849c1d3",
+    "trace_id": "20779137e251a909a503190a7b459bc7",
+    "span_id": "7bddb83d3784bc83",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-020"
+    },
+    "output": [
+      {
+        "qty": 17,
+        "name": "Glacier 0F Sleeping Bag",
+        "product_id": "P-020",
+        "refreshed_at": "2026-11-01T01:49:53.499943+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 5.876699986401945,
+    "created_at": "2026-11-01T01:49:54.641404+00:00"
+  },
+  {
+    "conversation_id": "conv-3849c1d3",
+    "trace_id": "b232304c219928ac9e001a178badbd36",
+    "span_id": "f4bf27d31746ce83",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-020"
+    },
+    "output": [
+      {
+        "qty": 0,
+        "name": "Glacier 0F Sleeping Bag",
+        "product_id": "P-020",
+        "refreshed_at": "2026-10-29T00:10:55.220495+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 5.48640001215972,
+    "created_at": "2026-11-01T01:49:56.213212+00:00"
+  },
+  {
+    "conversation_id": "conv-3849c1d3",
+    "trace_id": "3c7dab4d539587f325a8e55c2ce877ee",
+    "span_id": "542632e3175e7f8c",
+    "tool_name": "check_inventory",
+    "input": {
+      "product_id": "P-020"
+    },
+    "output": [
+      {
+        "qty": 0,
+        "name": "Glacier 0F Sleeping Bag",
+        "product_id": "P-020",
+        "refreshed_at": "2026-11-01T01:49:56.900716+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 7.765399990603328,
+    "created_at": "2026-11-01T01:49:57.833808+00:00"
+  }
+]

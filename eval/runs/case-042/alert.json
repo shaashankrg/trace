@@ -1,0 +1,53 @@
+{
+  "alert_id": "alert-case-042",
+  "type": "quality_drop",
+  "fired_at": "2026-11-01T01:56:55.409620+00:00",
+  "window": {
+    "start": "2026-11-01T01:55:54.857201+00:00",
+    "end": "2026-11-01T01:56:55.409620+00:00"
+  },
+  "conversation_id": "conv-09280997",
+  "trace_id": "18aabbc6fcc7be04de8d31dc3e3c603c",
+  "question": "What's the price match window?",
+  "answer": "I don't know the price match window from the available documents. Please contact support for assistance.",
+  "reviewer_correction": "The price match window is 14 days.",
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:14|fourteen)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": []
+  },
+  "metric": "kestrel_canary_accuracy",
+  "before": 1.0,
+  "after": 0.9667,
+  "failing_samples": [
+    {
+      "conversation_id": "canary-322fc4eb-q002",
+      "trace_id": "2d7491cf3d14c554437072b2ee0553dc",
+      "question": "Once you receive my return, how long until the refund reaches my card?",
+      "answer": "I don't know the timeframe for a refund to reach your card from the provided documents. Please contact support for more details.",
+      "reviewer_correction": "missing ['\\\\b(?:5|five)[- ](?:calendar |business )?days?\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\b(?:5|five)[- ](?:calendar |business )?days?\\b"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "conversation_id": "canary-322fc4eb-q011",
+      "trace_id": "3d0c90eecb59a27eaa1a386370353982",
+      "question": "How long is a password reset link valid?",
+      "answer": "I don't know the answer to that question. Please contact support for assistance.",
+      "reviewer_correction": "missing ['\\\\b(?:30|thirty)[- ]minutes?\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\b(?:30|thirty)[- ]minutes?\\b"
+        ],
+        "must_not_contain": [
+          "\\b(?:60|sixty)[- ]minutes?\\b"
+        ]
+      }
+    }
+  ]
+}

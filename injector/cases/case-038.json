@@ -1,0 +1,40 @@
+{
+  "case_id": "case-038",
+  "conversation_id": "conv-9bdf144c",
+  "fault": {
+    "type": "guardrail_misfire",
+    "params": {
+      "topic": "warranty"
+    },
+    "age_min": 84,
+    "author": "alice",
+    "description": "Expand the blocked topic list",
+    "change_id": "change:config-change-5875"
+  },
+  "decoy": {
+    "type": "unrelated_config_change",
+    "params": {
+      "value": 700
+    },
+    "age_min": 128,
+    "position": "before",
+    "author": "ben",
+    "change_id": "change:config-change-6877",
+    "description": "Allow longer replies"
+  },
+  "alert": {
+    "type": "quality_drop",
+    "question": "How long is the warranty on Kestrel-brand gear?",
+    "reviewer_correction": "The warranty is 2 years. The assistant refused a question it should have answered.",
+    "metric": "kestrel_canary_accuracy"
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:2|two)[- ]years?\\b"
+    ],
+    "must_not_contain": [
+      "can'?t help with that topic|cannot help with that topic"
+    ]
+  },
+  "split": "test"
+}

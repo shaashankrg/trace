@@ -1,0 +1,28 @@
+{
+  "case_id": "case-042",
+  "conversation_id": "conv-09280997",
+  "fault": {
+    "type": "embedding_mismatch",
+    "params": {
+      "embedding_model": "sentence-transformers/all-MiniLM-L12-v2"
+    },
+    "age_min": 72,
+    "author": "alice",
+    "description": "Switch query embeddings to L12",
+    "change_id": "change:config-change-3748"
+  },
+  "decoy": null,
+  "alert": {
+    "type": "quality_drop",
+    "question": "What's the price match window?",
+    "reviewer_correction": "The price match window is 14 days.",
+    "metric": "kestrel_canary_accuracy"
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:14|fourteen)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": []
+  },
+  "split": "test"
+}

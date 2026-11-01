@@ -135,3 +135,118 @@ Notes from building it (not part of the five above):
 - **The anti-cheating rule caught real attempts.** The agent tried `tool_timeout_ms=5000` (case-007, smoke run) and `similarity_threshold=0.5` (case-010): values that appear nowhere in the history. Both were rejected in code; case-010's fix therefore counts as failed.
 - **`answer_check` is now in `alert.json`.** The Day 4 anti-cheat test banned it from snapshot files; it is allowed in `alert.json` only, and no tool output shows it. The investigator never reads it either; only the replay's answer check does.
 - **Judge fallback is 0%.** The LLM judge runs only when an answer has every required pattern and a forbidden one (it states both facts). No replay in this run needed it, so the judge's own accuracy is untested on real answers.
+
+## Day 8
+
+1. **A same-dimension embedding model for the mismatch fault**, because…
+
+2. **A separate dev split for the Day 3 cases instead of putting them in test**, because…
+
+3. **Held-out failure types (`embedding_mismatch`, `guardrail_misfire`) only in test**, because…
+
+4. **The 2-of-3 replay rule for quality drops**, because…
+
+5. **Logging every test-split run**, because…
+
+Notes from building it (not part of the five above):
+
+- **Two of the four new fault types produce no cases, and the honest reason is different for each.**
+  `model_downgrade`: every smaller model available on this key is unusable as a *silent*
+  downgrade. `gemini-2.5-flash` and `gemini-2.5-flash-lite` return 404 ("no longer available to
+  new users"). The Gemma models (`gemma-4-26b-a4b-it`, `gemma-4-31b-it`) raise, because
+  `assistant.llm.is_gemini` routes any name that is not `gemini-*` to the Anthropic SDK — a loud
+  failure, and a routing artifact rather than a model-quality signal. `gemini-3.1-flash-lite` is
+  callable and silent but too capable: right 3/3 on all 13 two-hop questions (order date vs.
+  policy window) and on 7 of 8 three-hop ones. The single question it failed 3/3 in one sweep
+  passed 3/3 in the next, so that was sampling noise at the edge of its ability, not a fault.
+  A fault that only shows up as flakiness cannot be scored, because the replay rule needs a patch
+  to flip the answer repeatably. Same call as `context_overflow` on Day 3: the fault class and its
+  apply/revert tests stay, the cases do not. Probe: `eval/probes/probe_model_downgrade.py`.
+
+- **`chunking_regression` needed 40-60 chars, not the 80 I started with.** At 80 the model
+  simply reassembled the answer out of several small chunks: of 12 policy questions only
+  `price-matching` lost its answer. A sweep over 40/60/80/120/1000/2000
+  (`eval/probes/probe_chunking_sizes.py`) shows 40 and 60 are where the key sentence fragments
+  badly enough that no retrieved chunk carries the whole fact, and where the answer actually
+  breaks. 1000 and 2000 broke nothing: a bigger chunk still contains the sentence. So the
+  intensity is per (doc, size), measured, not guessed.
+
+- **The embedding mismatch is silent, and that took choosing the model on evidence.**
+  `all-MiniLM-L12-v2` and `multi-qa-MiniLM-L6-cos-v1` are both 384-dim, so neither raises a
+  dimension error. But `multi-qa` broke 0 of 24 questions: it ranks this corpus about as well as
+  the indexed model. `all-MiniLM-L12-v2` drops the answer chunk on 3, so that is the one the
+  cases use. A 768-dim model would have thrown on the first query, which is the loud failure the
+  plan warns about and useless as a test.
+
+- **Chunk refs carry their chunking: `chunk:refund-policy@v2#3/c80`.** Both chunkings of a
+  re-chunked doc live in the `chunks` table at once and only the index flag moves, so a replay
+  can switch between them in memory without re-chunking anything. That is what made
+  `set_config chunk_size` replayable, which Day 6 had refused with "documents are already
+  chunked". `_switch_chunking` only touches doc/version pairs that actually have both chunkings.
+
+- **`guardrail_misfire` needs the blocked topic to appear as a whole word in the question.** The
+  guardrail matches on `\b`-delimited topics, so blocking "return" does nothing to "returning".
+  The cases block `refund`, `shipping`, `warranty`, `exchange`, `deposit`, each paired with a
+  question that uses that exact word. Their `must_not_contain` carries the refusal text, so a
+  blocked answer fails the check even where the answer pattern is loose.
+
+- **Three new categories were needed, or the new ground truth would not have been scoreable.**
+  `retrieval_failure` and `guardrail_error` are not in the Day 5 vocabulary, so
+  `agent/schema.py` would have rejected the labels for `chunking_regression`,
+  `embedding_mismatch` and `guardrail_misfire`. Added both to `CATEGORIES`; the components
+  (`retriever`, `guardrail`) already existed.
+
+- **The investigator prompt changed for the new alert shape, not for accuracy.** It said "a
+  reviewer flagged one of its answers as wrong", which is false for a `quality_drop` alert. It
+  now describes both alert types and states the 2-of-3 rule. This is before the freeze and is not
+  tuning: it tells the agent what the input is, which no train miss was consulted for.
+
+- **`alert_text` hides `answer_check` from the failing samples.** The samples go to the model so
+  it can see the shape of the drop, but their grading patterns do not: that would hand it the
+  answer key. The Day 4 anti-cheat rule keeps `answer_check` to `alert.json` alone.
+
+- **A `run_case` shadowing bug surfaced while wiring quality drops.** Inside the injection loop
+  `record = item.change_record()` overwrote the function's own `record` flag, so the later
+  `if record:` was always truthy and `record_run()` was handed a dict where a bool belonged. The
+  change record is now `change`.
+
+- **`wait_for_scrape` had to learn which canary suite it is waiting for.** It only ever queried
+  `suite="smoke"`, but a quality-drop case runs the full canary, which pushes under
+  `suite="full"`, so the first quality-drop recording timed out waiting for a scrape that was
+  never going to arrive.
+
+- **The benchmark as recorded: 52 cases, 45 with a valid recording.** train 13/17, dev 4/5,
+  test 28/30. Test covers 8 fault types and holds all 10 quality-drop alerts and **every** case of
+  both held-out types (`guardrail_misfire` 5, `embedding_mismatch` 3). The four train cases and one
+  dev case without a valid recording are the Day 3 `--force` cases, which were already recorded
+  that way before Day 8; the scorer reports "valid" and "all recorded" separately, as it did on
+  Day 6. The two test cases left out (`case-032`, `case-039`, both `chunking_regression`) never
+  produced a wrong answer and are excluded from the lock rather than padding the split.
+
+- **The lock reads the snapshots, not `eval.case_runs`.** The first version used the latest row
+  per case, and it disagreed with the recordings: six cases had an earlier run that recorded a
+  genuinely wrong answer and a later run that logged "the fault did not make the answer wrong".
+  Both are true — the assistant model is not deterministic — but the snapshot is what a replay
+  actually evaluates, so validity is now derived by scoring each snapshot's recorded answer
+  against that case's own `answer_check`. That moved the valid test count from 23 to 28.
+
+- **`guard_test_run` ignored a caller-supplied lock path.** It called `check_lock()` with no
+  argument, so it always read `eval/test_split.lock` regardless of what it was handed. Caught by
+  a test that passed a temporary lock and watched the wrong error come back.
+
+- **Test split locked at 28 cases, hash `3d497defc7e3b08f`, 0 test runs.** `eval/test_split.lock`
+  pins the ids and a hash over each case's JSON including its `split`, so both a case leaving the
+  split and a case being quietly reworded break the lock (both have tests).
+
+- **Section 5 (tuning on train) did not run: both model providers are out of budget.** Gemini
+  returns `429 RESOURCE_EXHAUSTED` ("project has exceeded its monthly spending cap") and Anthropic
+  returns `400` ("credit balance is too low"), so no investigator run is possible and the prompt is
+  deliberately **not** frozen. `eval/frozen_prompt.sha` is absent, and `--split test` refuses to
+  run without it, which is the behaviour we want: the test split stays untouched rather than being
+  spent on an untuned prompt. To resume: top up either provider, run
+  `python -m eval.replay_case --split train`, read the misses, add general guidance only, re-run
+  train, then `python -m eval.splits --freeze-prompt` before any test run.
+
+- **The investigator prompt changed only to describe the new alert shape.** No train miss has been
+  read, so no accuracy tuning has happened. That edit is listed above and is the only prompt change
+  on Day 8.

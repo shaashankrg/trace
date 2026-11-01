@@ -1,12 +1,17 @@
 """Inject one case, record everything an investigator could see, put the system back.
 
   1. reset_healthy(), smoke canary (abort under 90%), and check the alert question is answered
-     correctly while healthy
+     correctly while healthy; a quality_drop case also runs the full canary here, for `before`
   2. write the decoy (if any)
   3. apply the fault, write its change record (if any); the label stays in the eval schema
-  4. ask the alert question; if the answer is not actually wrong the case is invalid
+  4. ask the alert question; if the answer is not actually wrong the case is invalid.
+     A quality_drop case also re-runs the full canary here, for `after` and the failing samples
   5. snapshot trace, logs, metrics and DB state to eval/runs/<case_id>/
   6. revert, remove the decoy, smoke canary again and confirm recovery
+
+Alert types (Day 8). `flagged_conversation` is one reviewer-flagged answer. `quality_drop` is a
+metric that fell: the alert carries before/after accuracy and up to MAX_FAILING_SAMPLES failing
+canary conversations, and the traces of up to SNAPSHOT_FAILING_TRACES of them are recorded.
 
 Usage: python -m eval.run_case case-001 [case-002 ...]
        python -m eval.run_case --all
@@ -39,6 +44,9 @@ PROMETHEUS_URL = os.environ.get("PROMETHEUS_URL", "http://localhost:9092")
 RUNS_DIR = Path(__file__).resolve().parent / "runs"
 SMOKE_MIN_ACCURACY = 0.9
 SCRAPE_WAIT_S = 60
+# A quality-drop alert shows the reviewer a few failing conversations, not all of them.
+MAX_FAILING_SAMPLES = 5
+SNAPSHOT_FAILING_TRACES = 10
 
 
 class CaseAborted(Exception):
@@ -87,23 +95,85 @@ def ask_alert(case: dict) -> tuple[dict, list[str]]:
     return resp, canary.score(case["answer_check"], resp["answer"])
 
 
+
+def is_quality_drop(case: dict) -> bool:
+    return case["alert"].get("type") == "quality_drop"
+
+
+def full_canary(label: str) -> tuple[list[dict], float]:
+    """The whole 60-question canary. Only quality-drop cases pay for this."""
+    results, acc = canary.run_canary(smoke=False, verbose=False)
+    print(f"  [{label}] full canary accuracy {acc:.3f} "
+          f"({sum(r['passed'] for r in results)}/{len(results)})")
+    return results, acc
+
+
+def failing_samples(results: list[dict], limit: int = MAX_FAILING_SAMPLES) -> list[dict]:
+    """The failing canary questions, as the alert would carry them: the question, what the
+    reviewer says the answer should contain, and the conversation to pull a trace for."""
+    out = []
+    for r in results:
+        if r["passed"]:
+            continue
+        out.append({
+            "conversation_id": r.get("conversation_id") or "",
+            "trace_id": r.get("trace_id"),
+            "question": r["question"],
+            "answer": r.get("answer", "")[:600],
+            "reviewer_correction": "; ".join(r["failures"]),
+            "answer_check": {"must_contain": r["must_contain"],
+                             "must_not_contain": r["must_not_contain"]},
+        })
+        if len(out) >= limit:
+            break
+    return out
+
+
+def trace_for(trace_id: str, tries: int = 20) -> dict | None:
+    """Poll Jaeger for one trace; spans are exported in batches."""
+    for _ in range(tries):
+        try:
+            data = http_json(f"{JAEGER_URL}/api/traces/{trace_id}")
+            if data.get("data"):
+                return data
+        except Exception:
+            pass
+        time.sleep(1)
+    return None
+
+
+def merge_traces(primary: dict | None, extra: list[dict]) -> dict:
+    """One trace.json holding the alert's trace plus the failing canary traces."""
+    data = list((primary or {}).get("data", []))
+    seen = {t.get("traceID") for t in data}
+    for d in extra:
+        for t in d.get("data", []):
+            if t.get("traceID") not in seen:
+                seen.add(t.get("traceID"))
+                data.append(t)
+    return {"data": data}
+
+
 def snapshot(case: dict, resp: dict, window: tuple[datetime, datetime], case_start: datetime,
-             out: Path) -> None:
+             out: Path, drop: dict | None = None) -> None:
+    """`drop`, for a quality_drop case: {"metric", "before", "after", "samples", "results"}."""
     out.mkdir(parents=True, exist_ok=True)
     start, end = window
 
     # Jaeger: spans are exported in batches, so poll until the trace shows up.
     trace_id = resp["trace_id"]
-    trace_json = None
-    for _ in range(30):
-        try:
-            trace_json = http_json(f"{JAEGER_URL}/api/traces/{trace_id}")
-            if trace_json.get("data"):
-                break
-        except Exception:
-            pass
-        time.sleep(1)
-    dump(out / "trace.json", trace_json or {"data": []})
+    trace_json = trace_for(trace_id, tries=30)
+
+    # A quality drop is not one bad conversation, so record the failing canary ones too.
+    extra = []
+    if drop:
+        failing = [r for r in drop["results"] if not r["passed"] and r.get("trace_id")]
+        for r in failing[:SNAPSHOT_FAILING_TRACES]:
+            got = trace_for(r["trace_id"], tries=3)
+            if got:
+                extra.append(got)
+        print(f"  recorded {len(extra)} failing canary traces of {len(failing)}")
+    dump(out / "trace.json", merge_traces(trace_json, extra))
 
     # OpenSearch: logs in the alert window (the handler flushes every second).
     client = OpenSearch(OPENSEARCH_URL)
@@ -165,7 +235,7 @@ def snapshot(case: dict, resp: dict, window: tuple[datetime, datetime], case_sta
 
     # No ground truth in here: only what the alert would carry in production. answer_check is
     # the reviewer's correction written as patterns, so a replay can be checked in code.
-    dump(out / "alert.json", {
+    alert_json = {
         "alert_id": f"alert-{case['case_id']}",
         "type": case["alert"]["type"],
         "fired_at": window[1].isoformat(),
@@ -176,7 +246,15 @@ def snapshot(case: dict, resp: dict, window: tuple[datetime, datetime], case_sta
         "answer": resp["answer"],
         "reviewer_correction": case["alert"]["reviewer_correction"],
         "answer_check": case["answer_check"],
-    })
+    }
+    if drop:
+        alert_json.update({
+            "metric": drop["metric"],
+            "before": round(drop["before"], 4),
+            "after": round(drop["after"], 4),
+            "failing_samples": drop["samples"],
+        })
+    dump(out / "alert.json", alert_json)
 
 
 STORE_TABLES = {
@@ -200,10 +278,13 @@ def store_rows(conn) -> dict[str, list[dict]]:
     return out
 
 
-def wait_for_scrape(after: float) -> None:
-    """Block until Prometheus has scraped a canary push made after `after` (unix time)."""
+def wait_for_scrape(after: float, suite: str = "smoke") -> None:
+    """Block until Prometheus has scraped a canary push made after `after` (unix time).
+
+    `suite` follows the run that was just pushed: a quality-drop case runs the full canary, which
+    pushes under suite="full", so waiting on suite="smoke" would always time out."""
     deadline = time.time() + SCRAPE_WAIT_S
-    q = urllib.parse.quote('max(kestrel_canary_run_timestamp{suite="smoke"})')
+    q = urllib.parse.quote(f'max(kestrel_canary_run_timestamp{{suite="{suite}"}})')
     while time.time() < deadline:
         try:
             result = http_json(f"{PROMETHEUS_URL}/api/v1/query?query={q}")["data"]["result"]
@@ -224,21 +305,35 @@ def record_run(case_id: str, conversation_id: str, valid: bool, note: str, resp:
              (resp or {}).get("answer")))
 
 
-def run_case(case_id: str, fault_canary: bool = True, force: bool = False) -> dict:
+def run_case(case_id: str, fault_canary: bool = True, force: bool = False, runs_dir: Path = RUNS_DIR,
+             while_faulted=None, record: bool = True) -> dict:
+    """`while_faulted(case, case_dir)`, if given, runs after the snapshot and before the revert (the
+    Day 7 live check investigates the live stack there). `record=False` leaves eval.case_runs alone,
+    so a check run cannot change which recording the scorer treats as the case's latest."""
     case = load_case(case_id)
     case_start = datetime.now(timezone.utc)
     print(f"{case_id}: {case['fault']['type']}" + (f" + {case['decoy']['type']}" if case["decoy"] else ""))
     result = {"case_id": case_id, "valid": False, "recovered": False, "note": ""}
 
     with db.connect() as conn:
-        # 1. healthy baseline
+        # 1. healthy baseline: the alert question must be answered right in the world the fault breaks
         healthy_state(conn, "reset")
-        healthy_resp, healthy_failures = ask_alert(case)
+        twin = faults.build(conn, case["fault"], datetime.now(timezone.utc))
+        twin.apply_healthy()
+        before_results, before_acc = (None, None)
+        try:
+            healthy_resp, healthy_failures = ask_alert(case)
+            if is_quality_drop(case):
+                # The `before` half of the metric: the whole canary, in the healthy world.
+                before_results, before_acc = full_canary("healthy")
+        finally:
+            twin.revert()
         if healthy_failures:
             result["note"] = f"invalid: the alert question already fails while healthy: {healthy_failures}"
             print("  " + result["note"])
             if not force:
-                record_run(case_id, case["conversation_id"], False, result["note"], healthy_resp)
+                if record:
+                    record_run(case_id, case["conversation_id"], False, result["note"], healthy_resp)
                 return result
 
         now = datetime.now(timezone.utc)
@@ -250,9 +345,9 @@ def run_case(case_id: str, fault_canary: bool = True, force: bool = False) -> di
             window_start = datetime.now(timezone.utc)
             for item in sorted(filter(None, [decoy, fault]), key=lambda x: x.created_at):
                 item.apply()
-                record = item.change_record()
-                if record:
-                    state.insert_change(conn, record)
+                change = item.change_record()   # not `record`: that is this function's flag
+                if change:
+                    state.insert_change(conn, change)
 
             # 4. the alert
             resp, failures = ask_alert(case)
@@ -261,7 +356,8 @@ def run_case(case_id: str, fault_canary: bool = True, force: bool = False) -> di
                 result["note"] = "invalid: the fault did not make the answer wrong"
                 print(f"  {result['note']}\n    answer: {resp['answer'][:200]!r}")
                 if not force:
-                    record_run(case_id, case["conversation_id"], False, result["note"], resp)
+                    if record:
+                        record_run(case_id, case["conversation_id"], False, result["note"], resp)
                     return result
                 print("  --force: snapshotting anyway; this run is not a valid evaluation case")
             elif not healthy_failures:
@@ -269,14 +365,40 @@ def run_case(case_id: str, fault_canary: bool = True, force: bool = False) -> di
                 print(f"  wrong answer confirmed: {failures}")
 
             # 5. snapshot, with a fault-time canary so the metrics show the drop
-            if fault_canary:
+            drop = None
+            if is_quality_drop(case):
+                # The `after` half, and the failing conversations the alert cites as samples.
+                after_results, after_acc = full_canary("fault")
+                samples = failing_samples(after_results)
+                drop = {"metric": case["alert"].get("metric", "kestrel_canary_accuracy"),
+                        "before": before_acc, "after": after_acc,
+                        "samples": samples, "results": after_results}
+                result["drop"] = {"before": round(before_acc, 4), "after": round(after_acc, 4),
+                                  "failing": sum(1 for r in after_results if not r["passed"])}
+                if after_acc >= before_acc:
+                    result["note"] = (f"invalid: no quality drop "
+                                      f"({before_acc:.3f} -> {after_acc:.3f})")
+                    print("  " + result["note"])
+                    result["valid"] = False
+                    if not force:
+                        if record:
+                            record_run(case_id, case["conversation_id"], False, result["note"], resp)
+                        return result
+                else:
+                    print(f"  quality drop confirmed: {before_acc:.3f} -> {after_acc:.3f} "
+                          f"({len(samples)} samples of "
+                          f"{sum(1 for r in after_results if not r['passed'])} failing)")
+                wait_for_scrape(time.time() - 5, suite="full")
+            elif fault_canary:
                 _, acc = canary.run_canary(smoke=True, verbose=False)
                 print(f"  [fault] smoke accuracy {acc:.3f}")
                 wait_for_scrape(time.time() - 5)
             time.sleep(3)  # let the log handler flush
             window = (window_start, datetime.now(timezone.utc))
-            snapshot(case, resp, window, case_start, RUNS_DIR / case_id)
-            print(f"  snapshot saved to eval/runs/{case_id}")
+            snapshot(case, resp, window, case_start, runs_dir / case_id, drop)
+            print(f"  snapshot saved to {runs_dir / case_id}")
+            if while_faulted:
+                result["while_faulted"] = while_faulted(case, runs_dir / case_id)
         finally:
             # 6. put it back
             fault.revert()
@@ -285,7 +407,8 @@ def run_case(case_id: str, fault_canary: bool = True, force: bool = False) -> di
 
         healthy_state(conn, "recovery")
         result["recovered"] = True
-        record_run(case_id, case["conversation_id"], result["valid"], result["note"] or "ok", resp)
+        if record:
+            record_run(case_id, case["conversation_id"], result["valid"], result["note"] or "ok", resp)
     return result
 
 

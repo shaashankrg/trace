@@ -1,0 +1,39 @@
+{
+  "case_id": "case-040",
+  "conversation_id": "conv-e804b7a9",
+  "fault": {
+    "type": "guardrail_misfire",
+    "params": {
+      "topic": "deposit"
+    },
+    "age_min": 107,
+    "author": "alice",
+    "description": "Expand the blocked topic list",
+    "change_id": "change:config-change-9452"
+  },
+  "decoy": {
+    "type": "unrelated_config_change",
+    "params": {
+      "value": 700
+    },
+    "age_min": 142,
+    "position": "before",
+    "author": "ops-bot",
+    "change_id": "change:config-change-5609",
+    "description": "Raise response length limit"
+  },
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "How much is the deposit to rent a tent?",
+    "reviewer_correction": "The rental deposit is $100. The assistant refused a question it should have answered."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\$100"
+    ],
+    "must_not_contain": [
+      "can'?t help with that topic|cannot help with that topic"
+    ]
+  },
+  "split": "test"
+}

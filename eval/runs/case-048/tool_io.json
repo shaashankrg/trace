@@ -1,0 +1,122 @@
+[
+  {
+    "conversation_id": "conv-925e9fa1",
+    "trace_id": "41305400f076a58b4949018450f099ff",
+    "span_id": "6267833a05e0f7fd",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0027"
+    },
+    "output": [
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Cirrus Down Jacket",
+            "product_id": "P-007"
+          },
+          {
+            "qty": 1,
+            "name": "Talus Fleece Pullover",
+            "product_id": "P-008"
+          }
+        ],
+        "total": "280.00",
+        "status": "shipped",
+        "order_id": "O-1027",
+        "placed_at": "2026-10-10T12:00:00+00:00",
+        "delivered_at": null
+      },
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Backpacking Stove",
+            "product_id": "P-031"
+          }
+        ],
+        "total": "15.00",
+        "status": "delivered",
+        "order_id": "O-1065",
+        "placed_at": "2026-10-06T10:00:00+00:00",
+        "delivered_at": "2026-10-10T10:00:00+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 8.12959999893792,
+    "created_at": "2026-11-01T02:04:58.352045+00:00"
+  },
+  {
+    "conversation_id": "conv-925e9fa1",
+    "trace_id": "ef96e82795c5ad53dae62fb4d8553b1f",
+    "span_id": "b8b51c54d9190101",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0027"
+    },
+    "output": [],
+    "timed_out": true,
+    "latency_ms": 7.13250000262633,
+    "created_at": "2026-11-01T02:05:01.587184+00:00"
+  },
+  {
+    "conversation_id": "conv-925e9fa1",
+    "trace_id": "b29a120dd092cd3856d745c2cbf495a9",
+    "span_id": "60ca4117f810b1ba",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0027"
+    },
+    "output": [
+      {
+        "items": [
+          {
+            "qty": 2,
+            "name": "Cirrus Down Jacket",
+            "product_id": "P-007"
+          },
+          {
+            "qty": 1,
+            "name": "Talus Fleece Pullover",
+            "product_id": "P-008"
+          }
+        ],
+        "total": "280.00",
+        "status": "shipped",
+        "order_id": "O-1027",
+        "placed_at": "2026-10-10T12:00:00+00:00",
+        "delivered_at": null
+      },
+      {
+        "items": [
+          {
+            "qty": 1,
+            "name": "Backpacking Stove",
+            "product_id": "P-031"
+          }
+        ],
+        "total": "15.00",
+        "status": "delivered",
+        "order_id": "O-1065",
+        "placed_at": "2026-10-06T10:00:00+00:00",
+        "delivered_at": "2026-10-10T10:00:00+00:00"
+      }
+    ],
+    "timed_out": false,
+    "latency_ms": 6.069900002330542,
+    "created_at": "2026-11-01T02:06:37.511705+00:00"
+  },
+  {
+    "conversation_id": "conv-925e9fa1",
+    "trace_id": "5359f11253ca040c189f72d1503f5be2",
+    "span_id": "a72cd36a67d01917",
+    "tool_name": "lookup_order",
+    "input": {
+      "customer_id": "C-0027"
+    },
+    "output": [],
+    "timed_out": true,
+    "latency_ms": 6.876400002511218,
+    "created_at": "2026-11-01T02:06:40.744644+00:00"
+  }
+]

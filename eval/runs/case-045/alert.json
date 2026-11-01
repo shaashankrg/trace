@@ -1,0 +1,98 @@
+{
+  "alert_id": "alert-case-045",
+  "type": "quality_drop",
+  "fired_at": "2026-11-01T02:01:40.848131+00:00",
+  "window": {
+    "start": "2026-11-01T02:00:37.380940+00:00",
+    "end": "2026-11-01T02:01:40.848131+00:00"
+  },
+  "conversation_id": "conv-bee1ce78",
+  "trace_id": "0e0ef1cd55ca2b24c8593810119b4bd8",
+  "question": "What's the price match window?",
+  "answer": "I don't know the price match window based on the available information. Please contact customer support for assistance.",
+  "reviewer_correction": "The price match window is 14 days.",
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:14|fourteen)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": []
+  },
+  "metric": "kestrel_canary_accuracy",
+  "before": 1.0,
+  "after": 0.8,
+  "failing_samples": [
+    {
+      "conversation_id": "canary-6eab5e49-q001",
+      "trace_id": "b7d2419d209b00e601ed0c377ce30924",
+      "question": "How long do I have to return boots for a refund?",
+      "answer": "I don't know the return window for boots as it is not specified in the available documents. Please contact customer support for assistance.",
+      "reviewer_correction": "missing ['\\\\b(?:14|fourteen)[- ](?:calendar |business )?days?\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\b(?:14|fourteen)[- ](?:calendar |business )?days?\\b"
+        ],
+        "must_not_contain": [
+          "\\b(?:30|thirty)[- ](?:calendar |business )?days?\\b"
+        ]
+      }
+    },
+    {
+      "conversation_id": "canary-6eab5e49-q002",
+      "trace_id": "758a07e78500555c16eb4186ebc2cbf2",
+      "question": "Once you receive my return, how long until the refund reaches my card?",
+      "answer": "I don't know the timeframe for refunds reaching your card based on the available information. Please contact customer support for assistance.",
+      "reviewer_correction": "missing ['\\\\b(?:5|five)[- ](?:calendar |business )?days?\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\b(?:5|five)[- ](?:calendar |business )?days?\\b"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "conversation_id": "canary-6eab5e49-q003",
+      "trace_id": "e7a3786cd62163e050f86b63076f7252",
+      "question": "Do I have to pay for return shipping?",
+      "answer": "I don't have the return shipping policy details in front of me, and since you didn't provide a customer ID or order details, I can't look up specific account information. Please contact customer support for assistance with return shipping charges.",
+      "reviewer_correction": "missing ['\\\\bfree\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\bfree\\b"
+        ],
+        "must_not_contain": [
+          "\\$7\\.95"
+        ]
+      }
+    },
+    {
+      "conversation_id": "canary-6eab5e49-q004",
+      "trace_id": "fa2da405a6ee7c1c07781ac6880f0ab8",
+      "question": "How long do I have to exchange a jacket for a different size?",
+      "answer": "I don't know the answer to that question. Please contact support for assistance.",
+      "reviewer_correction": "missing ['\\\\b(?:30|thirty)[- ](?:calendar |business )?days?\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\b(?:30|thirty)[- ](?:calendar |business )?days?\\b"
+        ],
+        "must_not_contain": [
+          "\\b(?:21|twenty-one)[- ](?:calendar |business )?days?\\b"
+        ]
+      }
+    },
+    {
+      "conversation_id": "canary-6eab5e49-q005",
+      "trace_id": "cbfd84352156bf5be99f02b4d2e086d4",
+      "question": "What's the minimum order for free standard shipping?",
+      "answer": "I don't know the minimum order amount for free standard shipping based on the available information. Please contact support for assistance.",
+      "reviewer_correction": "missing ['\\\\$75']",
+      "answer_check": {
+        "must_contain": [
+          "\\$75"
+        ],
+        "must_not_contain": [
+          "\\$50"
+        ]
+      }
+    }
+  ]
+}

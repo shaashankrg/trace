@@ -53,13 +53,17 @@ def ask(question: str, conversation_id: str) -> dict:
 
 
 def run_one(item: dict, run_id: str) -> dict:
+    # The conversation id is returned, not just used: a quality-drop alert cites the failing
+    # canary conversations, and the investigator pulls their traces by conversation id.
+    conversation_id = f"canary-{run_id}-{item['id']}"
     try:
-        resp = ask(item["question"], f"canary-{run_id}-{item['id']}")
+        resp = ask(item["question"], conversation_id)
         failures = score(item, resp["answer"])
-        return {**item, "answer": resp["answer"], "trace_id": resp["trace_id"],
-                "passed": not failures, "failures": failures}
+        return {**item, "conversation_id": conversation_id, "answer": resp["answer"],
+                "trace_id": resp["trace_id"], "passed": not failures, "failures": failures}
     except Exception as e:
-        return {**item, "answer": "", "trace_id": None, "passed": False, "failures": [f"error: {e}"]}
+        return {**item, "conversation_id": conversation_id, "answer": "", "trace_id": None,
+                "passed": False, "failures": [f"error: {e}"]}
 
 
 class _Snapshot:

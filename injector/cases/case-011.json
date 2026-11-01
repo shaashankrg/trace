@@ -27,10 +27,11 @@
   },
   "answer_check": {
     "must_contain": [
-      "(?:don'?t|do not) have (?:any |specific )?information|not covered|no information|contact (?:our )?(?:support|team)|support team|help@kestrel"
+      "(?:don'?t|do not) (?:have (?:any |specific )?information|know)|not covered|no (?:specific )?(?:information|mention|instructions|guidance|details)|(?:doesn'?t|does not|don'?t|do not) (?:mention|cover|address|specify|say)|not (?:mentioned|specified|addressed)|contact(?:ing)? (?:our )?(?:customer )?(?:support|team)|support team|help@kestrel"
     ],
     "must_not_contain": [
       "(?:don'?t|do not) need (?:a |your )?(?:physical )?receipt|no receipt (?:is )?(?:needed|required)|receipt (?:is )?not (?:needed|required)"
     ]
-  }
+  },
+  "split": "dev"
 }

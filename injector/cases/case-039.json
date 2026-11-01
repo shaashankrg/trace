@@ -1,0 +1,28 @@
+{
+  "case_id": "case-039",
+  "conversation_id": "conv-877a7891",
+  "fault": {
+    "type": "chunking_regression",
+    "params": {
+      "doc_id": "store-pickup",
+      "chunk_size": 40
+    },
+    "age_min": 67,
+    "author": "alice",
+    "description": "Tune chunk size for retrieval",
+    "change_id": "change:config-change-6500"
+  },
+  "decoy": null,
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "How long will you hold my store pickup order?",
+    "reviewer_correction": "Store pickup orders are held for 7 days."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:7|seven)[- ](?:calendar |business )?days?\\b"
+    ],
+    "must_not_contain": []
+  },
+  "split": "test"
+}

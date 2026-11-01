@@ -35,5 +35,6 @@
     "must_not_contain": [
       "\\$24\\.95"
     ]
-  }
+  },
+  "split": "train"
 }

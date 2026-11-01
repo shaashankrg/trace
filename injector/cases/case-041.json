@@ -1,0 +1,29 @@
+{
+  "case_id": "case-041",
+  "conversation_id": "conv-e9ccb9de",
+  "fault": {
+    "type": "stale_tool_data",
+    "params": {
+      "product_id": "P-002",
+      "new_qty": 0
+    },
+    "age_min": 90,
+    "author": "alice",
+    "description": ""
+  },
+  "decoy": null,
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "Is the Summit GTX Boot (product P-002) in stock, and how many do you have?",
+    "reviewer_correction": "The Summit GTX Boot is out of stock. There are none left."
+  },
+  "answer_check": {
+    "must_contain": [
+      "out of stock|not in stock|sold out|unavailable|none left|\\b0\\b"
+    ],
+    "must_not_contain": [
+      "\\b4\\b"
+    ]
+  },
+  "split": "test"
+}

@@ -1,0 +1,22 @@
+{
+  "alert_id": "alert-case-023",
+  "type": "flagged_conversation",
+  "fired_at": "2026-11-01T01:35:23.544156+00:00",
+  "window": {
+    "start": "2026-11-01T01:34:55.963529+00:00",
+    "end": "2026-11-01T01:35:23.544156+00:00"
+  },
+  "conversation_id": "conv-14ae2438",
+  "trace_id": "bb7cb21aa9d09eb10cddcd4edbb47e42",
+  "question": "I'm customer C-0003. Today is 2026-10-12. Can I still return the Cirrus Down Jacket from order O-1003 for a refund?",
+  "answer": "I'm sorry, but I couldn't find any orders associated with customer ID C-0003, so I am unable to verify the delivery date of the Cirrus Down Jacket from order O-1003. Please double-check your customer ID or contact support for assistance.\n\nAnswer: No",
+  "reviewer_correction": "Order O-1003 was delivered 2 days ago, inside the 14-day window. The answer is yes.",
+  "answer_check": {
+    "must_contain": [
+      "answer:\\W*yes\\b"
+    ],
+    "must_not_contain": [
+      "answer:\\W*no\\b"
+    ]
+  }
+}

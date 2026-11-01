@@ -1,0 +1,93 @@
+{
+  "alert_id": "alert-case-028",
+  "type": "quality_drop",
+  "fired_at": "2026-11-01T01:41:39.569878+00:00",
+  "window": {
+    "start": "2026-11-01T01:40:39.705063+00:00",
+    "end": "2026-11-01T01:41:39.569878+00:00"
+  },
+  "conversation_id": "conv-c2bebec5",
+  "trace_id": "b142183e181fba4e8cd596a4256cb8c0",
+  "question": "How long is a password reset link valid?",
+  "answer": "I don't know the answer to how long a password reset link is valid. Please contact support for assistance.",
+  "reviewer_correction": "Password reset links are valid for 30 minutes.",
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:30|thirty)[- ]minutes?\\b"
+    ],
+    "must_not_contain": []
+  },
+  "metric": "kestrel_canary_accuracy",
+  "before": 0.9833,
+  "after": 0.7833,
+  "failing_samples": [
+    {
+      "conversation_id": "canary-f736d62f-q002",
+      "trace_id": "ebe13eafec59a5d49c7beba95c01d89b",
+      "question": "Once you receive my return, how long until the refund reaches my card?",
+      "answer": "I don't know the timeframe for a refund to reach your card from the provided documents. Please contact support for assistance.",
+      "reviewer_correction": "missing ['\\\\b(?:5|five)[- ](?:calendar |business )?days?\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\b(?:5|five)[- ](?:calendar |business )?days?\\b"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "conversation_id": "canary-f736d62f-q011",
+      "trace_id": "b613859e0eb18f97ba7b619c1249ee3e",
+      "question": "How long is a password reset link valid?",
+      "answer": "I don't know the answer to how long a password reset link is valid. Please contact customer support for assistance.",
+      "reviewer_correction": "missing ['\\\\b(?:30|thirty)[- ]minutes?\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\b(?:30|thirty)[- ]minutes?\\b"
+        ],
+        "must_not_contain": [
+          "\\b(?:60|sixty)[- ]minutes?\\b"
+        ]
+      }
+    },
+    {
+      "conversation_id": "canary-f736d62f-q025",
+      "trace_id": "77c82fbd51d5b4b5f2b8ec6ebe397e33",
+      "question": "Can I pay for my order in installments?",
+      "answer": "I don't know. Please contact customer support for assistance with payment options.",
+      "reviewer_correction": "missing ['affirm']; missing ['\\\\$150']",
+      "answer_check": {
+        "must_contain": [
+          "affirm",
+          "\\$150"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "conversation_id": "canary-f736d62f-q026",
+      "trace_id": "9ae14420fcc65be7dcb47dea8c0c2312",
+      "question": "How many promo codes can I use on one order?",
+      "answer": "I don't know the answer to that question. Please contact our support team for assistance.",
+      "reviewer_correction": "missing ['\\\\b(?:1|one)\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\b(?:1|one)\\b"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "conversation_id": "canary-f736d62f-q027",
+      "trace_id": "cd3be88940fc1d129026afc98828722c",
+      "question": "Do you have a student discount?",
+      "answer": "I don't know and suggest contacting support.",
+      "reviewer_correction": "missing ['\\\\b10\\\\s?(?:%|percent)']",
+      "answer_check": {
+        "must_contain": [
+          "\\b10\\s?(?:%|percent)"
+        ],
+        "must_not_contain": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "case_id": "case-024",
+  "conversation_id": "conv-07e52957",
+  "fault": {
+    "type": "embedding_mismatch",
+    "params": {
+      "embedding_model": "sentence-transformers/all-MiniLM-L12-v2"
+    },
+    "age_min": 68,
+    "author": "priya",
+    "description": "Upgrade the embedding model",
+    "change_id": "change:config-change-9766"
+  },
+  "decoy": null,
+  "alert": {
+    "type": "quality_drop",
+    "question": "What are the loyalty tier thresholds?",
+    "reviewer_correction": "The loyalty tiers and their spend thresholds are listed in the loyalty-tiers policy.",
+    "metric": "kestrel_canary_accuracy"
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\$\\d+"
+    ],
+    "must_not_contain": []
+  },
+  "split": "test"
+}

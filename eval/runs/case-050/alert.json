@@ -1,0 +1,22 @@
+{
+  "alert_id": "alert-case-050",
+  "type": "flagged_conversation",
+  "fired_at": "2026-11-01T02:09:23.183989+00:00",
+  "window": {
+    "start": "2026-11-01T02:08:52.124713+00:00",
+    "end": "2026-11-01T02:09:23.183989+00:00"
+  },
+  "conversation_id": "conv-1169e5df",
+  "trace_id": "3c97b1105973ff7be3cf7bc3f3d138af",
+  "question": "Is the Water Filter Pump (product P-032) in stock, and how many do you have?",
+  "answer": "The Water Filter Pump (product P-032) is currently out of stock, with a quantity of 0.\n\nAnswer: No",
+  "reviewer_correction": "The Water Filter Pump is in stock: 17 units available.",
+  "answer_check": {
+    "must_contain": [
+      "\\b17\\b"
+    ],
+    "must_not_contain": [
+      "out of stock|sold out|unavailable"
+    ]
+  }
+}

@@ -35,5 +35,6 @@
     "must_not_contain": [
       "\\b(?:1|one)[- ]year\\b"
     ]
-  }
+  },
+  "split": "dev"
 }

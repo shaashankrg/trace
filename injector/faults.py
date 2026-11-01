@@ -5,6 +5,7 @@ revert()         undo it; safe to call any number of times
 change_record()  the entry the fault leaves in `changes`, or None for an outage
 ground_truth()   the label that goes to the eval schema, never to the investigator
 """
+import json
 from datetime import datetime, timedelta
 
 import psycopg
@@ -33,6 +34,11 @@ class Fault:
 
     def revert(self) -> None:
         raise NotImplementedError
+
+    def apply_healthy(self) -> None:
+        """The world the alert's correct answer assumes, without the fault: run_case asks the
+        question here first. Most faults break a world that is already right, so nothing to do;
+        undone by revert()."""
 
     def change_record(self) -> dict | None:
         return None
@@ -150,6 +156,12 @@ class StaleToolData(Fault):
             "UPDATE inventory_cache SET refreshed_at = %s WHERE product_id = %s",
             (self.created_at - timedelta(days=3), pid))
 
+    def apply_healthy(self) -> None:
+        # The restock happened and the cache refreshed, as it should have.
+        pid, qty = self.params["product_id"], self.params["new_qty"]
+        self.conn.execute("UPDATE inventory_source SET qty = %s, updated_at = now() WHERE product_id = %s", (qty, pid))
+        self.conn.execute("UPDATE inventory_cache SET qty = %s, refreshed_at = now() WHERE product_id = %s", (qty, pid))
+
     def revert(self) -> None:
         state.reset_inventory(self.conn, self.params["product_id"])
 
@@ -190,9 +202,119 @@ class PromptRegression(Fault):
         return self._record("prompt_edit", "prompt", diff)
 
 
+
+class ChunkingRegression(Fault):
+    """Re-chunked at a size that splits the key sentence across chunks, so retrieval returns
+    halves of the answer. Both chunkings stay in the table; only the index flag moves, which
+    is what lets a replay switch between them in memory."""
+    type = "chunking_regression"
+    root_component = "retriever"
+    category = "retrieval_failure"
+
+    @property
+    def size(self) -> int:
+        return int(self.params["chunk_size"])
+
+    def apply(self) -> None:
+        doc_id = self.params["doc_id"]
+        state.rechunk_doc(self.conn, doc_id, self.size)
+        # The default chunking leaves the index; the off-size chunking of the newest version takes it.
+        self.conn.execute("UPDATE chunks SET indexed = FALSE WHERE doc_id = %s AND chunk_id NOT LIKE %s",
+                          (doc_id, f"%/c{self.size}"))
+        newest = self.conn.execute(
+            """SELECT version FROM documents WHERE doc_id = %s
+               ORDER BY published_at DESC, version DESC LIMIT 1""", (doc_id,)).fetchone()[0]
+        self.conn.execute(
+            "UPDATE chunks SET indexed = TRUE WHERE doc_id = %s AND version = %s AND chunk_id LIKE %s",
+            (doc_id, newest, f"%/c{self.size}"))
+        state.set_config(self.conn, "chunk_size", str(self.size), self.created_at)
+
+    def revert(self) -> None:
+        state.set_config(self.conn, "chunk_size", DEFAULTS["chunk_size"])
+        state.drop_rechunk(self.conn, self.params["doc_id"])
+        state.restore_index_flags(self.conn, self.params["doc_id"])
+
+    def change_record(self) -> dict:
+        return self._record("config_change", "config:chunk_size",
+                            f"- chunk_size: {DEFAULTS['chunk_size']}\n+ chunk_size: {self.size}\n")
+
+
+class EmbeddingMismatch(Fault):
+    """The query embedding model was switched without re-indexing, so queries are embedded by
+    one model and the chunks by another. Same dimension (384), so nothing raises: the only
+    symptom is that retrieval ranks the wrong chunks."""
+    type = "embedding_mismatch"
+    root_component = "retriever"
+    category = "retrieval_failure"
+
+    @property
+    def new_value(self) -> str:
+        return self.params["embedding_model"]
+
+    def apply(self) -> None:
+        state.set_config(self.conn, "embedding_model", self.new_value, self.created_at)
+
+    def revert(self) -> None:
+        state.set_config(self.conn, "embedding_model", DEFAULTS["embedding_model"])
+
+    def change_record(self) -> dict:
+        return self._record("config_change", "config:embedding_model",
+                            f"- embedding_model: {DEFAULTS['embedding_model']}\n"
+                            f"+ embedding_model: {self.new_value}\n")
+
+
+class ModelDowngrade(Fault):
+    """Switched to a smaller, cheaper model. Only breaks questions that need several steps."""
+    type = "model_downgrade"
+    root_component = "model"
+    category = "model_change"
+
+    @property
+    def new_value(self) -> str:
+        return self.params["model"]
+
+    def apply(self) -> None:
+        state.set_config(self.conn, "model", self.new_value, self.created_at)
+
+    def revert(self) -> None:
+        state.set_config(self.conn, "model", DEFAULTS["model"])
+
+    def change_record(self) -> dict:
+        return self._record("model_change", "config:model",
+                            f"- model: {DEFAULTS['model']}\n+ model: {self.new_value}\n")
+
+
+class GuardrailMisfire(Fault):
+    """An everyday topic was added to the blocked list, so ordinary questions are refused."""
+    type = "guardrail_misfire"
+    root_component = "guardrail"
+    category = "guardrail_error"
+
+    @property
+    def topic(self) -> str:
+        return self.params["topic"]
+
+    def _blocked(self) -> list[str]:
+        return json.loads(DEFAULTS["guardrail_blocked_topics"])
+
+    def apply(self) -> None:
+        state.set_config(self.conn, "guardrail_blocked_topics",
+                         json.dumps(self._blocked() + [self.topic]), self.created_at)
+
+    def revert(self) -> None:
+        state.set_config(self.conn, "guardrail_blocked_topics", DEFAULTS["guardrail_blocked_topics"])
+
+    def change_record(self) -> dict:
+        before, after = self._blocked(), self._blocked() + [self.topic]
+        return self._record("config_change", "config:guardrail_blocked_topics",
+                            f"- guardrail_blocked_topics: {json.dumps(before)}\n"
+                            f"+ guardrail_blocked_topics: {json.dumps(after)}\n")
+
+
 FAULTS = {cls.type: cls for cls in (
     StaleDocument, MissingDocument, ThresholdTooStrict, ContextOverflow,
     SilentToolFailure, StaleToolData, PromptRegression,
+    ChunkingRegression, EmbeddingMismatch, ModelDowngrade, GuardrailMisfire,
 )}
 
 

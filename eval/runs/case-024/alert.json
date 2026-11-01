@@ -1,0 +1,94 @@
+{
+  "alert_id": "alert-case-024",
+  "type": "quality_drop",
+  "fired_at": "2026-11-01T01:37:10.380542+00:00",
+  "window": {
+    "start": "2026-11-01T01:36:06.240231+00:00",
+    "end": "2026-11-01T01:37:10.380542+00:00"
+  },
+  "conversation_id": "conv-07e52957",
+  "trace_id": "177b2113984be4448b62dc1a3aabc1e6",
+  "question": "What are the loyalty tier thresholds?",
+  "answer": "I don't know the loyalty tier thresholds. Please contact support for assistance.",
+  "reviewer_correction": "The loyalty tiers and their spend thresholds are listed in the loyalty-tiers policy.",
+  "answer_check": {
+    "must_contain": [
+      "\\$\\d+"
+    ],
+    "must_not_contain": []
+  },
+  "metric": "kestrel_canary_accuracy",
+  "before": 1.0,
+  "after": 0.8667,
+  "failing_samples": [
+    {
+      "conversation_id": "canary-dce0fa21-q002",
+      "trace_id": "5a2b83711bee9d5b8ed0944b4585a70a",
+      "question": "Once you receive my return, how long until the refund reaches my card?",
+      "answer": "I don't know the timeframe for a refund to reach your card from the provided documents. Please contact support for more details.",
+      "reviewer_correction": "missing ['\\\\b(?:5|five)[- ](?:calendar |business )?days?\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\b(?:5|five)[- ](?:calendar |business )?days?\\b"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "conversation_id": "canary-dce0fa21-q011",
+      "trace_id": "1e134f59cf6f8b5fad18f2b3100f77bd",
+      "question": "How long is a password reset link valid?",
+      "answer": "I don't know the answer to how long a password reset link is valid. Please contact support for assistance.",
+      "reviewer_correction": "missing ['\\\\b(?:30|thirty)[- ]minutes?\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "\\b(?:30|thirty)[- ]minutes?\\b"
+        ],
+        "must_not_contain": [
+          "\\b(?:60|sixty)[- ]minutes?\\b"
+        ]
+      }
+    },
+    {
+      "conversation_id": "canary-dce0fa21-q051",
+      "trace_id": "73e3fe6c748a5841006d11e15ae0306f",
+      "question": "I'm customer C-0002. Today is 2026-10-12. Can I still return the Comfort Plus Sleeping Pad from order O-1002 for a refund?",
+      "answer": "I don't know the return policy window for items in order O-1002, so I can't confirm if you can still return the Comfort Plus Sleeping Pad. Please contact support.",
+      "reviewer_correction": "missing ['answer:\\\\W*yes\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "answer:\\W*yes\\b"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "conversation_id": "canary-dce0fa21-q053",
+      "trace_id": "11f1a1ac7fe1786d9f5fda93d3ebbed0",
+      "question": "I'm customer C-0008. Today is 2026-10-12. Can I still return the Comfort Plus Sleeping Pad from order O-1008 for a refund?",
+      "answer": "I don't know and suggest contacting support.",
+      "reviewer_correction": "missing ['answer:\\\\W*yes\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "answer:\\W*yes\\b"
+        ],
+        "must_not_contain": []
+      }
+    },
+    {
+      "conversation_id": "canary-dce0fa21-q056",
+      "trace_id": "7afc0944890a8bf6cb1485b83af0ffc5",
+      "question": "I'm customer C-0026. Today is 2026-10-12. Can I still return the Insulated Gloves from order O-1026 for a refund?",
+      "answer": "I don't know whether you can still return the Insulated Gloves from order O-1026 for a refund, as the return policy and time window documents were not retrieved. Please contact support for assistance.",
+      "reviewer_correction": "missing ['answer:\\\\W*no\\\\b']",
+      "answer_check": {
+        "must_contain": [
+          "answer:\\W*no\\b"
+        ],
+        "must_not_contain": [
+          "answer:\\W*yes\\b"
+        ]
+      }
+    }
+  ]
+}

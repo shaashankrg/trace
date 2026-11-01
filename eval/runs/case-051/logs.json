@@ -1,0 +1,12 @@
+[
+  {
+    "log_id": "7b56ef8e-c90e-49b2-9e3e-6e8f7aacfd4d",
+    "timestamp": "2026-11-01T02:09:55.417+00:00",
+    "level": "INFO",
+    "component": "chat",
+    "trace_id": "d9c9b99e1fef436e139aa23a3f881624",
+    "span_id": "7e214a22972d2631",
+    "conversation_id": "conv-d115668c",
+    "message": "chat answered (chunks=4, tools=none, stop_reason=end_turn)"
+  }
+]

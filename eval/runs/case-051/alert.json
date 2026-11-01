@@ -1,0 +1,20 @@
+{
+  "alert_id": "alert-case-051",
+  "type": "flagged_conversation",
+  "fired_at": "2026-11-01T02:12:25.280088+00:00",
+  "window": {
+    "start": "2026-11-01T02:09:52.353696+00:00",
+    "end": "2026-11-01T02:12:25.280088+00:00"
+  },
+  "conversation_id": "conv-d115668c",
+  "trace_id": "d9c9b99e1fef436e139aa23a3f881624",
+  "question": "How much is the deposit to rent a tent?",
+  "answer": "Based on the provided documents, it is mentioned that rentals require a refundable deposit [rentals@v1#2/c40], but the specific amount for the deposit to rent a tent is not stated [rentals@v1#2/c40]. I don't know the exact deposit amount and suggest contacting support.",
+  "reviewer_correction": "The rental deposit is $100.",
+  "answer_check": {
+    "must_contain": [
+      "\\$100"
+    ],
+    "must_not_contain": []
+  }
+}

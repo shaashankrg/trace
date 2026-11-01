@@ -23,5 +23,6 @@
     "must_not_contain": [
       "answer:\\W*no\\b"
     ]
-  }
+  },
+  "split": "dev"
 }

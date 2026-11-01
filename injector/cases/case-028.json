@@ -1,0 +1,38 @@
+{
+  "case_id": "case-028",
+  "conversation_id": "conv-c2bebec5",
+  "fault": {
+    "type": "embedding_mismatch",
+    "params": {
+      "embedding_model": "sentence-transformers/all-MiniLM-L12-v2"
+    },
+    "age_min": 70,
+    "author": "ben",
+    "description": "Switch query embeddings to L12",
+    "change_id": "change:config-change-2584"
+  },
+  "decoy": {
+    "type": "unrelated_config_change",
+    "params": {
+      "value": 700
+    },
+    "age_min": 26,
+    "position": "after",
+    "author": "ops-bot",
+    "change_id": "change:config-change-8637",
+    "description": "Allow longer replies"
+  },
+  "alert": {
+    "type": "quality_drop",
+    "question": "How long is a password reset link valid?",
+    "reviewer_correction": "Password reset links are valid for 30 minutes.",
+    "metric": "kestrel_canary_accuracy"
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b(?:30|thirty)[- ]minutes?\\b"
+    ],
+    "must_not_contain": []
+  },
+  "split": "test"
+}

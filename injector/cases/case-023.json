@@ -1,0 +1,36 @@
+{
+  "case_id": "case-023",
+  "conversation_id": "conv-14ae2438",
+  "fault": {
+    "type": "silent_tool_failure",
+    "params": {
+      "tool": "lookup_order"
+    },
+    "age_min": 89,
+    "author": "ops-bot",
+    "description": ""
+  },
+  "decoy": {
+    "type": "typo_prompt_edit",
+    "params": {},
+    "age_min": 74,
+    "position": "after",
+    "author": "priya",
+    "change_id": "change:prompt-edit-6750",
+    "description": "Prompt typo fix"
+  },
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "I'm customer C-0003. Today is 2026-10-12. Can I still return the Cirrus Down Jacket from order O-1003 for a refund?",
+    "reviewer_correction": "Order O-1003 was delivered 2 days ago, inside the 14-day window. The answer is yes."
+  },
+  "answer_check": {
+    "must_contain": [
+      "answer:\\W*yes\\b"
+    ],
+    "must_not_contain": [
+      "answer:\\W*no\\b"
+    ]
+  },
+  "split": "test"
+}

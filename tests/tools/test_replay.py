@@ -60,7 +60,9 @@ def test_malformed_patches_are_rejected(patch, message):
     # not a value the change log or the trace shows the key holding: no invented values
     ("case-002", {"kind": "set_config", "key": "similarity_threshold", "value": "0.1"}, "not a value"),
     ("case-007", {"kind": "set_config", "key": "tool_timeout_ms", "value": "2000"}, "not a value"),
-    ("case-003", {"kind": "set_config", "key": "chunk_size", "value": "300"}, "cannot be patched"),
+    # chunk_size is patchable on Day 8, but only to a chunking the snapshot carries; case-003
+    # is a stale_document case with only the default one, so an off-size value has nothing to use.
+    ("case-003", {"kind": "set_config", "key": "chunk_size", "value": "80"}, "is not a value the change log"),
     ("case-003", {"kind": "set_config", "key": "prompt_version", "value": "v1"}, "cannot be patched"),
     ("case-003", {"kind": "rerun_tool", "tool": "delete_orders"}, "no tool"),
     ("case-003", {"kind": "bypass_cache", "tool": "lookup_order"}, "has no cache"),
@@ -229,3 +231,117 @@ def test_the_mcp_tool_returns_a_summary_and_logs_the_replay(warranty_model, tmp_
     assert resolve_ref(b, out["replay_ref"])["record"]["matches_correction"] is True
     bad = handlers.replay_conversation(b, "conv-nope", {})
     assert "no recorded conversation" in bad["error"]
+
+
+# --- Day 8: chunk_size switches between pre-built chunkings -------------------------------
+
+def test_chunk_size_of_reads_the_suffix():
+    assert replay.chunk_size_of("refund-policy@v2#3") is None
+    assert replay.chunk_size_of("refund-policy@v2#3/c80") == "80"
+    assert replay.chunk_size_of("refund-policy@v2#12/c40") == "40"
+
+
+def test_switching_chunk_size_needs_that_chunking_in_the_snapshot():
+    """A replay never re-chunks: it can only pick a chunking the recording already holds."""
+    s = snap("case-003")
+    with pytest.raises(PatchError, match="no chunk_size=40 chunking"):
+        replay._switch_chunking(replay.baseline(s), s, "40")
+
+
+def test_switching_chunk_size_moves_only_the_affected_docs():
+    """With both chunkings present, switching indexes one family and excludes the other, and
+    leaves docs that have a single chunking alone."""
+    s = snap("case-003")
+    # Synthesize an 80-char chunking of one doc, as a chunking_regression snapshot would carry.
+    doc = s.chunks[0]
+    extra = [{**doc, "chunk_id": f"{doc['doc_id']}@{doc['version']}#{i}/c80", "chunk_index": i,
+              "indexed": False} for i in range(3)]
+    untouched = {c["chunk_id"] for c in s.chunks
+                 if (c["doc_id"], c["version"]) != (doc["doc_id"], doc["version"])}
+    s.chunks = s.chunks + extra
+
+    ov = replay._switch_chunking(replay.baseline(s), s, "80")
+    assert {c["chunk_id"] for c in extra} <= ov.include_chunks
+    assert doc["chunk_id"] in ov.exclude_chunks
+    assert not (untouched & ov.include_chunks)
+    assert not (untouched & ov.exclude_chunks)
+
+    back = replay._switch_chunking(ov, s, replay.DEFAULT_CHUNK_SIZE)
+    assert doc["chunk_id"] in back.include_chunks
+    assert {c["chunk_id"] for c in extra} <= back.exclude_chunks
+
+
+def test_chunk_size_patch_targets_the_retriever():
+    assert replay.target_component(
+        {"kind": "set_config", "key": "chunk_size", "value": "300"}) == "retriever"
+
+
+# --- Day 8: the 2-of-3 rule for quality-drop alerts ----------------------------------------
+
+def quality_snapshot(case: str = "case-003", n: int = 3) -> Snapshot:
+    """A snapshot whose alert is a quality drop with `n` failing warranty samples."""
+    s = snap(case)
+    s.alert = {**s.alert, "type": "quality_drop", "metric": "kestrel_canary_accuracy",
+               "before": 0.95, "after": 0.71,
+               "failing_samples": [
+                   {"conversation_id": f"canary-x-q{i}", "trace_id": None,
+                    "question": f"How long is the warranty on item {i}?",
+                    "answer": "The warranty is 1 year.",
+                    "reviewer_correction": "The warranty is 2 years.",
+                    "answer_check": {"must_contain": [r"\b2[- ]years?\b"],
+                                     "must_not_contain": [r"\b1[- ]year\b"]}}
+                   for i in range(n)]}
+    return s
+
+
+def test_a_sample_snapshot_swaps_the_alert_but_keeps_the_recorded_world():
+    s = quality_snapshot()
+    sub = replay._sample_snapshot(s, replay.failing_samples(s)[1])
+    assert sub.alert["question"] == "How long is the warranty on item 1?"
+    assert sub.case_id != s.case_id, "each sample needs its own control cache key"
+    # the world is the recording's, not a copy or a mutation
+    assert sub.chunks is s.chunks and sub.config is s.config and sub.prompts is s.prompts
+    assert s.alert["question"] != sub.alert["question"], "the original snapshot is untouched"
+
+
+def test_a_quality_drop_needs_two_of_three_samples_fixed(warranty_model, tmp_path):
+    """The correct patch fixes every sample, so the rule confirms it."""
+    s = quality_snapshot()
+    rec = replay.run_quality_replay(
+        s, {"kind": "use_doc_version", "doc_id": "warranty", "version": "v2"},
+        tmp_path / "q.jsonl", judge=None)
+    assert rec["rule"] == "2-of-3" and rec["sampled"] == 3
+    assert rec["fixed"] == 3 and rec["matches_correction"] is True
+    assert rec["target_component"] == "knowledge_base"
+    assert all(r["proves_fix"] for r in rec["sample_replays"])
+
+
+def test_one_lucky_fix_is_not_enough_for_a_quality_drop(monkeypatch, tmp_path):
+    """A patch that only helps the first sample fails the rule: the claim was a BROAD drop."""
+    def chat(cfg, system, messages, tools, turn):
+        docs = messages[0]["content"]
+        fixed = "warranty@v1#" not in docs
+        # only "item 0" benefits; the others stay wrong even with the patch applied
+        first = "item 0" in docs
+        text = "The warranty is 2 years." if (fixed and first) else "The warranty is 1 year."
+        return response([llm.Block("text", text=text)])
+    monkeypatch.setattr(llm, "chat", chat)
+
+    rec = replay.run_quality_replay(
+        quality_snapshot(), {"kind": "use_doc_version", "doc_id": "warranty", "version": "v2"},
+        tmp_path / "q.jsonl", judge=None)
+    assert rec["fixed"] == 1
+    assert rec["matches_correction"] is False, "1 of 3 must not confirm a broad regression"
+
+
+def test_a_rejected_patch_counts_as_an_unfixed_sample(warranty_model, tmp_path):
+    rec = replay.run_quality_replay(
+        quality_snapshot(), {"kind": "set_config", "key": "chunk_size", "value": "40"},
+        tmp_path / "q.jsonl", judge=None)
+    assert rec["fixed"] == 0 and rec["matches_correction"] is False
+    assert all("patch rejected" in (r["error"] or "") for r in rec["sample_replays"])
+
+
+def test_a_flagged_conversation_alert_has_no_quality_samples():
+    with pytest.raises(ValueError, match="no failing_samples"):
+        replay.run_quality_replay(snap("case-003"), {})

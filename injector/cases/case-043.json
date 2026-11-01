@@ -1,0 +1,28 @@
+{
+  "case_id": "case-043",
+  "conversation_id": "conv-4a084b03",
+  "fault": {
+    "type": "chunking_regression",
+    "params": {
+      "doc_id": "military-discount",
+      "chunk_size": 60
+    },
+    "age_min": 39,
+    "author": "ops-bot",
+    "description": "Re-chunk the knowledge base",
+    "change_id": "change:config-change-8961"
+  },
+  "decoy": null,
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "Is there a military discount?",
+    "reviewer_correction": "Yes, military members, veterans and families get 15% off."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\b15\\s?(?:%|percent)"
+    ],
+    "must_not_contain": []
+  },
+  "split": "train"
+}

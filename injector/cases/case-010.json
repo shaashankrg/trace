@@ -22,5 +22,6 @@
       "\\$100"
     ],
     "must_not_contain": []
-  }
+  },
+  "split": "train"
 }

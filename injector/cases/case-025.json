@@ -1,0 +1,29 @@
+{
+  "case_id": "case-025",
+  "conversation_id": "conv-619c22f4",
+  "fault": {
+    "type": "guardrail_misfire",
+    "params": {
+      "topic": "exchange"
+    },
+    "age_min": 117,
+    "author": "marco",
+    "description": "Add a blocked topic",
+    "change_id": "change:config-change-7174"
+  },
+  "decoy": null,
+  "alert": {
+    "type": "flagged_conversation",
+    "question": "Can I exchange an item for a different size?",
+    "reviewer_correction": "Yes, unused items can be exchanged for a different size or color. The assistant refused a question it should have answered."
+  },
+  "answer_check": {
+    "must_contain": [
+      "\\byes\\b|can exchange|may exchange"
+    ],
+    "must_not_contain": [
+      "can'?t help with that topic|cannot help with that topic"
+    ]
+  },
+  "split": "test"
+}
