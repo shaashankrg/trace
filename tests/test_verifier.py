@@ -87,6 +87,7 @@ def test_the_verifier_reads_snapshot_files_not_the_tools():
 @pytest.mark.parametrize("claimed, actual, same", [
     (0, 0, True), ("4", 4, True), (0.85, 0.8500001, True), (0.3, 0.85, False),
     (True, "true", True), (True, 1, False), (["a", "b"], '["a","b"]', True), ("Allow", "allow", True),
+    ("['a', 'b']", '["a","b"]', True), ("['a', 'c']", '["a","b"]', False),
 ])
 def test_value_comparison(claimed, actual, same):
     assert verifier.same_value(claimed, actual) is same

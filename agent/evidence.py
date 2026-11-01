@@ -40,7 +40,7 @@ def from_result(tool: str, result: dict) -> list[Evidence]:
             keys = ROOT_KEYS if s.get("parent_ref") is None else SPAN_KEYS
             detail = _attrs(s.get("attrs", {}), keys)
             if s["name"] == "retrieve" and "retrieval.chunk_ids" in s.get("attrs", {}):
-                detail += f", chunk_ids={s['attrs']['retrieval.chunk_ids']}"
+                detail += f", retrieval.chunk_ids={s['attrs']['retrieval.chunk_ids']}"
             claim = f"span {s['name']} status={s['status']} {s['duration_ms']}ms" + (f": {detail}" if detail else "")
             if s.get("error"):
                 claim += f"; error: {s['error']}"
