@@ -1,0 +1,311 @@
+{
+  "case_id": "case-012",
+  "model": "gemini-3.8-flash",
+  "wall_s": 22.2,
+  "error": null,
+  "diagnosis": {
+    "root_component": "tool:check_inventory",
+    "category": "stale_data",
+    "cause_ref": null,
+    "confidence": 0.98,
+    "summary": "The check_inventory tool returned stale data with a cache age of over 264,602 seconds (~3 days), showing 0 units in stock for product P-019 when there are actually 12 units available.",
+    "evidence": [
+      {
+        "type": "trace",
+        "ref": "span:2f595590317002c845ec802435bea724/e42d966f14b4bf55",
+        "claim": "tool.check_inventory executed with tool.cache_age_s=264602.676483, indicating that the returned inventory record was over 3 days old and stale."
+      },
+      {
+        "type": "trace",
+        "ref": "span:2f595590317002c845ec802435bea724/59733f5cf069afa7",
+        "claim": "The llm.chat span generated the final response directly relying on the stale check_inventory tool result."
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:config-change-3659",
+        "reason": "This configuration change modified max_response_tokens to allow longer replies, which has no effect on inventory data freshness or cache TTL."
+      }
+    ],
+    "suggested_fix": "Invalidate or reduce the TTL of the inventory cache for tool:check_inventory so real-time stock levels are queried.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "tool:check_inventory",
+      "category": "stale_data",
+      "rationale": "Span tool.check_inventory returned inventory data with a cache age of over 264,000 seconds (over 3 days old), causing it to report 0 units instead of the current 12.",
+      "score": 0.85
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model may have misinterpreted the inventory tool payload or misreported the stock count despite tool output.",
+      "score": 0.1
+    },
+    {
+      "root_component": "tool:check_inventory",
+      "category": "tool_outage",
+      "rationale": "The inventory tool backend may have served an empty or fallback zero-inventory response due to an internal service failure.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 10,
+  "evidence_pool_size": 18,
+  "refs_not_in_pool": [],
+  "llm_calls": 11,
+  "input_tokens": 38854,
+  "output_tokens": 1127,
+  "thinking_tokens": 0,
+  "cost_usd": 0.033368,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-034d95a7"
+      },
+      "result_chars": 3577,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T03:55:08.567966+00:00",
+        "end": "2026-10-18T03:55:08.567966+00:00"
+      },
+      "result_chars": 309,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1736,
+      "output_tokens": 236,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002187,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"tool:check_inventory\",\n   \"category\": \"stale_data\",\n   \"rationale\": \"Span tool.check_inventory returned inventory data with a cache age of over 264,000 seconds (over 3 days old), causing it to report 0 units instead of the current 12.\",\n   \"score\": 0.85\n  },\n  {\n   \"root_component\": \"model\",\n   \"category\": \"model_change\",\n   \"rationale\": \"The model may have misinterpreted the inventory tool payload or misreported the stock count despite tool output.\","
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2777,
+      "output_tokens": 30,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002195,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "search_logs",
+      "args": {
+        "query": "e42d966f14b4bf55"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2838,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002204,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "search_logs",
+      "args": {
+        "component": "tool.check_inventory"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2889,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002242,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "P-019"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2940,
+      "output_tokens": 25,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002299,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "query": "conv-034d95a7"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2995,
+      "output_tokens": 27,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002348,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-034d95a7"
+      },
+      "result_chars": 3577,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4388,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003351,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "search_logs",
+      "args": {
+        "query": "cache"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4434,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003393,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "search_logs",
+      "args": {
+        "query": "check_inventory"
+      },
+      "result_chars": 579,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4709,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003588,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2491,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5600,
+      "output_tokens": 289,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005284,
+      "tool_calls": [],
+      "text": "### Summary of Findings\n\n- **Root Component**: `tool:check_inventory`\n- **Category**: `stale_data`\n\n### Investigation Details\n- **Span Analysis**: In trace `2f595590317002c845ec802435bea724`, the assistant called `tool.check_inventory` (ref: `span:2f595590317002c845ec802435bea724/e42d966f14b4bf55`).\n- **Evidence of Stale Data**: The tool span reported `tool.cache_age_s: 264602.676483` (approximately 3.06 days old). Because the inventory tool served heavily cached, outdated stock records showing "
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3548,
+      "output_tokens": 431,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004277,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"tool:check_inventory\",\n  \"category\": \"stale_data\",\n  \"cause_ref\": null,\n  \"confidence\": 0.98,\n  \"summary\": \"The check_inventory tool returned stale data with a cache age of over 264,602 seconds (~3 days), showing 0 units in stock for product P-019 when there are actually 12 units available.\",\n  \"evidence\": [\n    {\n      \"type\": \"trace\",\n      \"ref\": \"span:2f595590317002c845ec802435bea724/e42d966f14b4bf55\",\n      \"claim\": \"tool.check_inventory executed with tool.cache_age_s"
+    }
+  ]
+}

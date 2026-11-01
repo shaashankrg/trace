@@ -1,0 +1,368 @@
+{
+  "case_id": "case-011",
+  "model": "gemini-3.8-flash",
+  "wall_s": 25.8,
+  "error": null,
+  "diagnosis": {
+    "root_component": "prompt",
+    "category": "prompt_edit",
+    "cause_ref": "change:prompt-edit-8582",
+    "confidence": 0.98,
+    "summary": "Prompt version v2 removed the negative constraint requiring the model to only answer from provided documents and to state when information is missing while referring users to support. Consequently, when retrieved documents did not specify whether returns require a receipt, the model hallucinated an affirmative answer instead of admitting it did not know.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:prompt-edit-8582",
+        "claim": "Prompt edit change:prompt-edit-8582 changed the prompt version to v2 shortly before the incident to trim instructions."
+      },
+      {
+        "type": "change",
+        "ref": "prompt:v2",
+        "claim": "The diff between prompt:v1 and prompt:v2 shows the removal of '-Only answer from the provided documents. Tool results count as documents. If they do not contain the answer, say you don't know and suggest contacting support.'"
+      },
+      {
+        "type": "trace",
+        "ref": "span:1fb94cc9ec2d2def3f094185e667d381/eba6c558a2dfd717",
+        "claim": "Span llm.chat executed using prompt.version=v2 and generated the incorrect answer based on the missing fallback instructions."
+      },
+      {
+        "type": "trace",
+        "ref": "span:1fb94cc9ec2d2def3f094185e667d381/357382e9989b7f36",
+        "claim": "Retrieval returned relevant return policy chunks ('refund-policy@v2#1', 'holiday-returns@v1#0', 'gift-cards@v1#1', 'returns-process@v2#0') none of which explicitly state whether a receipt can be skipped."
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:config-change-9549",
+        "reason": "Raising max_response_tokens only affected response length and did not alter instructions regarding handling unanswerable queries."
+      }
+    ],
+    "suggested_fix": "Restore the instruction in the system prompt directing the assistant to only answer based on provided documents and to admit when an answer is not present while directing the user to support (help@kestrel.example).",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "prompt",
+      "category": "prompt_edit",
+      "rationale": "The recent prompt edit shortly before the alert trimmed instructions, likely removing the directive to admit ignorance and refer to support when information is missing.",
+      "score": 0.7
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model incorrectly hallucinated an affirmative answer despite acknowledging that the provided policy documents do not specify whether a receipt can be skipped.",
+      "score": 0.2
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "The knowledge base documents covering returns and refunds may be missing explicit guidance on return requirements regarding receipts.",
+      "score": 0.1
+    }
+  ],
+  "tool_calls_used": 12,
+  "evidence_pool_size": 55,
+  "refs_not_in_pool": [],
+  "llm_calls": 13,
+  "input_tokens": 67690,
+  "output_tokens": 1412,
+  "thinking_tokens": 0,
+  "cost_usd": 0.056063,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-e1710cc0"
+      },
+      "result_chars": 2662,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T03:54:08.421261+00:00",
+        "end": "2026-10-18T03:54:08.421261+00:00"
+      },
+      "result_chars": 565,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1693,
+      "output_tokens": 211,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002061,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"prompt\",\n      \"category\": \"prompt_edit\",\n      \"rationale\": \"The recent prompt edit shortly before the alert trimmed instructions, likely removing the directive to admit ignorance and refer to support when information is missing.\",\n      \"score\": 0.7\n    },\n    {\n      \"root_component\": \"model\",\n      \"category\": \"model_change\",\n      \"rationale\": \"The model incorrectly hallucinated an affirmative answer despite acknowledging that the provided "
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2711,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002131,
+      "tool_calls": [
+        "diff_prompt_versions"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "diff_prompt_versions",
+      "args": {
+        "b": "v2",
+        "a": "v1"
+      },
+      "result_chars": 784,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3005,
+      "output_tokens": 66,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002501,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:1fb94cc9ec2d2def3f094185e667d381/357382e9989b7f36"
+      },
+      "result_chars": 1516,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3508,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002706,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "refund-policy"
+      },
+      "result_chars": 1086,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3851,
+      "output_tokens": 28,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002993,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "query": "eba6c558a2dfd717"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3909,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003007,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "returns-process"
+      },
+      "result_chars": 1410,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4354,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003363,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-e1710cc0"
+      },
+      "result_chars": 2662,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5346,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00407,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "search_logs",
+      "args": {
+        "query": "prompt"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5392,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.0041,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "search_logs",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2589,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6548,
+      "output_tokens": 22,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004993,
+      "tool_calls": [
+        "query_metrics"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "query_metrics",
+      "args": {
+        "metric": "kestrel_canary_accuracy"
+      },
+      "result_chars": 7091,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 9347,
+      "output_tokens": 10,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007048,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "recent_changes",
+      "args": {},
+      "result_chars": 7252,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 11888,
+      "output_tokens": 346,
+      "thinking_tokens": 0,
+      "cost_usd": 0.010214,
+      "tool_calls": [],
+      "text": "### Summary of Findings\n\n- **Root Component**: `prompt`\n- **Category**: `prompt_edit`\n- **Evidence and Root Cause**:\n  - In trace `1fb94cc9ec2d2def3f094185e667d381`, the customer asked `\"Can I return an item without a receipt?\"`.\n  - Span `span:1fb94cc9ec2d2def3f094185e667d381/eba6c558a2dfd717` (`llm.chat`) used prompt version `v2`.\n  - Recent change `change:prompt-edit-8582` applied at `2026-10-18T02:10:41.428043+00:00` by `ops-bot` changed the prompt from `prompt:v1` to `prompt:v2`.\n  - Compar"
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6138,
+      "output_tokens": 606,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006876,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"prompt\",\n \"category\": \"prompt_edit\",\n \"cause_ref\": \"change:prompt-edit-8582\",\n \"confidence\": 0.98,\n \"summary\": \"Prompt version v2 removed the negative constraint requiring the model to only answer from provided documents and to state when information is missing while referring users to support. Consequently, when retrieved documents did not specify whether returns require a receipt, the model hallucinated an affirmative answer instead of admitting it did not know.\",\n \"evide"
+    }
+  ]
+}

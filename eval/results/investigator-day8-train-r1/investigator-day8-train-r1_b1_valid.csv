@@ -1,0 +1,9 @@
+group,key,n,top1,category,cause
+overall,all,13,0.0,0.0,0.0
+decoy,with decoy,7,0.0,0.0,0.0
+decoy,without decoy,6,0.0,0.0,0.0
+fault_type,chunking_regression,2,0.0,0.0,0.0
+fault_type,missing_document,3,0.0,0.0,0.0
+fault_type,silent_tool_failure,3,0.0,0.0,0.0
+fault_type,stale_tool_data,3,0.0,0.0,0.0
+fault_type,threshold_too_strict,2,0.0,0.0,0.0

@@ -1,0 +1,549 @@
+{
+  "case_id": "case-035",
+  "model": "gemini-3.8-flash",
+  "wall_s": 59.7,
+  "error": null,
+  "diagnosis": {
+    "root_component": "retriever",
+    "category": "config_change",
+    "cause_ref": "change:config-change-5753",
+    "confidence": 0.85,
+    "summary": "The chunk_size configuration was lowered to 40, which fragmented the refund-policy document into very small chunks (c40). As a result, the critical text mentioning the 14-day refund window was severed from surrounding context and not retrieved, causing the model to answer that it does not know the normal refund window.",
+    "evidence": [
+      {
+        "type": "trace",
+        "ref": "span:84ac860469889652c7bc9746bd66c652/0f16799d75caf23d",
+        "claim": "The root span shows config.chunk_size was set to 40.",
+        "attribute": "config.chunk_size",
+        "value": 40,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "trace",
+        "ref": "span:84ac860469889652c7bc9746bd66c652/eba182b9abdbe87a",
+        "claim": "Retrieved chunks were sliced into 40-character segments (c40), missing the chunk containing the 14-day refund window.",
+        "attribute": "retrieval.chunk_ids",
+        "value": "['holiday-returns@v1#0', 'refund-policy@v2#3/c40', 'refund-policy@v2#5/c40', 'refund-policy@v2#10/c40']",
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "change",
+        "ref": "change:config-change-5753",
+        "claim": "Ops-bot tuned config:chunk_size shortly before the alert fired.",
+        "attribute": null,
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "chunk",
+        "ref": "chunk:refund-policy@v2#3/c40",
+        "claim": "The retrieved chunk from refund-policy@v2 is tiny and broken up due to chunk_size=40, missing the delivery window clause.",
+        "attribute": null,
+        "value": null,
+        "quote": "full refund. Items must be unused, in",
+        "supports": null
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:config-change-5620",
+        "reason": "Tuning similarity threshold to 0.3 did not prevent 4 chunks from being retrieved (top_k=4 was reached).",
+        "ref": "change:config-change-5620"
+      },
+      {
+        "change": "change:config-change-6795",
+        "reason": "Raising max_response_tokens only affects output length limit, not retrieval content.",
+        "ref": "change:config-change-6795"
+      },
+      {
+        "change": "change:doc-update-8106",
+        "reason": "Publishing trail-volunteer-days@v1 is unrelated to refund policies.",
+        "ref": "change:doc-update-8106"
+      }
+    ],
+    "suggested_fix": "Revert the chunk_size configuration change to maintain sufficient chunk context for retrieval.",
+    "fix_patch": {
+      "kind": "set_config",
+      "key": "chunk_size",
+      "value": "300"
+    },
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 8,
+    "failures": []
+  },
+  "fix": {
+    "ref": "replay:4ec58c907de3",
+    "patch": {
+      "kind": "set_config",
+      "key": "chunk_size",
+      "value": "300"
+    },
+    "target_component": "retriever",
+    "matches_correction": false,
+    "votes": [
+      false,
+      false,
+      false
+    ],
+    "judge": "code",
+    "control_ref": "replay:989796f80da6",
+    "control_matches_correction": false,
+    "proves_fix": false,
+    "cost_usd": 0.00033
+  },
+  "gate": {
+    "passed": true,
+    "reason": "3 evidence types (change, chunk, trace) support retriever",
+    "hypothesis": "retriever",
+    "supporting_types": [
+      "change",
+      "chunk",
+      "trace"
+    ],
+    "replay_ref": null,
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "The recent change to chunk_size or similarity_threshold likely caused the relevant chunk containing the 14-day refund policy window to be missed or split awkwardly during retrieval.",
+      "score": 0.5
+    },
+    {
+      "root_component": "retriever",
+      "category": "retrieval_failure",
+      "rationale": "Retrieval returned specific sections of refund-policy@v2 (chunks 3, 5, 10) and holiday returns, failing to retrieve the specific chunk containing the standard 14-day return window.",
+      "score": 0.3
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "The document refund-policy may have been updated or re-indexed such that the standard return window information is missing or corrupted in the indexed chunks.",
+      "score": 0.15
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model may have received the standard return window in one of the retrieved refund-policy chunks but failed to extract or synthesize it properly.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 15,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 35,
+  "refs_not_in_pool": [],
+  "llm_calls": 15,
+  "input_tokens": 78675,
+  "output_tokens": 1551,
+  "thinking_tokens": 0,
+  "cost_usd": 0.066311,
+  "investigator_cost_usd": 0.064823,
+  "replay_cost_usd": 0.001488,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-b8779767"
+      },
+      "result_chars": 2675,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T01:49:08.885470+00:00",
+        "end": "2026-11-01T01:49:08.885470+00:00"
+      },
+      "result_chars": 1104,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2201,
+      "output_tokens": 322,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002858,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"retriever\",\n   \"category\": \"config_change\",\n   \"rationale\": \"The recent change to chunk_size or similarity_threshold likely caused the relevant chunk containing the 14-day refund policy window to be missed or split awkwardly during retrieval.\",\n   \"score\": 0.5\n  },\n  {\n   \"root_component\": \"retriever\",\n   \"category\": \"retrieval_failure\",\n   \"rationale\": \"Retrieval returned specific sections of refund-policy@v2 (chunks 3, 5, 10) and holiday returns, fa"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3541,
+      "output_tokens": 63,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002892,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:84ac860469889652c7bc9746bd66c652/eba182b9abdbe87a"
+      },
+      "result_chars": 1134,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3975,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003056,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "refund-policy"
+      },
+      "result_chars": 1089,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4328,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003314,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "chunk_size"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4384,
+      "output_tokens": 40,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003438,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-31T00:00:00+00:00"
+      },
+      "result_chars": 1104,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4822,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003684,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "search_logs",
+      "args": {
+        "query": "similarity_threshold"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4877,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003718,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "search_logs",
+      "args": {
+        "query": "config"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4930,
+      "output_tokens": 19,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003769,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "search_logs",
+      "args": {
+        "query": "5620"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4986,
+      "output_tokens": 19,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003811,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "search_logs",
+      "args": {
+        "query": "5753"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5042,
+      "output_tokens": 10,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003819,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "search_logs",
+      "args": {},
+      "result_chars": 5132,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7302,
+      "output_tokens": 25,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00557,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "search_logs",
+      "args": {
+        "query": "conv-b8779767"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7364,
+      "output_tokens": 50,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005711,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-b8779767",
+        "patch": {
+          "value": 80,
+          "key": "chunk_size",
+          "kind": "set_config"
+        }
+      },
+      "result_chars": 153,
+      "error": "patch rejected: chunk_size=80 is not a value the change log or the trace shows chunk_size holding",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7484,
+      "output_tokens": 51,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005804,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 14,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {
+          "key": "chunk_size",
+          "kind": "set_config",
+          "value": 300
+        },
+        "conversation_id": "conv-b8779767"
+      },
+      "result_chars": 721,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7765,
+      "output_tokens": 51,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006015,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 15,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-b8779767",
+        "patch": {
+          "value": 0.2,
+          "kind": "set_config",
+          "key": "similarity_threshold"
+        }
+      },
+      "result_chars": 176,
+      "error": "patch rejected: similarity_threshold=0.2 is not a value the change log or the trace shows similarity_threshold holding",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5674,
+      "output_tokens": 829,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007364,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"retriever\",\n \"category\": \"config_change\",\n \"cause_ref\": \"change:config-change-5753\",\n \"confidence\": 0.85,\n \"summary\": \"The chunk_size configuration was lowered to 40, which fragmented the refund-policy document into very small chunks (c40). As a result, the critical text mentioning the 14-day refund window was severed from surrounding context and not retrieved, causing the model to answer that it does not know the normal refund window.\",\n \"evidence\": [\n  {\n   \"type\": \"trace"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "3 evidence types (change, chunk, trace) support retriever",
+      "hypothesis": "retriever",
+      "supporting_types": [
+        "change",
+        "chunk",
+        "trace"
+      ],
+      "replay_ref": null,
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

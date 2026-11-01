@@ -1,0 +1,446 @@
+{
+  "case_id": "case-001",
+  "model": "gemini-3.8-flash",
+  "wall_s": 59.9,
+  "error": null,
+  "diagnosis": {
+    "root_component": "prompt",
+    "category": "prompt_edit",
+    "cause_ref": "change:prompt-edit-6188",
+    "confidence": 0.95,
+    "summary": "Prompt edit change:prompt-edit-6188 updated the prompt from v1 to v2, removing the instruction directing the model to admit when it does not know the answer and suggest contacting support when documents lack the answer.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:prompt-edit-6188",
+        "claim": "Prompt edit change:prompt-edit-6188 by marco trimmed prompt instructions shortly before the alert fired.",
+        "attribute": null,
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "change",
+        "ref": "prompt:v2",
+        "claim": "Prompt v2 removed the directive instructing the assistant to state it doesn't know and suggest contacting support if the documents do not contain the answer.",
+        "attribute": null,
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "trace",
+        "ref": "span:4f7f3c703e9aa789239b41e0c7cac670/a0c25e49d5829fef",
+        "claim": "The chat span ran using prompt version v2, which lacked instructions on handling missing information.",
+        "attribute": "prompt.version",
+        "value": "v2",
+        "quote": null,
+        "supports": null
+      }
+    ],
+    "ruled_out": [],
+    "suggested_fix": "Revert the system prompt to version v1 to restore the guidance to say when information is unknown and refer users to support.",
+    "fix_patch": {
+      "kind": "set_prompt_version",
+      "version": "v1"
+    },
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 4,
+    "failures": []
+  },
+  "fix": {
+    "ref": "replay:f05aa6b771bc",
+    "patch": {
+      "kind": "set_prompt_version",
+      "version": "v1"
+    },
+    "target_component": "prompt",
+    "matches_correction": false,
+    "votes": [
+      false,
+      false,
+      false
+    ],
+    "judge": "code",
+    "control_ref": "replay:77169e8a1563",
+    "control_matches_correction": false,
+    "proves_fix": false,
+    "cost_usd": 0.000161
+  },
+  "gate": {
+    "passed": true,
+    "reason": "2 evidence types (change, trace) support prompt",
+    "hypothesis": "prompt",
+    "supporting_types": [
+      "change",
+      "trace"
+    ],
+    "replay_ref": null,
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "prompt",
+      "category": "prompt_edit",
+      "rationale": "Prompt version v2 was introduced in recent change prompt-edit-6188, which likely removed or altered instructions on how to handle unknown answers and directing customers to support.",
+      "score": 0.75
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "The knowledge base lacks guidance on breaking in hiking boots or fallback customer support procedures.",
+      "score": 0.15
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The language model failed to appropriately state that it didn't know and provide support contact information despite receiving unhelpful context.",
+      "score": 0.1
+    }
+  ],
+  "tool_calls_used": 12,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 28,
+  "refs_not_in_pool": [],
+  "llm_calls": 13,
+  "input_tokens": 62830,
+  "output_tokens": 1338,
+  "thinking_tokens": 0,
+  "cost_usd": 0.052865,
+  "investigator_cost_usd": 0.052139,
+  "replay_cost_usd": 0.000726,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-9e32445c"
+      },
+      "result_chars": 2510,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-10T23:32:23.720375+00:00",
+        "end": "2026-10-17T23:32:23.720375+00:00"
+      },
+      "result_chars": 299,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1992,
+      "output_tokens": 216,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002304,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"prompt\",\n   \"category\": \"prompt_edit\",\n   \"rationale\": \"Prompt version v2 was introduced in recent change prompt-edit-6188, which likely removed or altered instructions on how to handle unknown answers and directing customers to support.\",\n   \"score\": 0.75\n  },\n  {\n   \"root_component\": \"knowledge_base\",\n   \"category\": \"doc_update\",\n   \"rationale\": \"The knowledge base lacks guidance on breaking in hiking boots or fallback customer support procedures.\","
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3259,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002542,
+      "tool_calls": [
+        "diff_prompt_versions"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "diff_prompt_versions",
+      "args": {
+        "a": "v1",
+        "b": "v2"
+      },
+      "result_chars": 782,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3558,
+      "output_tokens": 46,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002841,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {
+          "kind": "set_prompt_version",
+          "version": "v1"
+        },
+        "conversation_id": "conv-9e32445c"
+      },
+      "result_chars": 478,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3780,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002891,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2481,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4674,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00358,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "product-care"
+      },
+      "result_chars": 333,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4825,
+      "output_tokens": 64,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003859,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:4f7f3c703e9aa789239b41e0c7cac670/9ed6fad95cd24206"
+      },
+      "result_chars": 584,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5090,
+      "output_tokens": 21,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003896,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "search_logs",
+      "args": {
+        "query": "help@kestrel.example"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5148,
+      "output_tokens": 25,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003955,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "search_logs",
+      "args": {
+        "query": "conv-9e32445c"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5210,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004076,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "search_logs",
+      "args": {
+        "limit": 10,
+        "start": "2026-10-17T22:30:00+00:00"
+      },
+      "result_chars": 2588,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6392,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004854,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "search_logs",
+      "args": {
+        "query": "support"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6445,
+      "output_tokens": 27,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004935,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-9e32445c"
+      },
+      "result_chars": 2510,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7409,
+      "output_tokens": 401,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00706,
+      "tool_calls": [],
+      "text": "### Investigation Summary\n\n- **Root Component**: `prompt`\n- **Category**: `prompt_edit`\n\n#### Findings & Evidence:\n1. **Change History**: \n   - Change `change:prompt-edit-6188` created at `2026-10-17T22:38:53.749673+00:00` by `marco` updated prompt version from `v1` to `v2` under the description \"Trim redundant prompt instructions\".\n2. **Prompt Diff**:\n   - `diff_prompt_versions` between `v1` and `v2` shows that the following directive was removed:\n     ```diff\n     -Only answer from the provide"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5048,
+      "output_tokens": 416,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005346,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"prompt\",\n \"category\": \"prompt_edit\",\n \"cause_ref\": \"change:prompt-edit-6188\",\n \"confidence\": 0.95,\n \"summary\": \"Prompt edit change:prompt-edit-6188 updated the prompt from v1 to v2, removing the instruction directing the model to admit when it does not know the answer and suggest contacting support when documents lack the answer.\",\n \"evidence\": [\n  {\n   \"type\": \"change\",\n   \"ref\": \"change:prompt-edit-6188\",\n   \"claim\": \"Prompt edit change:prompt-edit-6188 by marco trimmed p"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "2 evidence types (change, trace) support prompt",
+      "hypothesis": "prompt",
+      "supporting_types": [
+        "change",
+        "trace"
+      ],
+      "replay_ref": null,
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

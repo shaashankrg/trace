@@ -1,0 +1,173 @@
+{
+  "case_id": "case-001",
+  "model": "gemini-3.8-flash",
+  "wall_s": 18.4,
+  "error": null,
+  "diagnosis": {
+    "root_component": "prompt",
+    "category": "prompt_edit",
+    "cause_ref": "change:prompt-edit-6188",
+    "confidence": 0.98,
+    "summary": "Prompt edit change:prompt-edit-6188 updated the prompt from v1 to v2, removing the instruction telling the model to state it does not know and suggest contacting support when documents lack the answer.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:prompt-edit-6188",
+        "claim": "Prompt edit change:prompt-edit-6188 was made shortly before the alert to trim redundant prompt instructions, creating prompt version v2."
+      },
+      {
+        "type": "change",
+        "ref": "prompt:v2",
+        "claim": "The diff between v1 and v2 reveals that the directive 'If they do not contain the answer, say you don't know and suggest contacting support' was removed."
+      },
+      {
+        "type": "trace",
+        "ref": "span:4f7f3c703e9aa789239b41e0c7cac670/a0c25e49d5829fef",
+        "claim": "The llm.chat span used prompt version v2 and failed to refer the user to support when the retrieved document lacked break-in instructions."
+      },
+      {
+        "type": "trace",
+        "ref": "span:4f7f3c703e9aa789239b41e0c7cac670/9ed6fad95cd24206",
+        "claim": "The retrieve span returned chunk product-care@v1#0 which contains only leather cleaning instructions and no break-in guidance."
+      }
+    ],
+    "ruled_out": [],
+    "suggested_fix": "Restore the fallback instruction in the system prompt advising the model to admit when information is missing and direct the user to contact support at help@kestrel.example.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "prompt",
+      "category": "prompt_edit",
+      "rationale": "A recent prompt edit shortly before the alert trimmed redundant instructions, likely removing the directive to admit lack of knowledge and refer customers to help@kestrel.example when retrieved context lacks an answer.",
+      "score": 0.75
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model correctly acknowledged the documents lacked break-in instructions, but failed to follow standard fallback behavior directing the user to customer support.",
+      "score": 0.15
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "The indexed product care document lacks any break-in guidance for boots, causing the assistant to answer without necessary documentation.",
+      "score": 0.1
+    }
+  ],
+  "tool_calls_used": 4,
+  "evidence_pool_size": 7,
+  "refs_not_in_pool": [],
+  "llm_calls": 5,
+  "input_tokens": 12642,
+  "output_tokens": 1108,
+  "thinking_tokens": 0,
+  "cost_usd": 0.013637,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-9e32445c"
+      },
+      "result_chars": 2510,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-10T23:32:23.720375+00:00",
+        "end": "2026-10-17T23:32:23.720375+00:00"
+      },
+      "result_chars": 299,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1564,
+      "output_tokens": 229,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002032,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"prompt\",\n      \"category\": \"prompt_edit\",\n      \"rationale\": \"A recent prompt edit shortly before the alert trimmed redundant instructions, likely removing the directive to admit lack of knowledge and refer customers to help@kestrel.example when retrieved context lacks an answer.\",\n      \"score\": 0.75\n    },\n    {\n      \"root_component\": \"model\",\n      \"category\": \"model_change\",\n      \"rationale\": \"The model correctly acknowledged the documents"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2598,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002046,
+      "tool_calls": [
+        "diff_prompt_versions"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "diff_prompt_versions",
+      "args": {
+        "a": "v1",
+        "b": "v2"
+      },
+      "result_chars": 782,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2890,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002243,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "product-care"
+      },
+      "result_chars": 333,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3035,
+      "output_tokens": 332,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003521,
+      "tool_calls": [],
+      "text": "### Root Cause Analysis\n\n- **Root Component**: `prompt`\n- **Category**: `prompt_edit`\n- **Suspect Change**: `change:prompt-edit-6188` (created at `2026-10-17T22:38:53.749673+00:00` by `marco`)\n\n### Evidence\n- Diffing prompt version `v1` (`prompt:v1`) against `v2` (`prompt:v2`) via `diff_prompt_versions` reveals that the following fallback instruction was removed:\n  ```diff\n  -Only answer from the provided documents. Tool results count as documents. If they do not contain the answer, say you don'"
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2555,
+      "output_tokens": 501,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003795,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"prompt\",\n  \"category\": \"prompt_edit\",\n  \"cause_ref\": \"change:prompt-edit-6188\",\n  \"confidence\": 0.98,\n  \"summary\": \"Prompt edit change:prompt-edit-6188 updated the prompt from v1 to v2, removing the instruction telling the model to state it does not know and suggest contacting support when documents lack the answer.\",\n  \"evidence\": [\n    {\n      \"type\": \"change\",\n      \"ref\": \"change:prompt-edit-6188\",\n      \"claim\": \"Prompt edit change:prompt-edit-6188 was made shortly be"
+    }
+  ]
+}

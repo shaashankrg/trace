@@ -1,0 +1,201 @@
+{
+  "case_id": "case-015",
+  "model": "gemini-3.8-flash",
+  "wall_s": 2942.6,
+  "error": null,
+  "diagnosis": {
+    "root_component": "knowledge_base",
+    "category": "doc_delete",
+    "cause_ref": "change:doc-delete-4356",
+    "confidence": 0.98,
+    "summary": "Document 'store-pickup' was unindexed during an index cleanup change, leaving 0 indexed chunks. Consequently, retrieval failed to find information regarding store pickup order holding times, leading the model to state it did not know the answer.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:doc-delete-4356",
+        "claim": "ops-bot ran a doc_delete operation on doc:store-pickup to clean up index entries shortly before the alert."
+      },
+      {
+        "type": "change",
+        "ref": "doc:store-pickup@v1",
+        "claim": "doc:store-pickup@v1 has 0 out of 1 chunks indexed following the deletion/cleanup."
+      },
+      {
+        "type": "trace",
+        "ref": "span:4f135ce5336eea5f1d4b6882f13f0f39/a8225a6435f593b1",
+        "claim": "The retrieve span returned unrelated chunks (store-locations, order-cancellation, order-tracking, returns-process) instead of store-pickup policy details."
+      },
+      {
+        "type": "trace",
+        "ref": "span:4f135ce5336eea5f1d4b6882f13f0f39/9dd24ed7208bed9e",
+        "claim": "Without store pickup documentation in context, the LLM answered that it did not know how long pickup orders are held."
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:doc-update-4531",
+        "reason": "This change published doc:gear-donation@v1, which is unrelated to store pickup order holding policies."
+      }
+    ],
+    "suggested_fix": "Re-index doc:store-pickup@v1 so that the store pickup policy is available to the retriever.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_delete",
+      "rationale": "The store-pickup document was deleted shortly before the query, preventing the assistant from retrieving the store pickup hold duration.",
+      "score": 0.85
+    },
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "The retriever's threshold or top_k may have excluded the relevant pickup policy chunk from being returned.",
+      "score": 0.1
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model answered that it did not know the hold duration instead of using any available context or fallback knowledge.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 5,
+  "evidence_pool_size": 11,
+  "refs_not_in_pool": [],
+  "llm_calls": 6,
+  "input_tokens": 16552,
+  "output_tokens": 1206,
+  "thinking_tokens": 0,
+  "cost_usd": 0.016936,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-93524c6d"
+      },
+      "result_chars": 2671,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T03:58:08.429534+00:00",
+        "end": "2026-10-18T03:58:08.429534+00:00"
+      },
+      "result_chars": 545,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1602,
+      "output_tokens": 206,
+      "thinking_tokens": 0,
+      "cost_usd": 0.001974,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"knowledge_base\",\n   \"category\": \"doc_delete\",\n   \"rationale\": \"The store-pickup document was deleted shortly before the query, preventing the assistant from retrieving the store pickup hold duration.\",\n   \"score\": 0.85\n  },\n  {\n   \"root_component\": \"retriever\",\n   \"category\": \"config_change\",\n   \"rationale\": \"The retriever's threshold or top_k may have excluded the relevant pickup policy chunk from being returned.\",\n   \"score\": 0.1\n  },\n  {\n   \"root_c"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2614,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002035,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "store-pickup"
+      },
+      "result_chars": 341,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2761,
+      "output_tokens": 68,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002326,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:4f135ce5336eea5f1d4b6882f13f0f39/a8225a6435f593b1"
+      },
+      "result_chars": 1624,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3301,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002543,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "store-pickup"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3350,
+      "output_tokens": 355,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003844,
+      "tool_calls": [],
+      "text": "### Findings Summary\n\n- **Root Component**: `knowledge_base`\n- **Category**: `doc_delete`\n\n### Evidence\n1. **Document History & Indexing**: Document `doc:store-pickup` (`doc:store-pickup@v1`, titled \"Buy Online, Pick Up in Store\") had its chunks unindexed (`indexed_chunk_count: 0`) following change `change:doc-delete-4356` by `ops-bot` on `2026-10-18T02:26:38.336469+00:00` (\"Clean up index entries\").\n2. **Retrieval**: In retrieve span `span:4f135ce5336eea5f1d4b6882f13f0f39/a8225a6435f593b1`, bec"
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2924,
+      "output_tokens": 539,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004214,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"knowledge_base\",\n  \"category\": \"doc_delete\",\n  \"cause_ref\": \"change:doc-delete-4356\",\n  \"confidence\": 0.98,\n  \"summary\": \"Document 'store-pickup' was unindexed during an index cleanup change, leaving 0 indexed chunks. Consequently, retrieval failed to find information regarding store pickup order holding times, leading the model to state it did not know the answer.\",\n  \"evidence\": [\n    {\n      \"type\": \"change\",\n      \"ref\": \"change:doc-delete-4356\",\n      \"claim\": \"ops-bo"
+    }
+  ]
+}

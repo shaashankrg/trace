@@ -1,0 +1,173 @@
+{
+  "case_id": "case-018",
+  "model": "gemini-3.8-flash",
+  "wall_s": 14.4,
+  "error": null,
+  "diagnosis": {
+    "root_component": "prompt",
+    "category": "prompt_edit",
+    "cause_ref": "change:prompt-edit-3227",
+    "confidence": 0.95,
+    "summary": "Prompt version v2 removed the fallback instruction directing the model to say it does not know and suggest contacting support when documents lack the answer. As a result, the model fabricated a negative answer ('No') instead of stating it didn't know.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:prompt-edit-3227",
+        "claim": "Alice edited the prompt to v2 shortly before the incident to simplify the system prompt."
+      },
+      {
+        "type": "change",
+        "ref": "prompt:v2",
+        "claim": "The prompt diff shows removal of the instruction: 'Only answer from the provided documents. Tool results count as documents. If they do not contain the answer, say you don't know and suggest contacting support.'"
+      },
+      {
+        "type": "trace",
+        "ref": "span:26dde5a6debca60c0da2768fbf3b3e5b/428a0fca155f6f83",
+        "claim": "Retrieval returned chunks order-cancellation@v1#0, pre-orders@v1#0, shipping-international@v1#1, and order-tracking@v1#0, none of which contain information about changing shipping addresses."
+      },
+      {
+        "type": "trace",
+        "ref": "span:26dde5a6debca60c0da2768fbf3b3e5b/0ccdaf6a9527646f",
+        "claim": "The llm.chat span executed with prompt.version=v2 and generated the incorrect answer."
+      }
+    ],
+    "ruled_out": [],
+    "suggested_fix": "Restore the fallback instruction in the system prompt requiring the assistant to say it does not know and point customers to help@kestrel.example when the retrieved documents do not contain the answer.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "prompt",
+      "category": "prompt_edit",
+      "rationale": "A recent prompt edit shortly before the alert likely removed the instruction directing the model to admit ignorance and refer users to support when documents lack the answer.",
+      "score": 0.8
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model failed to recognize that the absence of information in the retrieved chunks does not imply an outright negative answer.",
+      "score": 0.15
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "The knowledge base lacks explicit guidance or policy regarding modifying shipping addresses after placing an order.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 4,
+  "evidence_pool_size": 10,
+  "refs_not_in_pool": [],
+  "llm_calls": 5,
+  "input_tokens": 13096,
+  "output_tokens": 1141,
+  "thinking_tokens": 0,
+  "cost_usd": 0.014101,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-80841fa6"
+      },
+      "result_chars": 2673,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-11T04:01:10.220797+00:00",
+        "end": "2026-10-18T04:01:10.220797+00:00"
+      },
+      "result_chars": 287,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1548,
+      "output_tokens": 210,
+      "thinking_tokens": 0,
+      "cost_usd": 0.001948,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"prompt\",\n      \"category\": \"prompt_edit\",\n      \"rationale\": \"A recent prompt edit shortly before the alert likely removed the instruction directing the model to admit ignorance and refer users to support when documents lack the answer.\",\n      \"score\": 0.8\n    },\n    {\n      \"root_component\": \"model\",\n      \"category\": \"model_change\",\n      \"rationale\": \"The model failed to recognize that the absence of information in the retrieved chunks does "
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2563,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00202,
+      "tool_calls": [
+        "diff_prompt_versions"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "diff_prompt_versions",
+      "args": {
+        "b": "v2",
+        "a": "v1"
+      },
+      "result_chars": 770,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2854,
+      "output_tokens": 63,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002377,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:26dde5a6debca60c0da2768fbf3b3e5b/428a0fca155f6f83"
+      },
+      "result_chars": 1609,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3368,
+      "output_tokens": 327,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003752,
+      "tool_calls": [],
+      "text": "### Root Cause Analysis\n\n- **Root Component**: `prompt`\n- **Category**: `prompt_edit`\n- **Change Ref**: `change:prompt-edit-3227`\n\n### Findings & Evidence\n\n1. **Prompt Diff**: Comparing `prompt:v1` to `prompt:v2` (edited by `alice` in `change:prompt-edit-3227`) shows that the explicit fallback instruction was removed:\n   ```diff\n   - Only answer from the provided documents. Tool results count as documents. If they do not contain the answer, say you don't know and suggest contacting support.\n   `"
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2763,
+      "output_tokens": 515,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004004,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"prompt\",\n  \"category\": \"prompt_edit\",\n  \"cause_ref\": \"change:prompt-edit-3227\",\n  \"confidence\": 0.95,\n  \"summary\": \"Prompt version v2 removed the fallback instruction directing the model to say it does not know and suggest contacting support when documents lack the answer. As a result, the model fabricated a negative answer ('No') instead of stating it didn't know.\",\n  \"evidence\": [\n    {\n      \"type\": \"change\",\n      \"ref\": \"change:prompt-edit-3227\",\n      \"claim\": \"Alice"
+    }
+  ]
+}

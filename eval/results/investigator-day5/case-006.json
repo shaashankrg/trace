@@ -1,0 +1,243 @@
+{
+  "case_id": "case-006",
+  "model": "gemini-3.8-flash",
+  "wall_s": 18.4,
+  "error": null,
+  "diagnosis": {
+    "root_component": "knowledge_base",
+    "category": "doc_delete",
+    "cause_ref": "change:doc-delete-4848",
+    "confidence": 0.99,
+    "summary": "The knowledge base document doc:gift-cards was deleted/de-indexed by marco shortly before the alert, leaving 0 of its chunks indexed. Consequently, the retriever failed to retrieve information about gift card expiration policies, causing the model to correctly respond that the documents did not contain the answer.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:doc-delete-4848",
+        "claim": "doc:gift-cards was de-indexed in a doc_delete operation by marco shortly before the alert."
+      },
+      {
+        "type": "change",
+        "ref": "doc:gift-cards@v1",
+        "claim": "doc:gift-cards@v1 has 0/2 chunks indexed."
+      },
+      {
+        "type": "trace",
+        "ref": "span:9600252b9a77da9bbbe672ee6760534b/82e15f2734e25b68",
+        "claim": "The retrieve step only returned chunks from loyalty-program, refund-policy, and holiday-returns, none of which contained gift card expiration policy."
+      },
+      {
+        "type": "chunk",
+        "ref": "chunk:refund-policy@v2#1",
+        "claim": "Retrieved chunk mentions that gift cards cannot be returned, but does not state whether gift cards expire."
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:doc-update-1047",
+        "reason": "Updated holiday-returns document on 2026-10-01, which does not cover gift card expiration terms."
+      },
+      {
+        "change": "change:doc-update-1046",
+        "reason": "Updated returns-process document on 2026-09-01, unrelated to gift cards expiration."
+      },
+      {
+        "change": "change:doc-update-1045",
+        "reason": "Updated refund-policy on 2026-09-01, which only states gift cards are non-refundable."
+      },
+      {
+        "change": "change:doc-update-1044",
+        "reason": "Updated exchanges document on 2026-08-15, unrelated to gift cards expiration."
+      }
+    ],
+    "suggested_fix": "Re-index the gift-cards document (doc:gift-cards@v1) so its chunks can be retrieved when answering questions about gift cards.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_delete",
+      "rationale": "The document 'gift-cards' was deleted less than an hour before the alert, leaving the retriever without any source information explaining that gift cards never expire.",
+      "score": 0.85
+    },
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "Retrieval settings such as top_k or similarity threshold may have failed to surface alternative or relevant documents concerning gift card policies.",
+      "score": 0.08
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "An update or re-indexing of the gift card policy document may have inadvertently excluded expiration terms prior to deletion.",
+      "score": 0.04
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model followed prompt instructions and correctly stated that the retrieved context did not mention gift card expiration, but could have failed to infer or answer appropriately.",
+      "score": 0.03
+    }
+  ],
+  "tool_calls_used": 6,
+  "evidence_pool_size": 14,
+  "refs_not_in_pool": [],
+  "llm_calls": 7,
+  "input_tokens": 20685,
+  "output_tokens": 1331,
+  "thinking_tokens": 0,
+  "cost_usd": 0.020505,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-c4df8715"
+      },
+      "result_chars": 2665,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-10T23:24:25.524579+00:00",
+        "end": "2026-10-17T23:24:25.524579+00:00"
+      },
+      "result_chars": 293,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1582,
+      "output_tokens": 294,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002289,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"knowledge_base\",\n   \"category\": \"doc_delete\",\n   \"rationale\": \"The document 'gift-cards' was deleted less than an hour before the alert, leaving the retriever without any source information explaining that gift cards never expire.\",\n   \"score\": 0.85\n  },\n  {\n   \"root_component\": \"retriever\",\n   \"category\": \"config_change\",\n   \"rationale\": \"Retrieval settings such as top_k or similarity threshold may have failed to surface alternative or relevant docum"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2651,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002063,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "gift-cards"
+      },
+      "result_chars": 319,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2793,
+      "output_tokens": 67,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002346,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:9600252b9a77da9bbbe672ee6760534b/82e15f2734e25b68"
+      },
+      "result_chars": 1807,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3366,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002592,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "gift-cards"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3415,
+      "output_tokens": 14,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002614,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 5
+      },
+      "result_chars": 1273,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3882,
+      "output_tokens": 245,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00383,
+      "tool_calls": [],
+      "text": "### Investigation Findings\n\n- **Root Component**: `knowledge_base`\n- **Category**: `doc_delete`\n\n### Summary\nThe assistant failed to answer whether Kestrel gift cards expire because the relevant knowledge base document (`doc:gift-cards`) was de-indexed/deleted shortly before the incident (`change:doc-delete-4848` by marco at `2026-10-17T22:37:55.399359+00:00`). \n\nInspection of `doc:gift-cards` confirms that its indexed chunk count is 0 (`indexed_chunk_count: 0`). As a result, the retriever could"
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2996,
+      "output_tokens": 673,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004771,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"knowledge_base\",\n  \"category\": \"doc_delete\",\n  \"cause_ref\": \"change:doc-delete-4848\",\n  \"confidence\": 0.99,\n  \"summary\": \"The knowledge base document doc:gift-cards was deleted/de-indexed by marco shortly before the alert, leaving 0 of its chunks indexed. Consequently, the retriever failed to retrieve information about gift card expiration policies, causing the model to correctly respond that the documents did not contain the answer.\",\n  \"evidence\": [\n    {\n      \"type\": \""
+    }
+  ]
+}

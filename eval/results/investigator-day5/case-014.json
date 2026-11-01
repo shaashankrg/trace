@@ -1,0 +1,27 @@
+{
+  "case_id": "case-014",
+  "model": "gemini-3.8-flash",
+  "wall_s": 2936.3,
+  "error": "ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)",
+  "diagnosis": {
+    "root_component": null,
+    "category": null,
+    "cause_ref": null,
+    "confidence": 0.0,
+    "summary": "investigation crashed: ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)",
+    "evidence": [],
+    "ruled_out": [],
+    "suggested_fix": "",
+    "abstained": true
+  },
+  "candidates": [],
+  "tool_calls_used": 0,
+  "evidence_pool_size": 0,
+  "refs_not_in_pool": [],
+  "llm_calls": 0,
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "thinking_tokens": 0,
+  "cost_usd": 0,
+  "transcript": []
+}

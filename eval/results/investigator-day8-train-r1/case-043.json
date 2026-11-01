@@ -1,0 +1,525 @@
+{
+  "case_id": "case-043",
+  "model": "gemini-3.8-flash",
+  "wall_s": 56.7,
+  "error": null,
+  "diagnosis": {
+    "root_component": "retriever",
+    "category": "config_change",
+    "cause_ref": "change:config-change-8961",
+    "confidence": 0.95,
+    "summary": "A configuration change lowered chunk_size to 60, fragmenting documents into tiny chunks so the military discount percentage (15%) was split across chunks and omitted from the retrieved context.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:config-change-8961",
+        "claim": "Ops-bot re-chunked the knowledge base by changing chunk_size shortly before the alert fired.",
+        "attribute": null,
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "trace",
+        "ref": "span:78ee4ae685f8f219a50830abf2246899/131e068fa86ee843",
+        "claim": "The root span recorded config.chunk_size set to 60.",
+        "attribute": "config.chunk_size",
+        "value": 60,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "replay",
+        "ref": "replay:e56ea40b0bc6",
+        "claim": "Replaying the conversation with chunk_size restored to 300 proved the fix, matching the correction and showing the 15% discount.",
+        "attribute": "matches_correction",
+        "value": true,
+        "quote": null,
+        "supports": null
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:doc-update-1047",
+        "reason": "Document update for holiday-returns is unrelated to military discount queries and occurred a month prior.",
+        "ref": "change:doc-update-1047"
+      }
+    ],
+    "suggested_fix": "Revert the chunk_size configuration setting back to 300 to avoid overly fragmented document chunks.",
+    "fix_patch": {
+      "kind": "set_config",
+      "key": "chunk_size",
+      "value": "300"
+    },
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 5,
+    "failures": []
+  },
+  "fix": {
+    "ref": "replay:83edca3c026e",
+    "patch": {
+      "kind": "set_config",
+      "key": "chunk_size",
+      "value": "300"
+    },
+    "target_component": "retriever",
+    "matches_correction": true,
+    "votes": [
+      true,
+      true,
+      true
+    ],
+    "judge": "code",
+    "control_ref": "replay:7d0fa3528112",
+    "control_matches_correction": false,
+    "proves_fix": true,
+    "cost_usd": 0.000251
+  },
+  "gate": {
+    "passed": true,
+    "reason": "2 evidence types (change, trace) and replay replay:e56ea40b0bc6 support retriever",
+    "hypothesis": "retriever",
+    "supporting_types": [
+      "change",
+      "trace"
+    ],
+    "replay_ref": "replay:e56ea40b0bc6",
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "config",
+      "category": "config_change",
+      "rationale": "The recent chunk_size config change split documents into tiny 60-character chunks, cutting out chunk #1 which contained the specific 15% discount percentage.",
+      "score": 0.85
+    },
+    {
+      "root_component": "retriever",
+      "category": "retrieval_failure",
+      "rationale": "Retrieval fetched chunks #0 and #2 of military-discount but failed to rank or include chunk #1 which contained the key discount percentage.",
+      "score": 0.1
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "The military discount document re-indexing or chunking left out the discount percentage across retrieved segments.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 15,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 26,
+  "refs_not_in_pool": [],
+  "llm_calls": 15,
+  "input_tokens": 69138,
+  "output_tokens": 1161,
+  "thinking_tokens": 0,
+  "cost_usd": 0.057453,
+  "investigator_cost_usd": 0.056207,
+  "replay_cost_usd": 0.001246,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-4a084b03"
+      },
+      "result_chars": 2682,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T01:57:55.445688+00:00",
+        "end": "2026-11-01T01:57:55.445688+00:00"
+      },
+      "result_chars": 309,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2073,
+      "output_tokens": 227,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002406,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"config\",\n      \"category\": \"config_change\",\n      \"rationale\": \"The recent chunk_size config change split documents into tiny 60-character chunks, cutting out chunk #1 which contained the specific 15% discount percentage.\",\n      \"score\": 0.85\n    },\n    {\n      \"root_component\": \"retriever\",\n      \"category\": \"retrieval_failure\",\n      \"rationale\": \"Retrieval fetched chunks #0 and #2 of military-discount but failed to rank or include chunk #1 w"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3345,
+      "output_tokens": 14,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002561,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 5
+      },
+      "result_chars": 1289,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3824,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002936,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "search_logs",
+      "args": {
+        "query": "chunk_size"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3880,
+      "output_tokens": 23,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002996,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "config-change-8961"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3941,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003031,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "military-discount"
+      },
+      "result_chars": 340,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4089,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003127,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "search_logs",
+      "args": {
+        "query": "config"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4142,
+      "output_tokens": 25,
+      "thinking_tokens": 0,
+      "cost_usd": 0.0032,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "search_logs",
+      "args": {
+        "query": "conv-4a084b03"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4204,
+      "output_tokens": 66,
+      "thinking_tokens": 0,
+      "cost_usd": 0.0034,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:78ee4ae685f8f219a50830abf2246899/f195edb04725d8fd"
+      },
+      "result_chars": 1314,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4673,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003561,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "search_logs",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2580,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5826,
+      "output_tokens": 70,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004632,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "search_logs",
+      "args": {
+        "end": "2026-11-01T01:25:00+00:00",
+        "start": "2026-11-01T01:15:00+00:00"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5933,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004525,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "corporate-orders"
+      },
+      "result_chars": 347,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6083,
+      "output_tokens": 49,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004746,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {
+          "key": "chunk_size",
+          "kind": "set_config",
+          "value": null
+        },
+        "conversation_id": "conv-4a084b03"
+      },
+      "result_chars": 105,
+      "error": "patch rejected: set_config needs value",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6183,
+      "output_tokens": 49,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004821,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 14,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-4a084b03",
+        "patch": {
+          "value": 0,
+          "key": "chunk_size",
+          "kind": "set_config"
+        }
+      },
+      "result_chars": 152,
+      "error": "patch rejected: chunk_size=0 is not a value the change log or the trace shows chunk_size holding",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6301,
+      "output_tokens": 51,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004917,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 15,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {
+          "kind": "set_config",
+          "value": 300,
+          "key": "chunk_size"
+        },
+        "conversation_id": "conv-4a084b03"
+      },
+      "result_chars": 695,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4641,
+      "output_tokens": 498,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005348,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"retriever\",\n \"category\": \"config_change\",\n \"cause_ref\": \"change:config-change-8961\",\n \"confidence\": 0.95,\n \"summary\": \"A configuration change lowered chunk_size to 60, fragmenting documents into tiny chunks so the military discount percentage (15%) was split across chunks and omitted from the retrieved context.\",\n \"evidence\": [\n  {\n   \"type\": \"change\",\n   \"ref\": \"change:config-change-8961\",\n   \"claim\": \"Ops-bot re-chunked the knowledge base by changing chunk_size shortly be"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "2 evidence types (change, trace) and replay replay:e56ea40b0bc6 support retriever",
+      "hypothesis": "retriever",
+      "supporting_types": [
+        "change",
+        "trace"
+      ],
+      "replay_ref": "replay:e56ea40b0bc6",
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

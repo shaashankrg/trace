@@ -1,0 +1,230 @@
+{
+  "case_id": "case-003",
+  "model": "gemini-3.8-flash",
+  "wall_s": 18.5,
+  "error": null,
+  "diagnosis": {
+    "root_component": "knowledge_base",
+    "category": "doc_update",
+    "cause_ref": "doc:warranty@v2",
+    "confidence": 0.95,
+    "summary": "When warranty v2 was published updating Kestrel-brand gear coverage from 1 year to 2 years, chunks from warranty v1 remained indexed. As a result, the retriever fetched both v1 and v2 chunks, causing the LLM to present obsolete 1-year policy details alongside the updated 2-year warranty.",
+    "evidence": [
+      {
+        "type": "trace",
+        "ref": "span:80cbd5775e51e7db340d3dfb1511f295/94138b49249b8d89",
+        "claim": "The retrieve span returned both chunk:warranty@v1#0 and chunk:warranty@v2#0."
+      },
+      {
+        "type": "change",
+        "ref": "doc:warranty@v1",
+        "claim": "Warranty v1 has 1/1 chunks indexed with obsolete text stating a 1-year limited warranty."
+      },
+      {
+        "type": "change",
+        "ref": "doc:warranty@v2",
+        "claim": "Warranty v2 updated the warranty to 2 years, but v1 was not de-indexed, leaving both versions active."
+      },
+      {
+        "type": "chunk",
+        "ref": "chunk:warranty@v1#0",
+        "claim": "Retrieved chunk warranty@v1#0 contains outdated text stating Kestrel-brand gear carries a 1-year limited warranty."
+      },
+      {
+        "type": "chunk",
+        "ref": "chunk:warranty@v2#0",
+        "claim": "Retrieved chunk warranty@v2#0 contains updated text stating Kestrel-brand gear carries a 2-year limited warranty."
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:config-change-7565",
+        "reason": "This changed max_response_tokens to allow longer replies, which did not cause the retrieval of obsolete document chunks."
+      }
+    ],
+    "suggested_fix": "De-index all chunks belonging to doc:warranty@v1 so that only the current doc:warranty@v2 chunks are retrievable.",
+    "abstained": false
+  },
+  "candidates": [
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "An outdated version of the warranty document (warranty@v1#0) remains indexed alongside the current version (warranty@v2#0), causing the assistant to retrieve conflicting information and mention obsolete 1-year terms.",
+      "score": 0.75
+    },
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "The retriever retrieved both legacy and current document versions without deduplicating or prioritizing the latest document version.",
+      "score": 0.15
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The language model included confusing references to older policies rather than strictly stating the authoritative current 2-year warranty.",
+      "score": 0.1
+    }
+  ],
+  "tool_calls_used": 6,
+  "evidence_pool_size": 20,
+  "refs_not_in_pool": [],
+  "llm_calls": 7,
+  "input_tokens": 21853,
+  "output_tokens": 1224,
+  "thinking_tokens": 0,
+  "cost_usd": 0.02098,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-c5858137"
+      },
+      "result_chars": 2639,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-10T23:31:25.274338+00:00",
+        "end": "2026-10-17T23:31:25.274338+00:00"
+      },
+      "result_chars": 309,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1579,
+      "output_tokens": 230,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002047,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"knowledge_base\",\n      \"category\": \"doc_update\",\n      \"rationale\": \"An outdated version of the warranty document (warranty@v1#0) remains indexed alongside the current version (warranty@v2#0), causing the assistant to retrieve conflicting information and mention obsolete 1-year terms.\",\n      \"score\": 0.75\n    },\n    {\n      \"root_component\": \"retriever\",\n      \"category\": \"config_change\",\n      \"rationale\": \"The retriever retrieved both legacy "
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2613,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002027,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "warranty"
+      },
+      "result_chars": 796,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2886,
+      "output_tokens": 67,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002416,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:80cbd5775e51e7db340d3dfb1511f295/94138b49249b8d89"
+      },
+      "result_chars": 1776,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3452,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002649,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "warranty"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3499,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002681,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2491,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4390,
+      "output_tokens": 313,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004466,
+      "tool_calls": [],
+      "text": "### Investigation Summary\n\n- **Root Component**: `knowledge_base`\n- **Category**: `doc_update`\n\n#### Findings & Evidence\n1. **Trace Analysis**: In trace `80cbd5775e51e7db340d3dfb1511f295`, the retrieval span `span:80cbd5775e51e7db340d3dfb1511f295/94138b49249b8d89` returned 4 chunks, including both `chunk:warranty@v1#0` (score: 0.865) and `chunk:warranty@v2#0` (score: 0.8353).\n2. **Document History**: Checking `document_history` for `warranty` revealed that both `doc:warranty@v1` (indexed chunk c"
+    },
+    {
+      "kind": "llm",
+      "node": "conclude",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3434,
+      "output_tokens": 565,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004694,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"knowledge_base\",\n \"category\": \"doc_update\",\n \"cause_ref\": \"doc:warranty@v2\",\n \"confidence\": 0.95,\n \"summary\": \"When warranty v2 was published updating Kestrel-brand gear coverage from 1 year to 2 years, chunks from warranty v1 remained indexed. As a result, the retriever fetched both v1 and v2 chunks, causing the LLM to present obsolete 1-year policy details alongside the updated 2-year warranty.\",\n \"evidence\": [\n  {\n   \"type\": \"trace\",\n   \"ref\": \"span:80cbd5775e51e7db340d3"
+    }
+  ]
+}
