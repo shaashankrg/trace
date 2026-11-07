@@ -17,6 +17,7 @@ Usage:
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -178,16 +179,76 @@ def check_lock(path: Path = LOCK_PATH) -> dict:
     return lock
 
 
-def frozen_prompt() -> str | None:
+# What the freeze covers besides the prompt file. Cheap-first routing and the step budget change
+# the agent's answers as surely as a prompt edit does, so a test run has to pin them too: without
+# this, the escalation threshold could be retuned after the freeze and the lock would not notice,
+# which is the loophole the held-out split exists to close. Each entry is an env var and the
+# default agent/ uses when it is unset, so an unset var and a var set to the default agree.
+CONFIG_KEYS = {
+    "INVESTIGATOR_MODEL": "gemini-3.8-flash",          # llm.DEFAULT_MODEL
+    "INVESTIGATOR_CHEAP_MODEL": "gemini-3.5-flash-lite",
+    "INVESTIGATOR_ROUTING": "cheap_first",
+    "INVESTIGATOR_ESCALATE_CONFIDENCE": "0.6",
+    "INVESTIGATOR_TOOL_BUDGET": "15",                  # mcp_tools.TOOL_BUDGET
+    "INVESTIGATOR_REPLAY_BUDGET": "3",                 # mcp_tools.REPLAY_BUDGET
+    "INVESTIGATOR_MAX_TOKENS": "4096",                 # llm.MAX_TOKENS
+    "INVESTIGATOR_THINKING": "LOW",
+    "TOOL_OUTPUT_MAX_CHARS": "14000",                  # tools/output.py MAX_CHARS
+}
+
+
+def agent_config() -> dict[str, str]:
+    """The pinned settings as they are right now, defaults filled in."""
+    return {k: os.environ.get(k) or default for k, default in sorted(CONFIG_KEYS.items())}
+
+
+def config_hash() -> str:
+    blob = json.dumps(agent_config(), sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()
+
+
+def freeze_hash() -> str:
+    """One hash over the prompt and the configuration that decides how it is used."""
+    return hashlib.sha256(f"{prompt_hash()}:{config_hash()}".encode("utf-8")).hexdigest()
+
+
+def _frozen_fields() -> dict[str, str]:
+    """The frozen file parsed into {key: value}; the first line's hash is under 'freeze'."""
     if not FROZEN_PROMPT_PATH.exists():
-        return None
-    return FROZEN_PROMPT_PATH.read_text(encoding="utf-8").split()[0]
+        return {}
+    out: dict[str, str] = {}
+    for i, line in enumerate(FROZEN_PROMPT_PATH.read_text(encoding="utf-8").splitlines()):
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if i == 0:
+            out["freeze"] = line.split()[0]
+        elif "=" in line:
+            k, v = line.split("=", 1)
+            out[k.strip()] = v.strip()
+    return out
+
+
+def frozen_prompt() -> str | None:
+    """The frozen combined hash, or None. Kept under its original name: every caller wants
+    'the thing a test run must match', which is now the prompt plus its configuration."""
+    return _frozen_fields().get("freeze")
+
+
+def frozen_config() -> dict[str, str]:
+    return {k: v for k, v in _frozen_fields().items() if k in CONFIG_KEYS}
 
 
 def freeze_prompt(path: Path = FROZEN_PROMPT_PATH) -> str:
-    """Pin the current investigator prompt. The test run must use exactly this prompt."""
-    h = prompt_hash()
-    path.write_text(f"{h}  {PROMPT_PATH.relative_to(ROOT).as_posix()}\n", encoding="utf-8")
+    """Pin the prompt and the agent configuration. A test run must match both."""
+    h = freeze_hash()
+    cfg = agent_config()
+    lines = [f"{h}  prompt+config",
+             f"# prompt {PROMPT_PATH.relative_to(ROOT).as_posix()} sha256={prompt_hash()}",
+             f"# frozen {datetime.now(timezone.utc).isoformat(timespec='seconds')}",
+             "# the settings below are part of the freeze; changing one invalidates a test run"]
+    lines += [f"{k}={v}" for k, v in cfg.items()]
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return h
 
 
@@ -237,10 +298,24 @@ def guard_test_run(case_ids: list[str], require_frozen_prompt: bool = True,
         if want is None:
             raise LockError(f"no frozen prompt at {FROZEN_PROMPT_PATH}; "
                             "freeze it after tuning on train (python -m eval.splits --freeze-prompt)")
-        if want != prompt_hash():
+        if want != freeze_hash():
+            # Say what moved: "the hash differs" sends you hunting through a prompt that may be
+            # untouched when an env var is what changed.
+            frozen_cfg, now = frozen_config(), agent_config()
+            drift = [f"{k}: frozen {frozen_cfg[k]!r}, now {now[k]!r}"
+                     for k in sorted(frozen_cfg) if frozen_cfg[k] != now.get(k)]
+            # The recorded prompt sha lives in a comment line. Read it defensively: the freeze
+            # value can come from somewhere other than this file (a test stub), and failing to
+            # explain a real drift is worse than explaining it incompletely.
+            frozen_lines = (FROZEN_PROMPT_PATH.read_text(encoding="utf-8").splitlines()
+                            if FROZEN_PROMPT_PATH.exists() else [])
+            prompt_moved = any(ln.startswith("# prompt ") and f"sha256={prompt_hash()}" not in ln
+                               for ln in frozen_lines)
+            why = (["the prompt file changed"] if prompt_moved else []) + drift
             raise LockError(
-                f"the investigator prompt is not the frozen one: {prompt_hash()[:12]} on disk, "
-                f"{want[:12]} in {FROZEN_PROMPT_PATH.name}. A test run has to use the frozen prompt.")
+                f"the investigator is not the frozen one: {freeze_hash()[:12]} on disk, "
+                f"{want[:12]} in {FROZEN_PROMPT_PATH.name}. A test run has to use the frozen "
+                f"prompt and configuration. Changed: " + ("; ".join(why) or "unknown"))
     return lock
 
 

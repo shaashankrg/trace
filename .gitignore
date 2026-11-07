@@ -7,3 +7,6 @@ eval/*.log
 .spend.json
 eval/results/*/*.server.log
 eval/replays/
+gt_tmp.json
+eval/results/llm_cache/
+eval/results/spend.json

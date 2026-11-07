@@ -1,0 +1,13 @@
+fde09c164bd33ae93ae95cc519d50fafcd1d3f71872bf05de37aeeb9405a5189  prompt+config
+# prompt agent/prompts/investigator.md sha256=931ecc1c803e8886d264d35b014527e17b18f7f89f0b8adf1b1e6a1d7d3cbb77
+# frozen 2026-11-07T02:44:50+00:00
+# the settings below are part of the freeze; changing one invalidates a test run
+INVESTIGATOR_CHEAP_MODEL=gemini-3.5-flash-lite
+INVESTIGATOR_ESCALATE_CONFIDENCE=0.6
+INVESTIGATOR_MAX_TOKENS=4096
+INVESTIGATOR_MODEL=gemini-3.8-flash
+INVESTIGATOR_REPLAY_BUDGET=3
+INVESTIGATOR_ROUTING=cheap_first
+INVESTIGATOR_THINKING=LOW
+INVESTIGATOR_TOOL_BUDGET=15
+TOOL_OUTPUT_MAX_CHARS=14000

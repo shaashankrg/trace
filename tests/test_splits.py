@@ -105,20 +105,20 @@ def test_the_lock_only_covers_cases_with_a_failing_recording(tmp_path, monkeypat
 
 # --- the guard and the run log --------------------------------------------------------------
 
-def test_a_test_run_needs_the_frozen_prompt(tmp_path, monkeypatch, cases):
+def test_a_test_run_needs_the_frozen_prompt_and_config(tmp_path, monkeypatch, cases):
     path, lock = write_temp_lock(tmp_path, monkeypatch, cases)
     monkeypatch.setattr(splits, "frozen_prompt", lambda: "deadbeef" * 8)
     # the ids are the locked ones, so only the prompt check can fail here
     with pytest.raises(splits.LockError, match="not the frozen one"):
         splits.guard_test_run(list(lock["case_ids"]), path=path)
     # with the real hash it passes
-    monkeypatch.setattr(splits, "frozen_prompt", splits.prompt_hash)
+    monkeypatch.setattr(splits, "frozen_prompt", splits.freeze_hash)
     assert splits.guard_test_run(list(lock["case_ids"]), path=path)["case_count"] == lock["case_count"]
 
 
 def test_a_test_run_refuses_cases_outside_the_locked_split(tmp_path, monkeypatch, cases):
     path, lock = write_temp_lock(tmp_path, monkeypatch, cases)
-    monkeypatch.setattr(splits, "frozen_prompt", splits.prompt_hash)
+    monkeypatch.setattr(splits, "frozen_prompt", splits.freeze_hash)
     with pytest.raises(splits.LockError, match="not in the locked test split"):
         splits.guard_test_run(lock["case_ids"] + ["case-999"], path=path)
 
@@ -137,6 +137,7 @@ def test_the_run_log_appends_one_countable_line_per_run(tmp_path):
 def test_freezing_the_prompt_records_the_hash_on_disk(tmp_path, monkeypatch):
     path = tmp_path / "frozen.sha"
     h = splits.freeze_prompt(path)
-    assert h == splits.prompt_hash()
+    assert h == splits.freeze_hash(), "the freeze pins the prompt and the config that uses it"
+    assert splits.prompt_hash() in path.read_text(encoding="utf-8"), "the prompt sha is recorded too"
     monkeypatch.setattr(splits, "FROZEN_PROMPT_PATH", path)
     assert splits.frozen_prompt() == h

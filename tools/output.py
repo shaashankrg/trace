@@ -1,15 +1,20 @@
 """Output rules shared by every tool (failure scenario F8: the agent drowning in tool output).
 
-- about 4,000 tokens per response, hard cap; text is cut and says so (`"truncated": true`)
+- a hard per-response cap, about 4,000 tokens by default; text is cut and says so
+  (`"truncated": true`). TOOL_OUTPUT_MAX_CHARS lowers it, which is the cheapest way to cut cost:
+  tool results accumulate in the message history, and on the Day 8 train run 90% of the spend was
+  input tokens. The cap is part of what a test run freezes (eval/splits.CONFIG_KEYS).
 - list outputs carry `total`, so the agent knows what it is not seeing
 - errors are data: {"error": "...", "hint": "..."}, never a stack trace
 """
 import functools
 import json
+import os
 import sys
 import traceback
 
-MAX_CHARS = 14_000  # ~4,000 tokens of JSON at 3.5 chars a token
+# ~3.5 chars a token of JSON, so 14,000 chars is about 4,000 tokens.
+MAX_CHARS = int(os.environ.get("TOOL_OUTPUT_MAX_CHARS", "14000"))
 
 
 class ToolError(Exception):
