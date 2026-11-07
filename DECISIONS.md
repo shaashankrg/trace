@@ -250,3 +250,58 @@ Notes from building it (not part of the five above):
 - **The investigator prompt changed only to describe the new alert shape.** No train miss has been
   read, so no accuracy tuning has happened. That edit is listed above and is the only prompt change
   on Day 8.
+
+## Day 9
+
+- **Freeze the prompt *and* the configuration, over freezing the prompt file alone, because a
+  step budget is as much a tuning knob as a sentence of instructions.** The prompt-only freeze had
+  a loophole worth naming out loud: after freezing, you could lower the escalation confidence,
+  raise the tool budget or swap in a different model, and the prompt file's hash would still match,
+  so a test run would be allowed even though it described a different agent. `freeze_hash()` now
+  covers the prompt plus `CONFIG_KEYS` (model, cheap model, routing, escalation threshold, tool and
+  replay budgets, max tokens, thinking level, tool output cap), and `guard_test_run` names which
+  setting moved rather than just reporting a hash mismatch — "the hash differs" sends you hunting
+  through a prompt that may be untouched when an env var is what changed.
+
+- **Keep `case-032` and `case-039` out of the lock, over padding the split to 30.** Both are
+  `chunking_regression` cases whose fault never made an answer wrong, so they were never recorded
+  and `valid_recorded_ids()` excludes them; the lock lists them under `excluded_not_valid`. A case
+  that cannot be made to fail is not a test case. **Locked count stays 28.**
+
+- **Baseline B2 gets the chunks retrieval actually returned, over every chunk in the store.**
+  Handing it the whole store would be a different and easier problem: it could diff v1 against v2
+  directly instead of reasoning about what retrieval served. It also gets the transcript and the
+  change list with decoys unlabelled, the same vocabulary as the investigator from
+  `agent/schema.py`, and the same model — so the only thing removed is the investigation itself.
+
+- **An unparseable B2 reply scores as a wrong answer, over being skipped.** Dropping it would take
+  the case out of B2's denominator, and a baseline that crashes on the hard cases would then
+  outscore one that attempted them and got them wrong. The same rule makes every method score over
+  the same case set in `compare_methods`.
+
+- **B2 is reported even though it scores well (43% vs. 52%), because a baseline chosen to lose
+  proves nothing.** The narrow gap is the finding: the model alone solves the cases whose cause is
+  visible in the transcript and change list, and the tools earn their place on the rest — plus on
+  being able to say *which* answers are supported, which B2 structurally cannot.
+
+- **Top-3 counts a hallucinated diagnosis as wrong at every k, over scoring the ranked list
+  independently.** Otherwise top-3 would quietly launder exactly what the evidence verifier exists
+  to catch.
+
+- **Cost and wall time average only over methods that have them, over treating a missing value as
+  zero.** B1 calls no model and has no wall time; averaging it as $0.00 would make it look fast and
+  free next to the investigator, which is a statement about the comparison, not a fact about B1.
+
+- **The test split was run once, and the 48% abstention rate is reported rather than tuned away.**
+  Every abstention hit the 15-tool-call ceiling holding one evidence type, and on 8 of 11 the top
+  candidate was already the right component, so the obvious fix is a larger budget. That experiment
+  is deliberately not run: the split has been opened once, and tuning against what it showed would
+  turn the held-out number into a dev number. The next budget change belongs on train, with a
+  re-freeze before any second test run — which `test_runs.log` would record.
+
+- **`gt_tmp.json` was gitignored after being found untracked in the repo root.** It holds raw
+  ground truth, which the anti-cheating rule says lives only in the evaluator. Nothing read it, but
+  a ground-truth file sitting next to the agent's code is the kind of thing that eventually does.
+
+- **Supersedes the last Day 8 note:** the budget block is resolved, the prompt and config are
+  frozen (`eval/frozen_prompt.sha`), and both the train and the held-out test runs have been made.
