@@ -96,7 +96,22 @@ LangGraph investigator: triage -> hypothesize -> investigate -> verify (code) ->
 evaluator: evidence verifier + replay checker + scorer   (ground truth lives here only)
 ```
 
-**Python · LangGraph · Claude / Gemini · MCP · OpenTelemetry · Jaeger · OpenSearch · pgvector**
+**Python · LangGraph · Claude / Gemini · MCP · OpenTelemetry · Jaeger · OpenSearch · Postgres +
+pgvector · Prometheus · Docker Compose**
+
+Each piece earns its place. The support assistant is a **FastAPI** app that answers from policy
+documents stored in **Postgres with pgvector** — one database holding the document versions, the
+store data the tools read, and the change log, so "which version was indexed when" is a query
+rather than a guess. Every step it takes emits an **OpenTelemetry** span, which is what makes the
+failure traceable at all: the trace goes to **Jaeger**, its log lines to **OpenSearch** (full-text,
+so the agent can search for "timed out"), and answer accuracy to **Prometheus**, where a quality
+drop becomes an alert. The investigator itself is a **LangGraph** state machine — the stages are
+explicit, the verification gate is a real node, and the tool-call budget is enforceable. It reaches
+the data only through an **MCP** server, so the tools are testable on their own and return typed
+refs the verifier can re-check. The model (**Gemini** by default, **Claude** supported) does the
+reasoning; the gate, the verifier and the scorer are plain Python, deliberately, because the thing
+checking the model's work shouldn't be the model. **Docker Compose** runs all six services on one
+machine.
 
 Once the stack is up and seeded ([setup](ARCHITECTURE.md#run-it)), you can watch an investigation
 run against a recorded case:
