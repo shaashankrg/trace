@@ -61,6 +61,12 @@ def score_cases(truth: list[dict], diagnoses: dict[str, dict]) -> list[dict]:
             "fix_success": bool(d.get("fix_matches")) and d.get("fix_target") == t["root_component"],
             "fix_proven": bool(d.get("fix_proves")) and d.get("fix_target") == t["root_component"],
             "replay_judges": "|".join(d.get("replay_judges") or []),
+            # Top-3 over the ranked candidate list. A method that ranks nothing (B1, B2) has only
+            # its one answer, so for those top-3 degenerates to top-1 rather than being blank.
+            "top3_correct": ok and t["root_component"] in (
+                (d.get("ranked_components") or ([d["root_component"]] if d.get("root_component") else []))[:3]),
+            "cost_usd": d.get("cost_usd"),
+            "wall_s": d.get("wall_s"),
         })
     return rows
 
@@ -87,6 +93,56 @@ def rate(rows: list[dict], key: str) -> float:
     return sum(r[key] for r in rows) / len(rows) if rows else float("nan")
 
 
+def mean(rows: list[dict], key: str) -> float:
+    """The average of a numeric field over the rows that carry it. B1 has no cost or wall time
+    (it is a heuristic over a recorded trace), so a missing value is absent, not zero."""
+    values = [r[key] for r in rows if r.get(key) is not None]
+    return sum(values) / len(values) if values else float("nan")
+
+
+def headline(rows: list[dict]) -> dict:
+    """One row per method for the comparison table: accuracy next to the three things that make
+    the investigator different from a model that just answers (verified evidence, a proven fix,
+    and not being fooled by a decoy)."""
+    proof = proof_summary(rows)
+    with_decoy = [r for r in rows if r["has_decoy"]]
+    without = [r for r in rows if not r["has_decoy"]]
+    return {
+        "n": len(rows),
+        "top1": rate(rows, "component_correct"),
+        "top3": rate(rows, "top3_correct"),
+        "category": rate(rows, "category_correct"),
+        "hallucinated_rate": proof["hallucinated_rate"],
+        "fix_success": proof["fix_success"],
+        "decoy_with": rate(with_decoy, "component_correct"),
+        "decoy_without": rate(without, "component_correct"),
+        # Decoy resistance: how much accuracy survives a red herring. 100% means the decoy cost
+        # nothing; below 100% is the share of accuracy it took away.
+        "decoy_resistance": (rate(with_decoy, "component_correct") / rate(without, "component_correct")
+                             if without and rate(without, "component_correct") else float("nan")),
+        "abstain_rate": proof["abstain_rate"],
+        "cost_usd": mean(rows, "cost_usd"),
+        "wall_s": mean(rows, "wall_s"),
+    }
+
+
+def comparison(by_method: dict[str, list[dict]]) -> str:
+    """The results table: one line per method, investigator first."""
+    head = ("| method | n | top-1 | top-3 | category | hallucinated evidence | fix success "
+            "(replay) | decoy resistance | abstained | $/case | s/case |")
+    lines = [head, "|" + "---|" * 11]
+    for name, rows in by_method.items():
+        if not rows:
+            continue
+        h = headline(rows)
+        lines.append(
+            f"| {name} | {h['n']} | {pct(h['top1'])} | {pct(h['top3'])} | {pct(h['category'])} "
+            f"| {pct(h['hallucinated_rate'])} | {pct(h['fix_success'])} "
+            f"| {pct(h['decoy_resistance'])} | {pct(h['abstain_rate'])} "
+            f"| {num(h['cost_usd'], '$', 4)} | {num(h['wall_s'], '', 1)} |")
+    return "\n".join(lines)
+
+
 def summarize(rows: list[dict]) -> list[dict]:
     """Summary rows: group, key, n, top1 (root component), category, cause."""
     def line(group: str, key: str, subset: list[dict]) -> dict:
@@ -105,6 +161,11 @@ def pct(x: float) -> str:
     return "n/a" if x != x else f"{x:.0%}"
 
 
+def num(x: float, prefix: str = "", places: int = 2) -> str:
+    """A number, or n/a when the method does not have one (B1 costs nothing and calls no model)."""
+    return "n/a" if x != x else f"{prefix}{x:.{places}f}"
+
+
 def markdown(run: str, summary: list[dict], rows: list[dict]) -> str:
     def table(group: str, title: str) -> str:
         lines = [f"### {title}", "", "| | n | top-1 | category | cause |", "|---|---|---|---|---|"]
@@ -116,6 +177,7 @@ def markdown(run: str, summary: list[dict], rows: list[dict]) -> str:
     lines = [f"# Results: {run}", "",
              "top-1 = root component named correctly; category = kind of cause named correctly; "
              "cause = the exact change or outage named (n/a when the method does not name one).", "",
+             "### Headline", "", comparison({run: rows}), "",
              table("overall", "Overall"), "", table("decoy", "With vs. without a decoy"), "",
              table("fault_type", "Per fault type"), "",
              "### Misses", "", "| case | fault | truth | predicted |", "|---|---|---|---|"]
@@ -134,14 +196,59 @@ def write_results(run: str, summary: list[dict], rows: list[dict], out_dir: Path
             writer.writerows(data)
 
 
+def compare_methods(specs: list[str], include_invalid: bool = False,
+                    restrict_to: list[str] | None = None) -> tuple[dict[str, list[dict]], str]:
+    """Score several methods against the same truth and build the comparison table.
+
+    `specs` are `name=path/to/diagnoses.jsonl`, investigator first. Every method is scored over the
+    same case set, so a method that is missing a case scores it as unanswered rather than having it
+    quietly dropped from its denominator - otherwise a baseline that crashed on the hard cases
+    would look better than one that tried them.
+    """
+    truth = load_truth(include_invalid)
+    if restrict_to is not None:
+        keep = set(restrict_to)
+        truth = [t for t in truth if t["case_id"] in keep]
+    by_method = {}
+    for spec in specs:
+        name, _, path = spec.partition("=")
+        if not path:
+            raise SystemExit(f"--compare takes name=path, got {spec!r}")
+        by_method[name] = score_cases(truth, load_diagnoses(Path(path)))
+    return by_method, comparison(by_method)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("diagnoses", type=Path)
+    parser.add_argument("diagnoses", type=Path, nargs="?")
     parser.add_argument("--run", help="result name (default: the diagnoses file name)")
     parser.add_argument("--include-invalid", action="store_true",
                         help="also score cases recorded with run_case --force")
+    parser.add_argument("--compare", nargs="+", metavar="NAME=PATH",
+                        help="score several methods over the same cases into one table")
+    parser.add_argument("--split", help="restrict to one split's cases (e.g. test)")
+    parser.add_argument("--out", type=Path, help="write the comparison table here")
     args = parser.parse_args()
 
+    if args.compare:
+        restrict = None
+        if args.split:
+            from eval import splits
+            restrict = (splits.lockable_test_ids() if args.split == "test"
+                        else splits.split_ids(args.split))
+        by_method, table = compare_methods(args.compare, args.include_invalid, restrict)
+        print(table)
+        for name, rows in by_method.items():
+            if rows:
+                write_results(name, summarize(rows), rows)
+        if args.out:
+            args.out.parent.mkdir(parents=True, exist_ok=True)
+            args.out.write_text(table + "\n", encoding="utf-8")
+            print(f"\nwrote {args.out}")
+        return
+
+    if args.diagnoses is None:
+        raise SystemExit("pass a diagnoses file, or --compare name=path ...")
     run = args.run or args.diagnoses.stem
     rows = score_cases(load_truth(args.include_invalid), load_diagnoses(args.diagnoses))
     if not rows:

@@ -170,6 +170,15 @@ def as_scorable(record: dict, truth: dict | None = None) -> dict:
            "fix_tested": bool(fix), "fix_matches": bool(fix.get("matches_correction")),
            "fix_target": fix.get("target_component"), "fix_proves": bool(fix.get("proves_fix")),
            "replay_judges": record.get("replay_judges", []) + ([fix["judge"]] if fix.get("judge") else [])}
+    # The ranked candidate list, cost and wall time are all in the record already; carrying them
+    # through is what lets the scorer report top-3, cost per investigation and time to diagnosis
+    # without re-running anything. An abstention still ranked candidates, so top-3 counts it.
+    ranked = record.get("candidates") or []
+    if not ranked and d.get("abstained"):
+        ranked = d.get("top_candidates") or []
+    out["ranked_components"] = [c.get("root_component") for c in ranked if c.get("root_component")]
+    out["cost_usd"] = record.get("cost_usd")
+    out["wall_s"] = record.get("wall_s")
     return out
 
 
