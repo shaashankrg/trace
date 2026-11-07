@@ -89,17 +89,23 @@ def fix_replay(case_dir: Path, diagnosis: dict, log: Path) -> dict | None:
 
 
 async def run_one(case_id: str, runs_dir: Path, out_dir: Path, model: str,
-                  timeout_s: float = CASE_TIMEOUT_S) -> dict:
+                  timeout_s: float = CASE_TIMEOUT_S, verbose: bool = False) -> dict:
     case_dir = runs_dir / case_id
     alert = json.loads((case_dir / "alert.json").read_text(encoding="utf-8"))
     agent_log, fix_log = replay_logs(out_dir, case_id)
     env = {"TRACEWISE_BACKEND": f"snapshot:{case_id}", "TRACEWISE_RUNS_DIR": str(runs_dir),
            "TRACEWISE_REPLAY_LOG": str(agent_log), "TRACEWISE_REPLAY": "1"}
     progress: dict = {}
+    view = None
+    if verbose:
+        from agent.trace_view import TraceView
+        view = TraceView(case_id)
+        view.alert(alert)
     started = time.time()
     try:
         state = await asyncio.wait_for(
-            investigate_alert(alert, env, model, progress=progress, errlog=out_dir / f"{case_id}.server.log"),
+            investigate_alert(alert, env, model, progress=progress, errlog=out_dir / f"{case_id}.server.log",
+                              on_state=(view.on_state if view else None)),
             timeout_s)
         error = None
     except Exception as e:  # a crashed investigation is a miss, not a crashed run; keep what it got to
@@ -134,6 +140,8 @@ async def run_one(case_id: str, runs_dir: Path, out_dir: Path, model: str,
     }
     record["cost_usd"] = round(usage["cost_usd"] + replay_cost, 6)
     (out_dir / f"{case_id}.json").write_text(json.dumps(record, indent=2, default=str) + "\n", encoding="utf-8")
+    if view is not None:
+        view.finish(diagnosis, check, fix, record)
     d = diagnosis
     tag = " (abstained)" if d.get("abstained") else " HALLUCINATED" if check["hallucinated"] else ""
     fixed = "" if fix is None else f" fix={'ok' if fix.get('matches_correction') else 'no'}"
@@ -145,12 +153,12 @@ async def run_one(case_id: str, runs_dir: Path, out_dir: Path, model: str,
 
 
 async def run_all(case_ids: list[str], runs_dir: Path, out_dir: Path, model: str, concurrency: int,
-                  timeout_s: float = CASE_TIMEOUT_S) -> list[dict]:
+                  timeout_s: float = CASE_TIMEOUT_S, verbose: bool = False) -> list[dict]:
     sem = asyncio.Semaphore(concurrency)
 
     async def guarded(cid):
         async with sem:
-            return await run_one(cid, runs_dir, out_dir, model, timeout_s)
+            return await run_one(cid, runs_dir, out_dir, model, timeout_s, verbose=verbose)
 
     return await asyncio.gather(*(guarded(c) for c in case_ids))
 
@@ -284,6 +292,8 @@ def main() -> int:
     parser.add_argument("--timeout", type=float, default=CASE_TIMEOUT_S, help="seconds per case")
     parser.add_argument("--compare-with", default=COMPARE_WITH, help="an earlier run id ('' for none)")
     parser.add_argument("--rescore", action="store_true", help="only rebuild summary.md from saved cases")
+    parser.add_argument("--verbose", action="store_true",
+                        help="print each step as the investigation runs (forces one case at a time)")
     args = parser.parse_args()
 
     # The day budget refuses a call once the window is spent; --rescore makes no calls at all.
@@ -328,8 +338,15 @@ def main() -> int:
     if args.rescore:
         records = [r for r in load_records(out_dir) if r["case_id"] in case_ids]
     else:
-        print(f"{run_id}: {len(case_ids)} cases with {model}")
-        records = asyncio.run(run_all(case_ids, runs_dir, out_dir, model, args.concurrency, args.timeout))
+        # Two investigations printing their steps at once interleave into nonsense, so the live
+        # view runs one case at a time.
+        concurrency = 1 if args.verbose else args.concurrency
+        if args.verbose and args.concurrency != 1:
+            print(f"{run_id}: --verbose runs one case at a time (concurrency {args.concurrency} ignored)")
+        else:
+            print(f"{run_id}: {len(case_ids)} cases with {model}")
+        records = asyncio.run(run_all(case_ids, runs_dir, out_dir, model, concurrency, args.timeout,
+                                      verbose=args.verbose))
         print(f"spend so far: ${spent():.4f} of ${SPEND_CAP_USD:.2f}")
     (out_dir / "diagnoses.jsonl").write_text("".join(json.dumps(as_scorable(r)) + "\n" for r in records),
                                              encoding="utf-8")

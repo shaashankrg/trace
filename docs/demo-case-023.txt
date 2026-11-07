@@ -1,0 +1,124 @@
+day budget: $2.4117 of $3.00 over 418 call(s)
+demo-record: --verbose runs one case at a time (concurrency 2 ignored)
+-- ALERT  case-023  (flagged_conversation) ------------------------------------------------------
+  asked     I'm customer C-0003. Today is 2026-10-12. Can I still return the Cirrus Down Jack...
+  answered  I'm sorry, but I couldn't find any orders associated with customer ID C-0003, so ...
+  truth     Order O-1003 was delivered 2 days ago, inside the 14-day window. The answer is yes.
+
+-- TRIAGE ---------------------------------------------------------------------------------------
+  Trace bb7cb21aa9d09eb10cddcd4edbb47e42 (6 spans):
+  - POST /chat [ok, 1192.9ms] config.top_k=4, config.similarity_threshold=0.3, config.promp...
+  - guardrail [ok, 0.0ms] guardrail.decision=allow, guardrail.matched_rule= ref=span:bb7cb2...
+  - retrieve [ok, 23.3ms] retrieval.result_count=4, retrieval.top_k=4, retrieval.threshold=...
+  - llm.chat [ok, 549.4ms] prompt.version=v2, gen_ai.request.model=gemini-3.5-flash-lite re...
+  - tool.lookup_order [ok, 8.6ms] tool.result_count=0, tool.latency_ms=5.4 ref=span:bb7cb21...
+  - llm.chat [ok, 566.9ms] prompt.version=v2, gen_ai.request.model=gemini-3.5-flash-lite re...
+  Changes in the 7 days before the alert: 0 (showing 0, newest first):
+  => no span reports an error (6 spans, all OK) - nothing here looks broken
+
+  -> get_trace()
+     3684 chars
+  -> recent_changes(start=2026-10-25T01:35:23.544156+00:00, end=2026-11-01T01:3...)
+     50 chars
+     [span] span:bb7cb21aa9d09eb10cddcd4edbb47e42/80aef...
+            span POST /chat status=ok 1192.9ms: config.top_k=4, config.similarity_threshold=...
+     [span] span:bb7cb21aa9d09eb10cddcd4edbb47e42/80047...
+            span guardrail status=ok 0.0ms: guardrail.decision=allow, guardrail.matched_rule=
+     [span] span:bb7cb21aa9d09eb10cddcd4edbb47e42/98cd9...
+            span retrieve status=ok 23.3ms: retrieval.result_count=4, retrieval.top_k=4, ret...
+     ... 3 more item(s) from this call
+-- HYPOTHESIZE ----------------------------------------------------------------------------------
+  1. config                 0.85  Runtime config shows config.tool_timeout_ms=1 while tool....
+  2. tool:lookup_order      0.60  The lookup_order tool returned 0 results for customer C-0...
+  3. tool:lookup_order      0.30  The order store was missing record O-1003 or customer C-0...
+  4. model                  0.15  The model called lookup_order with incorrect parameters o...
+
+-- INVESTIGATE ----------------------------------------------------------------------------------
+  -> search_logs(query=timeout)
+     55 chars
+  -> search_logs(query=lookup_order)
+     4718 chars
+     [log] log:82138850-fecc-4892-899d-f5a2f5ba6506
+            2026-11-01T01:34:58.632+00:00 WARN tool.lookup_order: lookup_order timed out aft...
+     [log] log:1884d4cb-9ef4-43bb-8697-59c6c3e5bb87
+            2026-11-01T01:34:59.204+00:00 INFO chat: chat answered (chunks=4, tools=lookup_o...
+     [log] log:c1235025-af6c-42c3-ac1f-6161b2219b5b
+            2026-11-01T01:35:00.752+00:00 WARN tool.lookup_order: lookup_order timed out aft...
+     ... 15 more item(s) from this call
+  -> recent_changes()
+     7231 chars
+     [change] change:doc-update-1047
+            doc_update on doc:holiday-returns at 2026-10-01T09:00:00+00:00 by ben: Publish h...
+     [change] change:doc-update-1046
+            doc_update on doc:returns-process at 2026-09-01T09:00:00+00:00 by ops-bot: Publi...
+     [change] change:doc-update-1045
+            doc_update on doc:refund-policy at 2026-09-01T09:00:00+00:00 by ops-bot: Publish...
+     ... 27 more item(s) from this call
+  -> search_logs(query=config)
+     55 chars
+  -> search_logs(query=tool_timeout_ms)
+     55 chars
+  -> get_trace()
+     3684 chars
+  -> search_logs(query=timed out)
+     1629 chars
+     [log] log:9ce4c0f4-a62e-496f-8036-13c07b5ac4a7
+            2026-11-01T01:35:00.998+00:00 WARN tool.check_inventory: check_inventory timed o...
+  -> search_logs(start=2026-11-01T01:30:00Z, limit=20)
+     5196 chars
+     [log] log:1294d013-2680-4713-acec-03573185d865
+            2026-11-01T01:34:58.141+00:00 INFO chat: chat answered (chunks=4, tools=none, st...
+     [log] log:aa5dffad-a4d1-497a-935e-f1ac96586fe0
+            2026-11-01T01:34:58.276+00:00 INFO chat: chat answered (chunks=4, tools=none, st...
+     [log] log:ae937f9d-2c24-4a3a-a196-3a1e2a28db76
+            2026-11-01T01:34:58.303+00:00 INFO chat: chat answered (chunks=1, tools=none, st...
+     ... 8 more item(s) from this call
+  -> search_logs(start=2026-11-01T01:34:00.000+00:00, limit=20, end=2026-11-...)
+     1057 chars
+  -> replay_conversation(patch={"key": "tool_timeout_ms", "kind": "set_config", "val...)
+     refused: patch rejected: tool_timeout_ms=5000 is not a value the change log or the trac...
+  -> replay_conversation(patch={"kind": "rerun_tool", "tool": "lookup_order"})
+     1386 chars
+     [replay] replay:8d345f54ccc2
+            replay with {"kind": "rerun_tool", "tool": "lookup_order"} (targets tool:lookup_...
+-- VERIFY  (plain code, no model call) ----------------------------------------------------------
+  claim     tool:lookup_order / tool_outage
+  verdict   ACCEPTED
+  because   2 evidence types (log, trace) and replay replay:8d345f54ccc2 support tool:lookup_...
+
+-- DIAGNOSIS ------------------------------------------------------------------------------------
+  tool:lookup_order / tool_outage   confidence 0.98
+  The lookup_order tool timed out and returned an empty result, causing the assistant to fa...
+    cites [span] span:bb7cb21aa9d09eb10cddcd4edbb47e42/4adb3...
+    cites [log] log:82138850-fecc-4892-899d-f5a2f5ba6506
+    cites [replay] replay:8d345f54ccc2
+  fix       Increase the tool timeout configuration or resolve the latency/timeout issue affe...
+
+-- EVALUATOR  (independent of the agent) --------------------------------------------------------
+  evidence  all 3 cited refs resolve in the raw stores
+  fix       replayed on tool:lookup_order: answer matches the correction, control fails -> proves_fix=True
+  budget    13 tool calls, 1 replays, 1 draft(s), $0.0990
+------------------------------------------------------------------------------------------------
+  case-023: tool:lookup_order / tool_outage fix=ok  tools=13 replays=1 rounds=1 $0.0990 45.9s
+spend so far: $5.6083 of $8.00
+
+wrote C:\Users\shash\trace\eval\results\demo-record\summary.md
+# demo-record: investigator vs. investigator-day5-v2 vs. B1
+
+Investigator model `gemini-3.8-flash`, 1 cases, total cost $0.0990 ($0.0990 per case, replays included), mean wall time 46s. B1 makes no model calls.
+
+Top-1, category and cause count an abstention as no answer and a hallucinated diagnosis (any citation the verifier rejects) as wrong.
+
+| method | cases | n | top-1 | category | cause | precision when answered | abstain rate | abstention value | hallucinated evidence | fix success | judge fallback | cost |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| investigator | valid | 1 | 100% | 100% | 0% | 100% | 0% | n/a | 0% | 100% | 0% | $0.0990 |
+| investigator-day5-v2 | valid | 1 | 0% | 0% | 0% | n/a | 0% | n/a | n/a | n/a | n/a | $0.0000 |
+| B1 | valid | 1 | 0% | 0% | 0% | 0% | 0% | n/a | 0% | 0% | n/a | $0.0000 |
+| investigator | all recorded | 1 | 100% | 100% | 0% | 100% | 0% | n/a | 0% | 100% | 0% | $0.0990 |
+| investigator-day5-v2 | all recorded | 1 | 0% | 0% | 0% | n/a | 0% | n/a | n/a | n/a | n/a | $0.0000 |
+| B1 | all recorded | 1 | 0% | 0% | 0% | 0% | 0% | n/a | 0% | 0% | n/a | $0.0000 |
+
+valid = the fault made the answer wrong when it was recorded; all recorded adds the cases recorded with `run_case --force` (fault applied, answer not shown to be wrong).
+precision when answered = correct / non-abstained. abstention value = of the abstained cases, how many had a wrong top candidate. hallucinated evidence = diagnoses with a citation the verifier rejects / non-abstained diagnoses. fix success = fresh replays of the fix_patch that match the correction with a patch targeting the true root component / non-abstained diagnoses. judge fallback = replays checked by the LLM judge / all replays.
+
+

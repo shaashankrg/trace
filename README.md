@@ -49,9 +49,26 @@ sample size — 19 of the 23 cases carry a decoy, so the no-decoy baseline is 4 
 Full tables: `eval/results/investigator-test-r1/` (`summary.md`, `comparison.md`, per-case JSON with transcripts,
 tokens, cost and wall time).
 
+## See one investigation
+
+![Tracewise investigating a held-out silent tool failure](docs/demo.gif)
+
+*One held-out case, unedited: the assistant denies a customer's order exists. Every one of the six spans reports
+OK — so "blame the error span" has nothing to go on, and the no-tools baseline blamed the model. Tracewise finds
+the `lookup_order` span that returned 0 results, confirms the swallowed timeout in the logs, has one replay patch
+refused for citing a value the history never showed, then proves the cause with a patch that does: re-running the
+tool returns the order and the answer matches the reviewer's correction.*
+
+*Recorded from `python -m eval.replay_case --cases case-023 --verbose`; the raw terminal output it was rendered
+from is in [`docs/demo-case-023.txt`](docs/demo-case-023.txt). This is one real run, kept as it came out:
+the agent is not deterministic, and on this run it did not write a `ruled_out` entry for the unrelated document
+update, though it did on the run the results table comes from (see the written example below).*
+
 ## A worked example
 
-**case-023**, held out, a silent tool failure with a decoy. B2 blamed the model on this case.
+**case-023**, held out, a silent tool failure with a decoy. B2 blamed the model on this case. This walks through
+the run the results table above comes from, recorded in `eval/results/investigator-test-r1/case-023.json` — the
+same case as the GIF, a different run of it.
 
 The customer asks: *"I'm customer C-0003. Today is 2026-10-12. Can I still return the Cirrus Down Jacket from
 order O-1003 for a refund?"*
@@ -352,8 +369,15 @@ The model is `INVESTIGATOR_MODEL` (default `gemini-3.8-flash`; `claude-*` models
 
 ```bash
 python -m eval.replay_case --agent investigator --cases all     # every case in eval/runs/, on its snapshot
+python -m eval.replay_case --cases case-023 --verbose           # watch one investigation step by step
 python -m eval.replay_case --cases case-002 case-007 --run-id try
 ```
+
+`--verbose` (`agent/trace_view.py`) prints each step as it happens — the node entered, each tool call with the
+arguments the agent chose, the typed evidence built from each reply, and the gate's verdict. It reads the state the
+graph already streams and never writes back, so a run watched this way reaches the same diagnosis as one that is
+not; an observer that raises is swallowed rather than failing the investigation. It forces one case at a time,
+since two investigations printing at once interleave.
 
 After each investigation the evaluator runs the evidence verifier (`eval/verifier.py`), which reads the raw
 snapshot files and replay log, never the tools: an invented ref, a quote not in the text, a wrong attribute value

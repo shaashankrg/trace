@@ -277,9 +277,12 @@ def build_graph(toolbox: Toolbox, tools: list[dict], model: str | None = None):
 
 async def investigate_alert(alert: dict, env: dict[str, str] | None = None, model: str | None = None,
                             budget: int | None = None, progress: dict | None = None,
-                            errlog: Path | None = None) -> dict:
+                            errlog: Path | None = None, on_state=None) -> dict:
     """Run one investigation against a tool server started with `env` (e.g. the snapshot backend).
-    `progress`, if given, always holds the latest state, so a crash or timeout keeps the transcript."""
+    `progress`, if given, always holds the latest state, so a crash or timeout keeps the transcript.
+    `on_state`, if given, is called with each state the graph emits - a read-only observer (see
+    agent/trace_view.py); it is never allowed to change the run, so an observer that raises is
+    ignored rather than failing the investigation."""
     kwargs = {"budget": budget} if budget else {}
     state: dict = {}
     async with Toolbox.start(env, errlog=errlog, **kwargs) as toolbox:
@@ -291,4 +294,9 @@ async def investigate_alert(alert: dict, env: dict[str, str] | None = None, mode
             if progress is not None:
                 progress.clear()
                 progress.update(state)
+            if on_state is not None:
+                try:
+                    on_state(state)
+                except Exception:  # an observer must never change the outcome of a run
+                    pass
     return state
