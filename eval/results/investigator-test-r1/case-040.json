@@ -1,0 +1,376 @@
+{
+  "case_id": "case-040",
+  "model": "gemini-3.8-flash",
+  "wall_s": 60.6,
+  "error": null,
+  "diagnosis": {
+    "root_component": "guardrail",
+    "category": "guardrail_error",
+    "cause_ref": "change:config-change-9452",
+    "confidence": 0.99,
+    "summary": "The guardrail blocked a legitimate customer inquiry regarding rental deposits because 'deposit' was erroneously added to the guardrail_blocked_topics list in change config-change-9452.",
+    "evidence": [
+      {
+        "type": "trace",
+        "ref": "span:08978a345fddd4488e00cd84c5cad1a8/571fab53c1c538b2",
+        "claim": "The guardrail blocked the query due to matching the rule 'deposit'.",
+        "attribute": "guardrail.matched_rule",
+        "value": "deposit",
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "log",
+        "ref": "log:a9f36440-650f-4a13-ad3c-9fe5fc666546",
+        "claim": "Log indicates guardrail blocked the question with rule 'deposit'.",
+        "attribute": null,
+        "value": null,
+        "quote": "guardrail blocked question (rule=deposit)",
+        "supports": null
+      },
+      {
+        "type": "change",
+        "ref": "change:config-change-9452",
+        "claim": "Guardrail blocked topics were expanded right before the incident.",
+        "attribute": "config:guardrail_blocked_topics",
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "replay",
+        "ref": "replay:d7875c9f2555",
+        "claim": "Reverting guardrail_blocked_topics to remove 'deposit' fixes the conversation.",
+        "attribute": "matches_correction",
+        "value": true,
+        "quote": null,
+        "supports": null
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:config-change-5609",
+        "reason": "Raising max_response_tokens does not affect topic filtering or cause false positive guardrail blocks.",
+        "ref": "change:config-change-5609"
+      }
+    ],
+    "suggested_fix": "Remove 'deposit' from guardrail_blocked_topics config.",
+    "fix_patch": {
+      "kind": "set_config",
+      "key": "guardrail_blocked_topics",
+      "value": "[\"lawsuit\", \"legal advice\", \"medical advice\", \"weapon\", \"firearm\", \"social security number\", \"hack\"]"
+    },
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 6,
+    "failures": []
+  },
+  "fix": {
+    "ref": "replay:52ac9e09da3d",
+    "patch": {
+      "kind": "set_config",
+      "key": "guardrail_blocked_topics",
+      "value": "[\"lawsuit\", \"legal advice\", \"medical advice\", \"weapon\", \"firearm\", \"social security number\", \"hack\"]"
+    },
+    "target_component": "guardrail",
+    "matches_correction": true,
+    "votes": [
+      true,
+      true,
+      true
+    ],
+    "judge": "code",
+    "control_ref": "replay:ac1986b03316",
+    "control_matches_correction": false,
+    "proves_fix": true,
+    "cost_usd": 0.000215
+  },
+  "gate": {
+    "passed": true,
+    "reason": "3 evidence types (change, log, trace) and replay replay:d7875c9f2555 support guardrail",
+    "hypothesis": "guardrail",
+    "supporting_types": [
+      "change",
+      "log",
+      "trace"
+    ],
+    "replay_ref": "replay:d7875c9f2555",
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "guardrail",
+      "category": "guardrail_error",
+      "rationale": "The trace shows the guardrail explicitly blocked the question under matched_rule 'deposit' following a recent update to guardrail_blocked_topics.",
+      "score": 0.85
+    },
+    {
+      "root_component": "config",
+      "category": "config_change",
+      "rationale": "The recent config change expanding guardrail_blocked_topics inadvertently added 'deposit' as a blocked topic, causing legitimate rental deposit questions to be refused.",
+      "score": 0.7
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "Rental policy documentation or deposit guidelines may have been updated or misclassified, though execution stopped at the guardrail before retrieval.",
+      "score": 0.1
+    }
+  ],
+  "tool_calls_used": 8,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 14,
+  "refs_not_in_pool": [],
+  "llm_calls": 9,
+  "input_tokens": 35252,
+  "output_tokens": 1508,
+  "thinking_tokens": 0,
+  "cost_usd": 0.032524,
+  "investigator_cost_usd": 0.032094,
+  "replay_cost_usd": 0.00043,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-e804b7a9"
+      },
+      "result_chars": 1330,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T01:53:23.380221+00:00",
+        "end": "2026-11-01T01:53:23.380221+00:00"
+      },
+      "result_chars": 589,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1812,
+      "output_tokens": 224,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002199,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"guardrail\",\n   \"category\": \"guardrail_error\",\n   \"rationale\": \"The trace shows the guardrail explicitly blocked the question under matched_rule 'deposit' following a recent update to guardrail_blocked_topics.\",\n   \"score\": 0.85\n  },\n  {\n   \"root_component\": \"config\",\n   \"category\": \"config_change\",\n   \"rationale\": \"The recent config change expanding guardrail_blocked_topics inadvertently added 'deposit' as a blocked topic, causing legitimate rental de"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3088,
+      "output_tokens": 27,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002417,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-e804b7a9"
+      },
+      "result_chars": 1330,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3591,
+      "output_tokens": 17,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002757,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "search_logs",
+      "args": {
+        "query": "guardrail"
+      },
+      "result_chars": 295,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3747,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002867,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2522,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4655,
+      "output_tokens": 21,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00357,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "query": "guardrail_blocked_topics"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4713,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003595,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "search_logs",
+      "args": {
+        "query": "config"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4766,
+      "output_tokens": 85,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003893,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {
+          "value": [
+            "lawsuit",
+            "legal advice",
+            "medical advice",
+            "weapon",
+            "firearm",
+            "social security number",
+            "hack"
+          ],
+          "kind": "set_config",
+          "key": "guardrail_blocked_topics"
+        },
+        "conversation_id": "conv-e804b7a9"
+      },
+      "result_chars": 679,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5089,
+      "output_tokens": 487,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005643,
+      "tool_calls": [],
+      "text": "### Root Cause Analysis\n\n- **Root Component**: `guardrail` (or configured via `config:guardrail_blocked_topics`)\n- **Category**: `guardrail_error` / `config_change`\n- **What happened**: \n  A recent configuration update (`change:config-change-9452`) added `\"deposit\"` to the `guardrail_blocked_topics` list. When the user asked `\"How much is the deposit to rent a tent?\"`, the topic filter triggered rule `deposit` at span `span:08978a345fddd4488e00cd84c5cad1a8/571fab53c1c538b2` and logged `guardrail"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3791,
+      "output_tokens": 616,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005153,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"guardrail\",\n  \"category\": \"guardrail_error\",\n  \"cause_ref\": \"change:config-change-9452\",\n  \"confidence\": 0.99,\n  \"summary\": \"The guardrail blocked a legitimate customer inquiry regarding rental deposits because 'deposit' was erroneously added to the guardrail_blocked_topics list in change config-change-9452.\",\n  \"evidence\": [\n    {\n      \"type\": \"trace\",\n      \"ref\": \"span:08978a345fddd4488e00cd84c5cad1a8/571fab53c1c538b2\",\n      \"claim\": \"The guardrail blocked the query d"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "3 evidence types (change, log, trace) and replay replay:d7875c9f2555 support guardrail",
+      "hypothesis": "guardrail",
+      "supporting_types": [
+        "change",
+        "log",
+        "trace"
+      ],
+      "replay_ref": "replay:d7875c9f2555",
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

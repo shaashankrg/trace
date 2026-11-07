@@ -1,0 +1,479 @@
+{
+  "case_id": "case-045",
+  "model": "gemini-3.8-flash",
+  "wall_s": 63.1,
+  "error": null,
+  "diagnosis": {
+    "root_component": null,
+    "category": null,
+    "cause_ref": null,
+    "confidence": 0.0,
+    "summary": "evidence not sufficient after 1 draft(s): only 1 evidence type (trace) relevant to retriever, no replay that fixes the answer by patching it; not relevant to retriever: log:95ec17f6-c5fb-4f2c-88b9-a450e97030bd",
+    "evidence": [],
+    "ruled_out": [],
+    "suggested_fix": "",
+    "fix_patch": null,
+    "fix_patch_error": "",
+    "abstained": true,
+    "top_candidate": {
+      "root_component": "retriever",
+      "category": "config_change"
+    },
+    "top_candidates": [
+      {
+        "root_component": "retriever",
+        "category": "config_change"
+      },
+      {
+        "root_component": "knowledge_base",
+        "category": "doc_delete"
+      }
+    ],
+    "missing_evidence": "only 1 evidence type (trace) relevant to retriever, no replay that fixes the answer by patching it; not relevant to retriever: log:95ec17f6-c5fb-4f2c-88b9-a450e97030bd"
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 0,
+    "failures": []
+  },
+  "fix": null,
+  "gate": {
+    "passed": false,
+    "reason": "only 1 evidence type (trace) relevant to retriever, no replay that fixes the answer by patching it; not relevant to retriever: log:95ec17f6-c5fb-4f2c-88b9-a450e97030bd",
+    "hypothesis": "retriever",
+    "supporting_types": [
+      "trace"
+    ],
+    "replay_ref": null,
+    "unresolved": [],
+    "irrelevant": [
+      "log:95ec17f6-c5fb-4f2c-88b9-a450e97030bd"
+    ]
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "The similarity threshold is set to an unusually high value of 0.85, resulting in 0 chunks retrieved across multiple standard canary questions.",
+      "score": 0.7
+    },
+    {
+      "root_component": "retriever",
+      "category": "retrieval_failure",
+      "rationale": "The retrieval step returned zero chunks for basic policy questions despite documents existing, possibly due to embedding model mismatch or index issues.",
+      "score": 0.15
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_delete",
+      "rationale": "Knowledge base documents containing return, price match, and shipping policies may have been unindexed or deleted.",
+      "score": 0.1
+    },
+    {
+      "root_component": "config",
+      "category": "config_change",
+      "rationale": "A runtime configuration change affected retrieval parameters or chunking behavior, leading to empty retrieval results.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 15,
+  "replays_used": 0,
+  "replay_judges": [],
+  "evidence_pool_size": 59,
+  "refs_not_in_pool": [],
+  "llm_calls": 15,
+  "input_tokens": 135718,
+  "output_tokens": 1418,
+  "thinking_tokens": 0,
+  "cost_usd": 0.107107,
+  "investigator_cost_usd": 0.107107,
+  "replay_cost_usd": 0,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-bee1ce78"
+      },
+      "result_chars": 2447,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T02:01:40.848131+00:00",
+        "end": "2026-11-01T02:01:40.848131+00:00"
+      },
+      "result_chars": 50,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2617,
+      "output_tokens": 279,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003009,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"retriever\",\n      \"category\": \"config_change\",\n      \"rationale\": \"The similarity threshold is set to an unusually high value of 0.85, resulting in 0 chunks retrieved across multiple standard canary questions.\",\n      \"score\": 0.7\n    },\n    {\n      \"root_component\": \"retriever\",\n      \"category\": \"retrieval_failure\",\n      \"rationale\": \"The retrieval step returned zero chunks for basic policy questions despite documents existing, possibly due t"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3913,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002991,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 30
+      },
+      "result_chars": 7231,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6462,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004907,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "search_logs",
+      "args": {
+        "query": "threshold"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6516,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004947,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "config"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6570,
+      "output_tokens": 40,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005078,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-11-01T01:50:00+00:00"
+      },
+      "result_chars": 5147,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 8856,
+      "output_tokens": 70,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006905,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-11-01T01:55:00+00:00",
+        "end": "2026-11-01T02:00:39+00:00"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 8963,
+      "output_tokens": 32,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006842,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "canary-6eab5e49-q001"
+      },
+      "result_chars": 157,
+      "error": "no trace for conversation 'canary-6eab5e49-q001'",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 9068,
+      "output_tokens": 24,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006891,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-bee1ce78"
+      },
+      "result_chars": 2447,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10009,
+      "output_tokens": 64,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007747,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:0e0ef1cd55ca2b24c8593810119b4bd8/18504b4feaddc080"
+      },
+      "result_chars": 139,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10171,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007703,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "price-matching"
+      },
+      "result_chars": 880,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10471,
+      "output_tokens": 82,
+      "thinking_tokens": 0,
+      "cost_usd": 0.008161,
+      "tool_calls": [
+        "query_metrics"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "query_metrics",
+      "args": {
+        "start": "2026-11-01T01:50:00+00:00",
+        "metric": "kestrel_canary_accuracy",
+        "end": "2026-11-01T02:05:00+00:00"
+      },
+      "result_chars": 10663,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 14729,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.011215,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10,
+        "start": "2026-11-01T01:50:00+00:00"
+      },
+      "result_chars": 50,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 14809,
+      "output_tokens": 48,
+      "thinking_tokens": 0,
+      "cost_usd": 0.011287,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 14,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {
+          "key": "similarity_threshold",
+          "kind": "set_config",
+          "value": 0.2
+        },
+        "conversation_id": "conv-bee1ce78"
+      },
+      "result_chars": 171,
+      "error": "patch rejected: similarity_threshold=0.2 is not a value the change log or the trace shows similarity_threshold holding",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 14925,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.011261,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 15,
+      "tool": "search_logs",
+      "args": {
+        "query": "sentence-transformers"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7639,
+      "output_tokens": 649,
+      "thinking_tokens": 0,
+      "cost_usd": 0.008163,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"retriever\",\n \"category\": \"config_change\",\n \"cause_ref\": null,\n \"confidence\": 0.95,\n \"summary\": \"The retrieval similarity threshold is set too high at 0.85 (config.similarity_threshold=0.85), causing the retrieve span to return 0 chunks across various general policy and canary questions, leading to assistant fallback answers.\",\n \"evidence\": [\n  {\n   \"type\": \"trace\",\n   \"ref\": \"span:0e0ef1cd55ca2b24c8593810119b4bd8/37e401822602785c\",\n   \"claim\": \"Root span indicates runtime c"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": false,
+      "reason": "only 1 evidence type (trace) relevant to retriever, no replay that fixes the answer by patching it; not relevant to retriever: log:95ec17f6-c5fb-4f2c-88b9-a450e97030bd",
+      "hypothesis": "retriever",
+      "supporting_types": [
+        "trace"
+      ],
+      "replay_ref": null,
+      "unresolved": [],
+      "irrelevant": [
+        "log:95ec17f6-c5fb-4f2c-88b9-a450e97030bd"
+      ]
+    },
+    {
+      "kind": "end",
+      "node": "abstain"
+    }
+  ]
+}

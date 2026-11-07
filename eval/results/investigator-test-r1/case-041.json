@@ -1,0 +1,342 @@
+{
+  "case_id": "case-041",
+  "model": "gemini-3.8-flash",
+  "wall_s": 57.1,
+  "error": null,
+  "diagnosis": {
+    "root_component": "tool:check_inventory",
+    "category": "stale_data",
+    "cause_ref": null,
+    "confidence": 0.98,
+    "summary": "The check_inventory tool returned stale cached inventory data with a cache age over 3 days (264602s), indicating 4 units in stock when product P-002 is actually out of stock.",
+    "evidence": [
+      {
+        "type": "trace",
+        "ref": "span:2e6964588e266a23c808ab81c63e93b4/0fc8eb34dfb14620",
+        "claim": "tool.check_inventory returned cached results with a cache age of ~264602.8 seconds",
+        "attribute": "tool.cache_age_s",
+        "value": 264602.837097,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "replay",
+        "ref": "replay:6f7819ba3299",
+        "claim": "Bypassing the check_inventory cache fixed the answer, proving the cached data was stale",
+        "attribute": "matches_correction",
+        "value": true,
+        "quote": null,
+        "supports": null
+      }
+    ],
+    "ruled_out": [],
+    "suggested_fix": "Invalidate or bypass the check_inventory cache so queries fetch real-time product inventory levels.",
+    "fix_patch": {
+      "kind": "bypass_cache",
+      "tool": "check_inventory"
+    },
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 2,
+    "failures": []
+  },
+  "fix": {
+    "ref": "replay:2741084244ae",
+    "patch": {
+      "kind": "bypass_cache",
+      "tool": "check_inventory"
+    },
+    "target_component": "tool:check_inventory",
+    "matches_correction": true,
+    "votes": [
+      true,
+      true,
+      true
+    ],
+    "judge": "code",
+    "control_ref": "replay:e598159e253b",
+    "control_matches_correction": false,
+    "proves_fix": true,
+    "cost_usd": 0.000372
+  },
+  "gate": {
+    "passed": true,
+    "reason": "1 evidence types (trace) and replay replay:6f7819ba3299 support tool:check_inventory",
+    "hypothesis": "tool:check_inventory",
+    "supporting_types": [
+      "trace"
+    ],
+    "replay_ref": "replay:6f7819ba3299",
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "tool:check_inventory",
+      "category": "stale_data",
+      "rationale": "Span tool.check_inventory shows a very high tool.cache_age_s of over 264,000 seconds (~3 days), likely serving stale inventory numbers instead of current stock.",
+      "score": 0.85
+    },
+    {
+      "root_component": "tool:check_inventory",
+      "category": "tool_outage",
+      "rationale": "The inventory lookup tool may be misconfigured or returning erroneous data from its upstream service.",
+      "score": 0.1
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model may have misinterpreted valid tool output regarding product stock levels.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 8,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 9,
+  "refs_not_in_pool": [],
+  "llm_calls": 9,
+  "input_tokens": 35542,
+  "output_tokens": 1131,
+  "thinking_tokens": 0,
+  "cost_usd": 0.032378,
+  "investigator_cost_usd": 0.030897,
+  "replay_cost_usd": 0.001481,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-e9ccb9de"
+      },
+      "result_chars": 3579,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T01:54:24.139046+00:00",
+        "end": "2026-11-01T01:54:24.139046+00:00"
+      },
+      "result_chars": 50,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2096,
+      "output_tokens": 222,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002404,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"tool:check_inventory\",\n      \"category\": \"stale_data\",\n      \"rationale\": \"Span tool.check_inventory shows a very high tool.cache_age_s of over 264,000 seconds (~3 days), likely serving stale inventory numbers instead of current stock.\",\n      \"score\": 0.85\n    },\n    {\n      \"root_component\": \"tool:check_inventory\",\n      \"category\": \"tool_outage\",\n      \"rationale\": \"The inventory lookup tool may be misconfigured or returning erroneous data fr"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3366,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002592,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "search_logs",
+      "args": {
+        "query": "check_inventory"
+      },
+      "result_chars": 579,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3647,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002795,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "search_logs",
+      "args": {
+        "component": "tool"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3701,
+      "output_tokens": 49,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002959,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-e9ccb9de",
+        "patch": {
+          "tool": "check_inventory",
+          "kind": "bypass_cache",
+          "bypass_cache": true
+        }
+      },
+      "result_chars": 120,
+      "error": "patch rejected: bypass_cache does not take bypass_cache",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3803,
+      "output_tokens": 43,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003014,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {
+          "kind": "bypass_cache",
+          "tool": "check_inventory"
+        },
+        "conversation_id": "conv-e9ccb9de"
+      },
+      "result_chars": 699,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4078,
+      "output_tokens": 25,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003152,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-e9ccb9de"
+      },
+      "result_chars": 3579,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5492,
+      "output_tokens": 23,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004205,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "search_logs",
+      "args": {
+        "query": "conv-e9ccb9de"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5552,
+      "output_tokens": 358,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005507,
+      "tool_calls": [],
+      "text": "### Incident Diagnosis\n\n- **Root Component**: `tool:check_inventory`\n- **Category**: `stale_data`\n\n### Findings and Evidence\n\n1. **Trace Analysis**:\n   - In trace `2e6964588e266a23c808ab81c63e93b4`, span `span:2e6964588e266a23c808ab81c63e93b4/0fc8eb34dfb14620` (`tool.check_inventory`) had an unusually high cached age attribute: `tool.cache_age_s: 264602.837097` (~3.06 days).\n   - Because it served stale cached data stating 4 units were in stock, the downstream model in span `span:2e6964588e266a2"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3807,
+      "output_tokens": 377,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004269,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"tool:check_inventory\",\n \"category\": \"stale_data\",\n \"cause_ref\": null,\n \"confidence\": 0.98,\n \"summary\": \"The check_inventory tool returned stale cached inventory data with a cache age over 3 days (264602s), indicating 4 units in stock when product P-002 is actually out of stock.\",\n \"evidence\": [\n  {\n   \"type\": \"trace\",\n   \"ref\": \"span:2e6964588e266a23c808ab81c63e93b4/0fc8eb34dfb14620\",\n   \"claim\": \"tool.check_inventory returned cached results with a cache age of ~264602.8 se"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "1 evidence types (trace) and replay replay:6f7819ba3299 support tool:check_inventory",
+      "hypothesis": "tool:check_inventory",
+      "supporting_types": [
+        "trace"
+      ],
+      "replay_ref": "replay:6f7819ba3299",
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

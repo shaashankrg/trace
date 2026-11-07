@@ -1,0 +1,437 @@
+{
+  "case_id": "case-038",
+  "model": "gemini-3.8-flash",
+  "wall_s": 56.6,
+  "error": null,
+  "diagnosis": {
+    "root_component": "guardrail",
+    "category": "guardrail_error",
+    "cause_ref": "change:config-change-5875",
+    "confidence": 0.99,
+    "summary": "The guardrail blocked topic list was expanded to include 'warranty', which incorrectly blocked legitimate customer questions regarding warranty coverage and repair policies.",
+    "evidence": [
+      {
+        "type": "trace",
+        "ref": "span:d1079c910b7aac10bf0f46dbc03afe00/b19ac594c6afbcdb",
+        "claim": "The guardrail span blocked the request matching the 'warranty' rule.",
+        "attribute": "guardrail.matched_rule",
+        "value": "warranty",
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "change",
+        "ref": "change:config-change-5875",
+        "claim": "Alice modified config:guardrail_blocked_topics to expand the blocked topic list shortly before the drop.",
+        "attribute": null,
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "log",
+        "ref": "log:1ce1df7b-623c-4d6d-ada3-0ec96040c7bf",
+        "claim": "Guardrail logged blocking a question due to the warranty rule.",
+        "attribute": null,
+        "value": null,
+        "quote": "guardrail blocked question (rule=warranty)",
+        "supports": null
+      },
+      {
+        "type": "replay",
+        "ref": "replay:5daf4a92ecc9",
+        "claim": "Reverting guardrail_blocked_topics to exclude 'warranty' proved the fix across test cases.",
+        "attribute": "matches_correction",
+        "value": true,
+        "quote": null,
+        "supports": null
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "config_change on config:max_response_tokens at 2026-10-31T23:43:38.412541+00:00 by ben: Allow longer replies",
+        "reason": "The change to max_response_tokens does not cause the guardrail to reject questions before LLM generation.",
+        "ref": "change:config-change-6877"
+      }
+    ],
+    "suggested_fix": "Remove 'warranty' from the guardrail_blocked_topics configuration list.",
+    "fix_patch": {
+      "kind": "set_config",
+      "key": "guardrail_blocked_topics",
+      "value": "[\"lawsuit\", \"legal advice\", \"medical advice\", \"weapon\", \"firearm\", \"social security number\", \"hack\"]"
+    },
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 6,
+    "failures": []
+  },
+  "fix": {
+    "ref": "replay:f0206977d14d",
+    "patch": {
+      "kind": "set_config",
+      "key": "guardrail_blocked_topics",
+      "value": "[\"lawsuit\", \"legal advice\", \"medical advice\", \"weapon\", \"firearm\", \"social security number\", \"hack\"]"
+    },
+    "target_component": "guardrail",
+    "matches_correction": true,
+    "votes": [
+      true,
+      true,
+      true
+    ],
+    "judge": "code",
+    "control_ref": "replay:93c4a24c29a0",
+    "control_matches_correction": false,
+    "proves_fix": true,
+    "cost_usd": 0.000265
+  },
+  "gate": {
+    "passed": true,
+    "reason": "3 evidence types (change, log, trace) and replay replay:5daf4a92ecc9 support guardrail",
+    "hypothesis": "guardrail",
+    "supporting_types": [
+      "change",
+      "log",
+      "trace"
+    ],
+    "replay_ref": "replay:5daf4a92ecc9",
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "guardrail",
+      "category": "guardrail_error",
+      "rationale": "A recent configuration change expanded guardrail blocked topics to include 'warranty', erroneously blocking legitimate warranty-related queries across multiple conversations.",
+      "score": 0.95
+    },
+    {
+      "root_component": "config",
+      "category": "config_change",
+      "rationale": "The guardrail_blocked_topics configuration update directly caused warranty topics to be rejected by the guardrail filter.",
+      "score": 0.85
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "Warranty policy documentation or indexing rules might have been misconfigured or removed, triggering fallback rejection behavior.",
+      "score": 0.1
+    }
+  ],
+  "tool_calls_used": 10,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 24,
+  "refs_not_in_pool": [],
+  "llm_calls": 11,
+  "input_tokens": 59506,
+  "output_tokens": 1625,
+  "thinking_tokens": 0,
+  "cost_usd": 0.051254,
+  "investigator_cost_usd": 0.050724,
+  "replay_cost_usd": 0.00053,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-9bdf144c"
+      },
+      "result_chars": 1332,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T01:51:55.544419+00:00",
+        "end": "2026-11-01T01:51:55.544419+00:00"
+      },
+      "result_chars": 578,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2491,
+      "output_tokens": 208,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002648,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"guardrail\",\n   \"category\": \"guardrail_error\",\n   \"rationale\": \"A recent configuration change expanded guardrail blocked topics to include 'warranty', erroneously blocking legitimate warranty-related queries across multiple conversations.\",\n   \"score\": 0.95\n  },\n  {\n   \"root_component\": \"config\",\n   \"category\": \"config_change\",\n   \"rationale\": \"The guardrail_blocked_topics configuration update directly caused warranty topics to be rejected by the guard"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3750,
+      "output_tokens": 17,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002876,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "search_logs",
+      "args": {
+        "query": "guardrail"
+      },
+      "result_chars": 2688,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4913,
+      "output_tokens": 21,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003763,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "search_logs",
+      "args": {
+        "query": "guardrail_blocked_topics"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4972,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003785,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2511,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5877,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004468,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "query": "config"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5930,
+      "output_tokens": 32,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004568,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "canary-d257dce2-q010"
+      },
+      "result_chars": 157,
+      "error": "no trace for conversation 'canary-d257dce2-q010'",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6035,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004624,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-9bdf144c"
+      },
+      "result_chars": 1332,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6527,
+      "output_tokens": 90,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005233,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "canary-d257dce2-q010",
+        "patch": {
+          "value": [
+            "lawsuit",
+            "legal advice",
+            "medical advice",
+            "weapon",
+            "firearm",
+            "social security number",
+            "hack"
+          ],
+          "key": "guardrail_blocked_topics",
+          "kind": "set_config"
+        }
+      },
+      "result_chars": 119,
+      "error": "no recorded conversation 'canary-d257dce2-q010'",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6686,
+      "output_tokens": 84,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00533,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-9bdf144c",
+        "patch": {
+          "key": "guardrail_blocked_topics",
+          "kind": "set_config",
+          "value": [
+            "lawsuit",
+            "legal advice",
+            "medical advice",
+            "weapon",
+            "firearm",
+            "social security number",
+            "hack"
+          ]
+        }
+      },
+      "result_chars": 783,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7032,
+      "output_tokens": 481,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007078,
+      "tool_calls": [],
+      "text": "### Root Cause Analysis\n\n- **Root Component**: `guardrail`\n- **Category**: `guardrail_error`\n- **Change Reference**: `change:config-change-5875` (author: `alice` at `2026-11-01T00:27:38.412541+00:00`, description: *\"Expand the blocked topic list\"*)\n\n### Evidence\n1. **Trace & Span**: In trace `d1079c910b7aac10bf0f46dbc03afe00`, span `span:d1079c910b7aac10bf0f46dbc03afe00/b19ac594c6afbcdb` (`guardrail`) made a decision `guardrail.decision=\"block\"` with `guardrail.matched_rule=\"warranty\"`. The root"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5293,
+      "output_tokens": 635,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006351,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"guardrail\",\n  \"category\": \"guardrail_error\",\n  \"cause_ref\": \"change:config-change-5875\",\n  \"confidence\": 0.99,\n  \"summary\": \"The guardrail blocked topic list was expanded to include 'warranty', which incorrectly blocked legitimate customer questions regarding warranty coverage and repair policies.\",\n  \"evidence\": [\n    {\n      \"type\": \"trace\",\n      \"ref\": \"span:d1079c910b7aac10bf0f46dbc03afe00/b19ac594c6afbcdb\",\n      \"claim\": \"The guardrail span blocked the request match"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "3 evidence types (change, log, trace) and replay replay:5daf4a92ecc9 support guardrail",
+      "hypothesis": "guardrail",
+      "supporting_types": [
+        "change",
+        "log",
+        "trace"
+      ],
+      "replay_ref": "replay:5daf4a92ecc9",
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

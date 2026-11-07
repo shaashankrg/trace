@@ -1,0 +1,250 @@
+{
+  "case_id": "case-030",
+  "model": "gemini-3.8-flash",
+  "wall_s": 44.5,
+  "error": null,
+  "diagnosis": {
+    "root_component": "knowledge_base",
+    "category": "doc_delete",
+    "cause_ref": "change:doc-delete-6234",
+    "confidence": 0.99,
+    "summary": "The student discount document was deleted shortly before the incident, causing retrieval to return unrelated discount chunks and the assistant to state it did not know the student discount.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:doc-delete-6234",
+        "claim": "The student-discount document was deleted from the index shortly before the query.",
+        "attribute": null,
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "change",
+        "ref": "doc:student-discount@v1",
+        "claim": "The student-discount document has 0 of 1 chunks indexed following deletion.",
+        "attribute": null,
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "replay",
+        "ref": "replay:27e53e480388",
+        "claim": "Restoring student-discount doc verified the fix and produced the expected answer.",
+        "attribute": "matches_correction",
+        "value": true,
+        "quote": null,
+        "supports": null
+      }
+    ],
+    "ruled_out": [],
+    "suggested_fix": "Restore the student-discount document to re-index its chunks for retrieval.",
+    "fix_patch": {
+      "kind": "restore_doc",
+      "doc_id": "student-discount"
+    },
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 4,
+    "failures": []
+  },
+  "fix": {
+    "ref": "replay:b790f67ab382",
+    "patch": {
+      "kind": "restore_doc",
+      "doc_id": "student-discount"
+    },
+    "target_component": "knowledge_base",
+    "matches_correction": true,
+    "votes": [
+      true,
+      true,
+      true
+    ],
+    "judge": "code",
+    "control_ref": "replay:d20d3da69940",
+    "control_matches_correction": false,
+    "proves_fix": true,
+    "cost_usd": 0.000238
+  },
+  "gate": {
+    "passed": true,
+    "reason": "1 evidence types (change) and replay replay:27e53e480388 support knowledge_base",
+    "hypothesis": "knowledge_base",
+    "supporting_types": [
+      "change"
+    ],
+    "replay_ref": "replay:27e53e480388",
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_delete",
+      "rationale": "The student discount document was deleted shortly before the alert, leaving the retriever with only unrelated discount documents.",
+      "score": 0.85
+    },
+    {
+      "root_component": "retriever",
+      "category": "retrieval_failure",
+      "rationale": "Retrieval failed to return the student discount information among the top 4 chunks.",
+      "score": 0.1
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model answered that it did not know the discount based on the retrieved context.",
+      "score": 0.05
+    }
+  ],
+  "tool_calls_used": 4,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 7,
+  "refs_not_in_pool": [],
+  "llm_calls": 5,
+  "input_tokens": 15487,
+  "output_tokens": 988,
+  "thinking_tokens": 0,
+  "cost_usd": 0.016276,
+  "investigator_cost_usd": 0.01532,
+  "replay_cost_usd": 0.000956,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-97a44487"
+      },
+      "result_chars": 2665,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T01:44:54.724828+00:00",
+        "end": "2026-11-01T01:44:54.724828+00:00"
+      },
+      "result_chars": 299,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1942,
+      "output_tokens": 196,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002191,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"knowledge_base\",\n   \"category\": \"doc_delete\",\n   \"rationale\": \"The student discount document was deleted shortly before the alert, leaving the retriever with only unrelated discount documents.\",\n   \"score\": 0.85\n  },\n  {\n   \"root_component\": \"retriever\",\n   \"category\": \"retrieval_failure\",\n   \"rationale\": \"Retrieval failed to return the student discount information among the top 4 chunks.\",\n   \"score\": 0.1\n  },\n  {\n   \"root_component\": \"model\",\n   \"ca"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3184,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002463,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "student-discount"
+      },
+      "result_chars": 337,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3333,
+      "output_tokens": 47,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002676,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {
+          "kind": "restore_doc",
+          "doc_id": "student-discount"
+        },
+        "conversation_id": "conv-97a44487"
+      },
+      "result_chars": 655,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3614,
+      "output_tokens": 377,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004124,
+      "tool_calls": [],
+      "text": "### Incident Summary\n\n- **Root Component**: `knowledge_base`\n- **Category**: `doc_delete`\n\n### Evidence\n1. **Change Record & Document History**: Change `change:doc-delete-6234` by `priya` at `2026-11-01T01:15:24.472629+00:00` deleted the `student-discount` document (`doc:student-discount`), de-indexing its chunks (`indexed_chunk_count: 0`).\n2. **Trace & Retrieval**: In trace `a75a5f374ee9ad089277483e3ecede1e`, the retrieval span `span:a75a5f374ee9ad089277483e3ecede1e/01660f93d053e789` was unable"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3414,
+      "output_tokens": 348,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003866,
+      "tool_calls": [],
+      "text": "{\n  \"root_component\": \"knowledge_base\",\n  \"category\": \"doc_delete\",\n  \"cause_ref\": \"change:doc-delete-6234\",\n  \"confidence\": 0.99,\n  \"summary\": \"The student discount document was deleted shortly before the incident, causing retrieval to return unrelated discount chunks and the assistant to state it did not know the student discount.\",\n  \"evidence\": [\n    {\n      \"type\": \"change\",\n      \"ref\": \"change:doc-delete-6234\",\n      \"claim\": \"The student-discount document was deleted from the index short"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "1 evidence types (change) and replay replay:27e53e480388 support knowledge_base",
+      "hypothesis": "knowledge_base",
+      "supporting_types": [
+        "change"
+      ],
+      "replay_ref": "replay:27e53e480388",
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

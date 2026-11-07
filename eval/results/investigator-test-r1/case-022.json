@@ -1,0 +1,470 @@
+{
+  "case_id": "case-022",
+  "model": "gemini-3.8-flash",
+  "wall_s": 35.2,
+  "error": null,
+  "diagnosis": {
+    "root_component": null,
+    "category": null,
+    "cause_ref": null,
+    "confidence": 0.0,
+    "summary": "evidence not sufficient after 1 draft(s): only 1 evidence type (trace) relevant to model, no replay that fixes the answer by patching it; not relevant to model: span:e3c1f4465b72722cf557eb3590a645a2/b46fb51408779397",
+    "evidence": [],
+    "ruled_out": [],
+    "suggested_fix": "",
+    "fix_patch": null,
+    "fix_patch_error": "",
+    "abstained": true,
+    "top_candidate": {
+      "root_component": "model",
+      "category": "model_change"
+    },
+    "top_candidates": [
+      {
+        "root_component": "model",
+        "category": "model_change"
+      },
+      {
+        "root_component": "prompt",
+        "category": "prompt_edit"
+      }
+    ],
+    "missing_evidence": "only 1 evidence type (trace) relevant to model, no replay that fixes the answer by patching it; not relevant to model: span:e3c1f4465b72722cf557eb3590a645a2/b46fb51408779397"
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 0,
+    "failures": []
+  },
+  "fix": null,
+  "gate": {
+    "passed": false,
+    "reason": "only 1 evidence type (trace) relevant to model, no replay that fixes the answer by patching it; not relevant to model: span:e3c1f4465b72722cf557eb3590a645a2/b46fb51408779397",
+    "hypothesis": "model",
+    "supporting_types": [
+      "trace"
+    ],
+    "replay_ref": null,
+    "unresolved": [],
+    "irrelevant": [
+      "span:e3c1f4465b72722cf557eb3590a645a2/b46fb51408779397"
+    ]
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "prompt",
+      "category": "prompt_edit",
+      "rationale": "A recent prompt edit shortly before the alert may have introduced instructions or formatting changes that cause the model to fail to follow instructions or use tools properly across multiple canary questions.",
+      "score": 0.5
+    },
+    {
+      "root_component": "tool:lookup_order",
+      "category": "tool_outage",
+      "rationale": "Multiple failing canary samples failed to locate orders for known customer IDs (C-0005, C-0002, C-0003, C-0008), suggesting an outage, failure, or empty response from the order lookup tool.",
+      "score": 0.3
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model gemini-3.5-flash-lite may be generating hallucinated guidelines or failing to trigger tool calls correctly despite receiving valid user prompts.",
+      "score": 0.2
+    }
+  ],
+  "tool_calls_used": 15,
+  "replays_used": 0,
+  "replay_judges": [],
+  "evidence_pool_size": 102,
+  "refs_not_in_pool": [],
+  "llm_calls": 15,
+  "input_tokens": 149389,
+  "output_tokens": 1033,
+  "thinking_tokens": 0,
+  "cost_usd": 0.115916,
+  "investigator_cost_usd": 0.115916,
+  "replay_cost_usd": 0,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-d05c9f9b"
+      },
+      "result_chars": 2445,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T01:34:24.799582+00:00",
+        "end": "2026-11-01T01:34:24.799582+00:00"
+      },
+      "result_chars": 280,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2980,
+      "output_tokens": 261,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003214,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"prompt\",\n   \"category\": \"prompt_edit\",\n   \"rationale\": \"A recent prompt edit shortly before the alert may have introduced instructions or formatting changes that cause the model to fail to follow instructions or use tools properly across multiple canary questions.\",\n   \"score\": 0.5\n  },\n  {\n   \"root_component\": \"tool:lookup_order\",\n   \"category\": \"tool_outage\",\n   \"rationale\": \"Multiple failing canary samples failed to locate orders for known customer"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4294,
+      "output_tokens": 31,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003337,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "canary-71b5fffe-q050"
+      },
+      "result_chars": 157,
+      "error": "no trace for conversation 'canary-71b5fffe-q050'",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4398,
+      "output_tokens": 27,
+      "thinking_tokens": 0,
+      "cost_usd": 0.0034,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-d05c9f9b"
+      },
+      "result_chars": 2445,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5355,
+      "output_tokens": 17,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00408,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "canary"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5410,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004114,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "query": ""
+      },
+      "result_chars": 5180,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7695,
+      "output_tokens": 21,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00585,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "search_logs",
+      "args": {
+        "query": "C-0005"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7753,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005882,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "search_logs",
+      "args": {
+        "query": "lookup_order"
+      },
+      "result_chars": 5240,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10060,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007605,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "search_logs",
+      "args": {
+        "component": "tool"
+      },
+      "result_chars": 4502,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 11934,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.009007,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 30
+      },
+      "result_chars": 7210,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 14480,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.01092,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "search_logs",
+      "args": {
+        "query": "timeout"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 14533,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.01096,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "search_logs",
+      "args": {
+        "component": "config"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 14586,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.011108,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-11-01T01:34:00+00:00",
+        "limit": 20
+      },
+      "result_chars": 5278,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 16888,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.012741,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 14,
+      "tool": "search_logs",
+      "args": {
+        "query": "tool_timeout_ms"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 16945,
+      "output_tokens": 58,
+      "thinking_tokens": 0,
+      "cost_usd": 0.012926,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 15,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "canary-71b5fffe-q050",
+        "patch": {
+          "value": 2000,
+          "key": "tool_timeout_ms",
+          "kind": "set_config"
+        }
+      },
+      "result_chars": 119,
+      "error": "no recorded conversation 'canary-71b5fffe-q050'",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 12078,
+      "output_tokens": 457,
+      "thinking_tokens": 0,
+      "cost_usd": 0.010772,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"model\",\n \"category\": \"model_change\",\n \"cause_ref\": null,\n \"confidence\": 0.85,\n \"summary\": \"The model hallucinated general sock replacement advice rather than acknowledging lack of documentation and referring to support, while across the canary set, tools timed out due to transient latency or the model failed to follow instructions.\",\n \"evidence\": [\n  {\n   \"type\": \"trace\",\n   \"ref\": \"span:e3c1f4465b72722cf557eb3590a645a2/1a2065d0b20861fe\",\n   \"claim\": \"llm.chat completed wit"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": false,
+      "reason": "only 1 evidence type (trace) relevant to model, no replay that fixes the answer by patching it; not relevant to model: span:e3c1f4465b72722cf557eb3590a645a2/b46fb51408779397",
+      "hypothesis": "model",
+      "supporting_types": [
+        "trace"
+      ],
+      "replay_ref": null,
+      "unresolved": [],
+      "irrelevant": [
+        "span:e3c1f4465b72722cf557eb3590a645a2/b46fb51408779397"
+      ]
+    },
+    {
+      "kind": "end",
+      "node": "abstain"
+    }
+  ]
+}

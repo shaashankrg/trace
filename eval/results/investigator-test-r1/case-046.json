@@ -1,0 +1,477 @@
+{
+  "case_id": "case-046",
+  "model": "gemini-3.8-flash",
+  "wall_s": 62.4,
+  "error": null,
+  "diagnosis": {
+    "root_component": "guardrail",
+    "category": "guardrail_error",
+    "cause_ref": null,
+    "confidence": 0.95,
+    "summary": "The guardrail erroneously classified valid customer questions about shipping and returns under the 'shipping' rule and blocked them, returning a generic refusal message instead of retrieving relevant store policy documents.",
+    "evidence": [
+      {
+        "type": "trace",
+        "ref": "span:503b11a86f5c488569a0f2bdd2978ee5/0132eef8ab0a0596",
+        "claim": "The guardrail blocked the query matching rule 'shipping'",
+        "attribute": "guardrail.decision",
+        "value": "block",
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "log",
+        "ref": "log:f0597bf6-13f8-4316-b9d0-15171d5bec59",
+        "claim": "Log indicates guardrail blocked question matching shipping rule",
+        "attribute": null,
+        "value": null,
+        "quote": "guardrail blocked question (rule=shipping)",
+        "supports": null
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "Publish trail-volunteer-days@v1",
+        "reason": "This document update is completely unrelated to shipping questions and the queries are being rejected by the guardrail before retrieval.",
+        "ref": "change:doc-update-4913"
+      }
+    ],
+    "suggested_fix": "Update or remove the 'shipping' guardrail rule so legitimate customer shipping queries are allowed through to the retriever and LLM.",
+    "fix_patch": null,
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 3,
+    "failures": []
+  },
+  "fix": null,
+  "gate": {
+    "passed": true,
+    "reason": "2 evidence types (log, trace) support guardrail",
+    "hypothesis": "guardrail",
+    "supporting_types": [
+      "log",
+      "trace"
+    ],
+    "replay_ref": null,
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "guardrail",
+      "category": "guardrail_error",
+      "rationale": "The guardrail blocked legitimate customer inquiries regarding shipping costs and policies due to a misconfigured or overly broad 'shipping' rule.",
+      "score": 0.95
+    },
+    {
+      "root_component": "config",
+      "category": "config_change",
+      "rationale": "A runtime configuration change to guardrail thresholds or rule definitions caused topic filtering to errantly block all shipping-related questions.",
+      "score": 0.4
+    },
+    {
+      "root_component": "prompt",
+      "category": "prompt_edit",
+      "rationale": "A prompt modification may have instructed the topic filter or classifier to reject valid store policy questions.",
+      "score": 0.2
+    }
+  ],
+  "tool_calls_used": 14,
+  "replays_used": 0,
+  "replay_judges": [],
+  "evidence_pool_size": 52,
+  "refs_not_in_pool": [],
+  "llm_calls": 15,
+  "input_tokens": 125711,
+  "output_tokens": 1764,
+  "thinking_tokens": 0,
+  "cost_usd": 0.100899,
+  "investigator_cost_usd": 0.100899,
+  "replay_cost_usd": 0,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-e0eac516"
+      },
+      "result_chars": 1332,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T02:04:38.866950+00:00",
+        "end": "2026-11-01T02:04:38.866950+00:00"
+      },
+      "result_chars": 312,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2474,
+      "output_tokens": 206,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002628,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"guardrail\",\n   \"category\": \"guardrail_error\",\n   \"rationale\": \"The guardrail blocked legitimate customer inquiries regarding shipping costs and policies due to a misconfigured or overly broad 'shipping' rule.\",\n   \"score\": 0.95\n  },\n  {\n   \"root_component\": \"config\",\n   \"category\": \"config_change\",\n   \"rationale\": \"A runtime configuration change to guardrail thresholds or rule definitions caused topic filtering to errantly block all shipping-related q"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3732,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002897,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-e0eac516"
+      },
+      "result_chars": 1332,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4237,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003234,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 30
+      },
+      "result_chars": 7242,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6795,
+      "output_tokens": 17,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00516,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "guardrail"
+      },
+      "result_chars": 1491,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7459,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005654,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "query": "config"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7512,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005803,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-11-01T02:00:00+00:00",
+        "limit": 20
+      },
+      "result_chars": 5109,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 9771,
+      "output_tokens": 32,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007448,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "canary-be2804a1-q003"
+      },
+      "result_chars": 157,
+      "error": "no trace for conversation 'canary-be2804a1-q003'",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 9876,
+      "output_tokens": 30,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00752,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "search_logs",
+      "args": {
+        "query": "canary-be2804a1-q003"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 9943,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007626,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T00:00:00+00:00",
+        "limit": 30
+      },
+      "result_chars": 312,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10117,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007648,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "search_logs",
+      "args": {
+        "query": "blocked"
+      },
+      "result_chars": 1491,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10779,
+      "output_tokens": 17,
+      "thinking_tokens": 0,
+      "cost_usd": 0.008148,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "search_logs",
+      "args": {
+        "component": "guardrail"
+      },
+      "result_chars": 1491,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 11442,
+      "output_tokens": 84,
+      "thinking_tokens": 0,
+      "cost_usd": 0.008896,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {
+          "value": [
+            "lawsuit",
+            "legal advice",
+            "medical advice",
+            "weapon",
+            "firearm",
+            "social security number",
+            "hack"
+          ],
+          "kind": "set_config",
+          "key": "guardrail_blocked_topics"
+        },
+        "conversation_id": "conv-e0eac516"
+      },
+      "result_chars": 407,
+      "error": "patch rejected: guardrail_blocked_topics=[\"lawsuit\", \"legal advice\", \"medical advice\", \"weapon\", \"firearm\", \"social security number\", \"hack\"] is not a value the change log or the trace shows guardrail_blocked_topics holding",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 11641,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.008791,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 14,
+      "tool": "search_logs",
+      "args": {
+        "query": "shipping"
+      },
+      "result_chars": 1491,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 12303,
+      "output_tokens": 798,
+      "thinking_tokens": 0,
+      "cost_usd": 0.01222,
+      "tool_calls": [],
+      "text": "### Summary of Investigation\n\n#### 1. Root Cause Analysis\n- **Root Component**: `guardrail`\n- **Category**: `guardrail_error`\n- **Issue**: The guardrail topic filter mistakenly blocked valid customer inquiries regarding store shipping policies. During canary evaluation runs, queries inquiring about shipping policies (e.g., minimum order for free shipping, return shipping fees, express shipping costs) were intercepted by the guardrail filter under rule `shipping`, producing the default canned rej"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7630,
+      "output_tokens": 401,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007226,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"guardrail\",\n \"category\": \"guardrail_error\",\n \"cause_ref\": null,\n \"confidence\": 0.95,\n \"summary\": \"The guardrail erroneously classified valid customer questions about shipping and returns under the 'shipping' rule and blocked them, returning a generic refusal message instead of retrieving relevant store policy documents.\",\n \"evidence\": [\n  {\n   \"type\": \"trace\",\n   \"ref\": \"span:503b11a86f5c488569a0f2bdd2978ee5/0132eef8ab0a0596\",\n   \"claim\": \"The guardrail blocked the query ma"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "2 evidence types (log, trace) support guardrail",
+      "hypothesis": "guardrail",
+      "supporting_types": [
+        "log",
+        "trace"
+      ],
+      "replay_ref": null,
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

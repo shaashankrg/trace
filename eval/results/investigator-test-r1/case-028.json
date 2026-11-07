@@ -1,0 +1,456 @@
+{
+  "case_id": "case-028",
+  "model": "gemini-3.8-flash",
+  "wall_s": 77.6,
+  "error": null,
+  "diagnosis": {
+    "root_component": null,
+    "category": null,
+    "cause_ref": null,
+    "confidence": 0.0,
+    "summary": "evidence not sufficient after 1 draft(s): only 1 evidence type (trace) relevant to retriever, no replay that fixes the answer by patching it; not relevant to retriever: log:e88fd038-eda4-4631-bfaa-9f7c61c9bdbf",
+    "evidence": [],
+    "ruled_out": [],
+    "suggested_fix": "",
+    "fix_patch": null,
+    "fix_patch_error": "",
+    "abstained": true,
+    "top_candidate": {
+      "root_component": "retriever",
+      "category": "retrieval_failure"
+    },
+    "top_candidates": [
+      {
+        "root_component": "retriever",
+        "category": "retrieval_failure"
+      },
+      {
+        "root_component": "knowledge_base",
+        "category": "doc_delete"
+      }
+    ],
+    "missing_evidence": "only 1 evidence type (trace) relevant to retriever, no replay that fixes the answer by patching it; not relevant to retriever: log:e88fd038-eda4-4631-bfaa-9f7c61c9bdbf"
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 0,
+    "failures": []
+  },
+  "fix": null,
+  "gate": {
+    "passed": false,
+    "reason": "only 1 evidence type (trace) relevant to retriever, no replay that fixes the answer by patching it; not relevant to retriever: log:e88fd038-eda4-4631-bfaa-9f7c61c9bdbf",
+    "hypothesis": "retriever",
+    "supporting_types": [
+      "trace"
+    ],
+    "replay_ref": null,
+    "unresolved": [],
+    "irrelevant": [
+      "log:e88fd038-eda4-4631-bfaa-9f7c61c9bdbf"
+    ]
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "retriever",
+      "category": "retrieval_failure",
+      "rationale": "Retrieval returned 0 chunks across multiple general knowledge questions despite standard threshold and top_k settings, indicating an embedding or index query failure.",
+      "score": 0.45
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_delete",
+      "rationale": "Documents or chunks containing answers to standard customer support topics may have been unindexed or removed, causing 0 chunks to be returned.",
+      "score": 0.25
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "Documents may have been updated or re-indexed incorrectly, breaking retrieval across multiple articles.",
+      "score": 0.15
+    },
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "A configuration change to retrieval settings or similarity scoring thresholds may have prevented documents from meeting the similarity cutoff.",
+      "score": 0.15
+    }
+  ],
+  "tool_calls_used": 15,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 57,
+  "refs_not_in_pool": [],
+  "llm_calls": 13,
+  "input_tokens": 116028,
+  "output_tokens": 1244,
+  "thinking_tokens": 0,
+  "cost_usd": 0.091861,
+  "investigator_cost_usd": 0.091686,
+  "replay_cost_usd": 0.000175,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-c2bebec5"
+      },
+      "result_chars": 2447,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T01:41:39.569878+00:00",
+        "end": "2026-11-01T01:41:39.569878+00:00"
+      },
+      "result_chars": 50,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2561,
+      "output_tokens": 281,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002975,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"retriever\",\n   \"category\": \"retrieval_failure\",\n   \"rationale\": \"Retrieval returned 0 chunks across multiple general knowledge questions despite standard threshold and top_k settings, indicating an embedding or index query failure.\",\n   \"score\": 0.45\n  },\n  {\n   \"root_component\": \"knowledge_base\",\n   \"category\": \"doc_delete\",\n   \"rationale\": \"Documents or chunks containing answers to standard customer support topics may have been unindexed or removed,"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3858,
+      "output_tokens": 88,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003223,
+      "tool_calls": [
+        "get_trace",
+        "recent_changes",
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "canary-f736d62f-q002"
+      },
+      "result_chars": 157,
+      "error": "no trace for conversation 'canary-f736d62f-q002'",
+      "node": "investigate"
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 30
+      },
+      "result_chars": 7231,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-11-01T01:30:00Z",
+        "query": ""
+      },
+      "result_chars": 5177,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 8804,
+      "output_tokens": 42,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006761,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-11-01T01:30:00Z",
+        "component": "retriev"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 8883,
+      "output_tokens": 24,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006752,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-c2bebec5"
+      },
+      "result_chars": 2447,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 9828,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007446,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "password-reset"
+      },
+      "result_chars": 799,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10116,
+      "output_tokens": 41,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007741,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "search_logs",
+      "args": {
+        "query": "config",
+        "start": "2026-10-31T00:00:00Z"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10194,
+      "output_tokens": 41,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007799,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-10-31T00:00:00Z",
+        "query": "embedding"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10272,
+      "output_tokens": 41,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007858,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "search_logs",
+      "args": {
+        "query": "error",
+        "start": "2026-11-01T01:30:00Z"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10350,
+      "output_tokens": 41,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007916,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "search_logs",
+      "args": {
+        "query": "warn",
+        "start": "2026-11-01T01:30:00Z"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10428,
+      "output_tokens": 40,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007971,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-11-01T01:40:00Z",
+        "limit": 10
+      },
+      "result_chars": 2630,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 11609,
+      "output_tokens": 27,
+      "thinking_tokens": 0,
+      "cost_usd": 0.008808,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 14,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-c2bebec5",
+        "patch": {}
+      },
+      "result_chars": 399,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 11792,
+      "output_tokens": 24,
+      "thinking_tokens": 0,
+      "cost_usd": 0.008934,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 15,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-c2bebec5"
+      },
+      "result_chars": 2447,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7333,
+      "output_tokens": 534,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007502,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"retriever\",\n \"category\": \"retrieval_failure\",\n \"cause_ref\": null,\n \"confidence\": 0.9,\n \"summary\": \"Canary accuracy dropped from 98.33% to 78.33% across multiple unrelated queries due to a transient retrieval failure where document retrieval returned 0 chunks (retrieval.result_count=0) despite relevant documents like password-reset@v2 existing and being indexed. Replaying without patches succeeds.\",\n \"evidence\": [\n  {\n   \"type\": \"trace\",\n   \"ref\": \"span:b142183e181fba4e8cd59"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": false,
+      "reason": "only 1 evidence type (trace) relevant to retriever, no replay that fixes the answer by patching it; not relevant to retriever: log:e88fd038-eda4-4631-bfaa-9f7c61c9bdbf",
+      "hypothesis": "retriever",
+      "supporting_types": [
+        "trace"
+      ],
+      "replay_ref": null,
+      "unresolved": [],
+      "irrelevant": [
+        "log:e88fd038-eda4-4631-bfaa-9f7c61c9bdbf"
+      ]
+    },
+    {
+      "kind": "end",
+      "node": "abstain"
+    }
+  ]
+}

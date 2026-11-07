@@ -1,0 +1,12 @@
+group,key,n,top1,category,cause
+overall,all,28,0.0,0.0,0.0
+decoy,with decoy,13,0.0,0.0,0.0
+decoy,without decoy,15,0.0,0.0,0.0
+fault_type,chunking_regression,1,0.0,0.0,0.0
+fault_type,embedding_mismatch,3,0.0,0.0,0.0
+fault_type,guardrail_misfire,5,0.0,0.0,0.0
+fault_type,missing_document,1,0.0,0.0,0.0
+fault_type,prompt_regression,1,0.0,0.0,0.0
+fault_type,silent_tool_failure,6,0.0,0.0,0.0
+fault_type,stale_tool_data,6,0.0,0.0,0.0
+fault_type,threshold_too_strict,5,0.0,0.0,0.0

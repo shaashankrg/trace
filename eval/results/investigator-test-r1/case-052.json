@@ -1,0 +1,506 @@
+{
+  "case_id": "case-052",
+  "model": "gemini-3.8-flash",
+  "wall_s": 68.8,
+  "error": null,
+  "diagnosis": {
+    "root_component": "tool:lookup_order",
+    "category": "tool_outage",
+    "cause_ref": null,
+    "confidence": 0.95,
+    "summary": "The lookup_order tool timed out after 1ms due to a strict timeout threshold, returning an empty result which caused the assistant to incorrectly state the customer had 0 orders.",
+    "evidence": [
+      {
+        "type": "trace",
+        "ref": "span:2f9af1dd156f456c3b4ffa1ddd877c40/cfee254a08f542f8",
+        "claim": "tool.lookup_order completed with 0 results despite taking 5.6ms",
+        "attribute": "tool.result_count",
+        "value": 0,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "log",
+        "ref": "log:950ffa59-7543-4e1a-88b4-102448f27fc3",
+        "claim": "lookup_order timed out after 1ms and returned an empty result",
+        "attribute": null,
+        "value": null,
+        "quote": "lookup_order timed out after 1ms; returning empty result",
+        "supports": null
+      },
+      {
+        "type": "replay",
+        "ref": "replay:759b421956e5",
+        "claim": "Rerunning lookup_order fixed the answer and matched the reviewer correction",
+        "attribute": "matches_correction",
+        "value": true,
+        "quote": null,
+        "supports": null
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:config-change-2598",
+        "reason": "This change modified max_response_tokens and did not cause or affect the tool timeout issue",
+        "ref": "change:config-change-2598"
+      }
+    ],
+    "suggested_fix": "Increase the tool timeout configuration or rerun the failed tool call.",
+    "fix_patch": {
+      "kind": "rerun_tool",
+      "tool": "lookup_order"
+    },
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 4,
+    "failures": []
+  },
+  "fix": {
+    "ref": "replay:c49d16f251fd",
+    "patch": {
+      "kind": "rerun_tool",
+      "tool": "lookup_order"
+    },
+    "target_component": "tool:lookup_order",
+    "matches_correction": true,
+    "votes": [
+      true,
+      true,
+      true
+    ],
+    "judge": "code",
+    "control_ref": "replay:3f745d95d698",
+    "control_matches_correction": false,
+    "proves_fix": true,
+    "cost_usd": 0.000738
+  },
+  "gate": {
+    "passed": true,
+    "reason": "2 evidence types (log, trace) and replay replay:759b421956e5 support tool:lookup_order",
+    "hypothesis": "tool:lookup_order",
+    "supporting_types": [
+      "log",
+      "trace"
+    ],
+    "replay_ref": "replay:759b421956e5",
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "config",
+      "category": "config_change",
+      "rationale": "The config has tool_timeout_ms set to an extremely low value of 1ms while tool.lookup_order took 5.6ms, likely causing it to abort or return empty results.",
+      "score": 0.8
+    },
+    {
+      "root_component": "tool:lookup_order",
+      "category": "tool_outage",
+      "rationale": "tool.lookup_order returned 0 results for customer C-0012 despite the customer having 6 orders on file.",
+      "score": 0.7
+    },
+    {
+      "root_component": "tool:lookup_order",
+      "category": "stale_data",
+      "rationale": "The order lookup tool may have queried stale or desynchronized data that omitted customer C-0012's order history.",
+      "score": 0.4
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model may have called tool.lookup_order with invalid parameters or misinterpreted the customer ID.",
+      "score": 0.3
+    }
+  ],
+  "tool_calls_used": 14,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 67,
+  "refs_not_in_pool": [],
+  "llm_calls": 15,
+  "input_tokens": 124966,
+  "output_tokens": 1485,
+  "thinking_tokens": 0,
+  "cost_usd": 0.10163,
+  "investigator_cost_usd": 0.099294,
+  "replay_cost_usd": 0.002336,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-9a7b3af7"
+      },
+      "result_chars": 3684,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T02:08:54.295322+00:00",
+        "end": "2026-11-01T02:08:54.295322+00:00"
+      },
+      "result_chars": 311,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2118,
+      "output_tokens": 302,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002721,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"config\",\n   \"category\": \"config_change\",\n   \"rationale\": \"The config has tool_timeout_ms set to an extremely low value of 1ms while tool.lookup_order took 5.6ms, likely causing it to abort or return empty results.\",\n   \"score\": 0.8\n  },\n  {\n   \"root_component\": \"tool:lookup_order\",\n   \"category\": \"tool_outage\",\n   \"rationale\": \"tool.lookup_order returned 0 results for customer C-0012 despite the customer having 6 orders on file.\",\n   \"score\": 0.7\n  },"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3444,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002658,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "search_logs",
+      "args": {
+        "query": "tool_timeout_ms"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3502,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002694,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "search_logs",
+      "args": {
+        "query": "lookup_order"
+      },
+      "result_chars": 5240,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5773,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004386,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 30
+      },
+      "result_chars": 7241,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 8327,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006305,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "query": "timeout"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 8380,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006345,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "search_logs",
+      "args": {
+        "query": "config"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 8433,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006385,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "search_logs",
+      "args": {
+        "component": "config"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 8486,
+      "output_tokens": 40,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006515,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-11-01T00:00:00Z",
+        "limit": 10
+      },
+      "result_chars": 2599,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 9667,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007348,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-9a7b3af7"
+      },
+      "result_chars": 3684,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 11069,
+      "output_tokens": 40,
+      "thinking_tokens": 0,
+      "cost_usd": 0.008452,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T00:00:00Z",
+        "limit": 30
+      },
+      "result_chars": 311,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 11234,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.008493,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "search_logs",
+      "args": {
+        "query": "tool_timeout"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 11289,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.008534,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "search_logs",
+      "args": {
+        "query": "timed out after"
+      },
+      "result_chars": 2418,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 12316,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.009406,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 14,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-9a7b3af7",
+        "patch": {
+          "kind": "rerun_tool",
+          "tool": "lookup_order"
+        }
+      },
+      "result_chars": 710,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 12610,
+      "output_tokens": 397,
+      "thinking_tokens": 0,
+      "cost_usd": 0.010946,
+      "tool_calls": [],
+      "text": "### Incident Summary\n\n**Root Component**: `tool:lookup_order`  \n**Category**: `tool_outage`\n\n#### Findings & Evidence:\n1. **Trace Analysis**:\n   - In conversation `conv-9a7b3af7` (trace `2f9af1dd156f456c3b4ffa1ddd877c40`), the LLM correctly called `lookup_order` with the customer ID (span `span:2f9af1dd156f456c3b4ffa1ddd877c40/cfee254a08f542f8`).\n   - The tool span executed with `tool.latency_ms: 5.6` and returned `tool.result_count: 0`.\n\n2. **Log Verification**:\n   - Log entry `log:950ffa59-754"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 8318,
+      "output_tokens": 498,
+      "thinking_tokens": 0,
+      "cost_usd": 0.008106,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"tool:lookup_order\",\n \"category\": \"tool_outage\",\n \"cause_ref\": null,\n \"confidence\": 0.95,\n \"summary\": \"The lookup_order tool timed out after 1ms due to a strict timeout threshold, returning an empty result which caused the assistant to incorrectly state the customer had 0 orders.\",\n \"evidence\": [\n  {\n   \"type\": \"trace\",\n   \"ref\": \"span:2f9af1dd156f456c3b4ffa1ddd877c40/cfee254a08f542f8\",\n   \"claim\": \"tool.lookup_order completed with 0 results despite taking 5.6ms\",\n   \"attrib"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "2 evidence types (log, trace) and replay replay:759b421956e5 support tool:lookup_order",
+      "hypothesis": "tool:lookup_order",
+      "supporting_types": [
+        "log",
+        "trace"
+      ],
+      "replay_ref": "replay:759b421956e5",
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

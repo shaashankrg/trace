@@ -1,0 +1,472 @@
+{
+  "case_id": "case-036",
+  "model": "gemini-3.8-flash",
+  "wall_s": 67.0,
+  "error": null,
+  "diagnosis": {
+    "root_component": null,
+    "category": null,
+    "cause_ref": null,
+    "confidence": 0.0,
+    "summary": "evidence not sufficient after 1 draft(s): only 1 evidence type (trace) relevant to retriever, no replay that fixes the answer by patching it",
+    "evidence": [],
+    "ruled_out": [],
+    "suggested_fix": "",
+    "fix_patch": null,
+    "fix_patch_error": "",
+    "abstained": true,
+    "top_candidate": {
+      "root_component": "retriever",
+      "category": "retrieval_failure"
+    },
+    "top_candidates": [
+      {
+        "root_component": "retriever",
+        "category": "retrieval_failure"
+      },
+      {
+        "root_component": "knowledge_base",
+        "category": "doc_update"
+      }
+    ],
+    "missing_evidence": "only 1 evidence type (trace) relevant to retriever, no replay that fixes the answer by patching it"
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 0,
+    "failures": []
+  },
+  "fix": null,
+  "gate": {
+    "passed": false,
+    "reason": "only 1 evidence type (trace) relevant to retriever, no replay that fixes the answer by patching it",
+    "hypothesis": "retriever",
+    "supporting_types": [
+      "trace"
+    ],
+    "replay_ref": null,
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "The similarity threshold is set very high at 0.88, causing the retrieve span to return 0 chunks for the query.",
+      "score": 0.55
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "The relevant gift card documentation may not be indexed or may be missing from the knowledge base.",
+      "score": 0.25
+    },
+    {
+      "root_component": "retriever",
+      "category": "retrieval_failure",
+      "rationale": "The retriever failed to match or score relevant gift card chunks above the threshold due to embedding mismatch or chunking issues.",
+      "score": 0.2
+    }
+  ],
+  "tool_calls_used": 15,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 46,
+  "refs_not_in_pool": [],
+  "llm_calls": 15,
+  "input_tokens": 90479,
+  "output_tokens": 1101,
+  "thinking_tokens": 0,
+  "cost_usd": 0.072236,
+  "investigator_cost_usd": 0.071989,
+  "replay_cost_usd": 0.000247,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-13c4b9e7"
+      },
+      "result_chars": 2446,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T01:49:25.775150+00:00",
+        "end": "2026-11-01T01:49:25.775150+00:00"
+      },
+      "result_chars": 50,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1823,
+      "output_tokens": 213,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002166,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"retriever\",\n   \"category\": \"config_change\",\n   \"rationale\": \"The similarity threshold is set very high at 0.88, causing the retrieve span to return 0 chunks for the query.\",\n   \"score\": 0.55\n  },\n  {\n   \"root_component\": \"knowledge_base\",\n   \"category\": \"doc_update\",\n   \"rationale\": \"The relevant gift card documentation may not be indexed or may be missing from the knowledge base.\",\n   \"score\": 0.25\n  },\n  {\n   \"root_component\": \"retriever\",\n   \"categ"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3082,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002379,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "search_logs",
+      "args": {
+        "query": "similarity_threshold"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3138,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00241,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 30
+      },
+      "result_chars": 7231,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5687,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00434,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "gift-cards"
+      },
+      "result_chars": 319,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5836,
+      "output_tokens": 61,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004606,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:6556baad91a2fbf0ce7f8f305cada8e6/119b253ce79faa57"
+      },
+      "result_chars": 139,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5992,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004554,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "search_logs",
+      "args": {
+        "query": "threshold"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6045,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004594,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "search_logs",
+      "args": {
+        "query": "config"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6098,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004633,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "search_logs",
+      "args": {
+        "query": "retrieve"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6151,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00467,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "search_logs",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2618,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7320,
+      "output_tokens": 83,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005801,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "search_logs",
+      "args": {
+        "limit": 20,
+        "end": "2026-11-01T01:48:58.000+00:00",
+        "start": "2026-11-01T01:40:00.000+00:00"
+      },
+      "result_chars": 587,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7671,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005922,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10,
+        "start": "2026-10-25T00:00:00+00:00"
+      },
+      "result_chars": 50,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7751,
+      "output_tokens": 51,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006005,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-13c4b9e7",
+        "patch": {
+          "key": "similarity_threshold",
+          "value": 0.7,
+          "kind": "set_config"
+        }
+      },
+      "result_chars": 171,
+      "error": "patch rejected: similarity_threshold=0.7 is not a value the change log or the trace shows similarity_threshold holding",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7870,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006071,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 14,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 30,
+        "start": "2026-01-01T00:00:00+00:00"
+      },
+      "result_chars": 7231,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10448,
+      "output_tokens": 30,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007949,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 15,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-13c4b9e7",
+        "patch": {}
+      },
+      "result_chars": 473,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5567,
+      "output_tokens": 457,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005889,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"retriever\",\n \"category\": \"retrieval_failure\",\n \"cause_ref\": null,\n \"confidence\": 0.85,\n \"summary\": \"The retriever returned zero chunks (retrieval.result_count=0) for the question about gift card expiration due to an overly strict similarity threshold of 0.88, preventing the model from seeing the indexed document doc:gift-cards@v1.\",\n \"evidence\": [\n  {\n   \"type\": \"trace\",\n   \"ref\": \"span:6556baad91a2fbf0ce7f8f305cada8e6/119b253ce79faa57\",\n   \"claim\": \"The retrieve span retur"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": false,
+      "reason": "only 1 evidence type (trace) relevant to retriever, no replay that fixes the answer by patching it",
+      "hypothesis": "retriever",
+      "supporting_types": [
+        "trace"
+      ],
+      "replay_ref": null,
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "abstain"
+    }
+  ]
+}

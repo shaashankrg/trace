@@ -1,0 +1,402 @@
+{
+  "case_id": "case-025",
+  "model": "gemini-3.8-flash",
+  "wall_s": 63.8,
+  "error": null,
+  "diagnosis": {
+    "root_component": "guardrail",
+    "category": "guardrail_error",
+    "cause_ref": null,
+    "confidence": 0.95,
+    "summary": "The guardrail erroneously blocked a legitimate question about item exchanges due to matching the rule 'exchange'.",
+    "evidence": [
+      {
+        "type": "trace",
+        "ref": "span:0aeafff7dd2cb2c1e4fc71387f6dc9af/e91dc615db8a6efd",
+        "claim": "The guardrail evaluated the user question and blocked it matching rule 'exchange'.",
+        "attribute": "guardrail.decision",
+        "value": "block",
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "trace",
+        "ref": "span:0aeafff7dd2cb2c1e4fc71387f6dc9af/e91dc615db8a6efd",
+        "claim": "The guardrail rule matched was 'exchange'.",
+        "attribute": "guardrail.matched_rule",
+        "value": "exchange",
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "log",
+        "ref": "log:745f546c-b55d-4cf9-9ead-72f5a3ec777a",
+        "claim": "Logs confirm the guardrail blocked the question under the exchange rule.",
+        "attribute": null,
+        "value": null,
+        "quote": "guardrail blocked question (rule=exchange)",
+        "supports": null
+      }
+    ],
+    "ruled_out": [
+      {
+        "change": "change:doc-update-1047",
+        "reason": "This document update was for holiday returns on October 1st and is unrelated to exchange policy guardrail blocking.",
+        "ref": "change:doc-update-1047"
+      }
+    ],
+    "suggested_fix": "Remove or update the 'exchange' rule in the guardrail filter so questions regarding exchanges are permitted.",
+    "fix_patch": null,
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 4,
+    "failures": []
+  },
+  "fix": null,
+  "gate": {
+    "passed": true,
+    "reason": "2 evidence types (log, trace) support guardrail",
+    "hypothesis": "guardrail",
+    "supporting_types": [
+      "log",
+      "trace"
+    ],
+    "replay_ref": null,
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "guardrail",
+      "category": "guardrail_error",
+      "rationale": "The guardrail span blocked the conversation on matched_rule 'exchange', improperly refusing a valid customer question about exchanging an item for a different size.",
+      "score": 0.95
+    },
+    {
+      "root_component": "config",
+      "category": "config_change",
+      "rationale": "A guardrail configuration setting or topic filter rule definition incorrectly classified exchange requests as disallowed.",
+      "score": 0.03
+    },
+    {
+      "root_component": "prompt",
+      "category": "prompt_edit",
+      "rationale": "The system prompt may have instructed the guardrail or model to reject exchange-related inquiries.",
+      "score": 0.02
+    }
+  ],
+  "tool_calls_used": 11,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 8,
+  "refs_not_in_pool": [],
+  "llm_calls": 12,
+  "input_tokens": 45913,
+  "output_tokens": 1398,
+  "thinking_tokens": 0,
+  "cost_usd": 0.039937,
+  "investigator_cost_usd": 0.039678,
+  "replay_cost_usd": 0.000259,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-619c22f4"
+      },
+      "result_chars": 1332,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T01:38:09.342369+00:00",
+        "end": "2026-11-01T01:38:09.342369+00:00"
+      },
+      "result_chars": 50,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1665,
+      "output_tokens": 205,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002018,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"guardrail\",\n   \"category\": \"guardrail_error\",\n   \"rationale\": \"The guardrail span blocked the conversation on matched_rule 'exchange', improperly refusing a valid customer question about exchanging an item for a different size.\",\n   \"score\": 0.95\n  },\n  {\n   \"root_component\": \"config\",\n   \"category\": \"config_change\",\n   \"rationale\": \"A guardrail configuration setting or topic filter rule definition incorrectly classified exchange requests as disallowe"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2920,
+      "output_tokens": 27,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002291,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-619c22f4"
+      },
+      "result_chars": 1332,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3404,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002613,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "search_logs",
+      "args": {
+        "query": "exchange"
+      },
+      "result_chars": 535,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3660,
+      "output_tokens": 35,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002876,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-01T00:00:00Z"
+      },
+      "result_chars": 293,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3814,
+      "output_tokens": 17,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002924,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "component": "guardrail"
+      },
+      "result_chars": 535,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4070,
+      "output_tokens": 30,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003165,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {},
+        "conversation_id": "conv-619c22f4"
+      },
+      "result_chars": 565,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4310,
+      "output_tokens": 47,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003409,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "eef876c3319da0c83e4b6f91c4841790"
+      },
+      "result_chars": 152,
+      "error": "no trace 'eef876c3319da0c83e4b6f91c4841790'",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4443,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003501,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "search_logs",
+      "args": {
+        "query": "eef876c3319da0c83e4b6f91c4841790"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4525,
+      "output_tokens": 17,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003458,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "search_logs",
+      "args": {
+        "query": "guardrail"
+      },
+      "result_chars": 535,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4781,
+      "output_tokens": 19,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003657,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "exchanges"
+      },
+      "result_chars": 1039,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5118,
+      "output_tokens": 459,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00556,
+      "tool_calls": [],
+      "text": "### Incident Investigation Summary\n\n#### Root Cause\n- **Root Component:** `guardrail`\n- **Category:** `guardrail_error`\n\n#### Evidence & Analysis\n1. **Trace Evidence:**\n   - In conversation `conv-619c22f4` (trace `0aeafff7dd2cb2c1e4fc71387f6dc9af`), span `span:0aeafff7dd2cb2c1e4fc71387f6dc9af/e91dc615db8a6efd` (`guardrail`) triggered a blocking action with attributes:\n     - `guardrail.decision`: `block`\n     - `guardrail.matched_rule`: `exchange`\n   - The root span (`span:0aeafff7dd2cb2c1e4fc71"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3203,
+      "output_tokens": 481,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004206,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"guardrail\",\n \"category\": \"guardrail_error\",\n \"cause_ref\": null,\n \"confidence\": 0.95,\n \"summary\": \"The guardrail erroneously blocked a legitimate question about item exchanges due to matching the rule 'exchange'.\",\n \"evidence\": [\n  {\n   \"type\": \"trace\",\n   \"ref\": \"span:0aeafff7dd2cb2c1e4fc71387f6dc9af/e91dc615db8a6efd\",\n   \"claim\": \"The guardrail evaluated the user question and blocked it matching rule 'exchange'.\",\n   \"attribute\": \"guardrail.decision\",\n   \"value\": \"block\"\n "
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "2 evidence types (log, trace) support guardrail",
+      "hypothesis": "guardrail",
+      "supporting_types": [
+        "log",
+        "trace"
+      ],
+      "replay_ref": null,
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

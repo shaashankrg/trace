@@ -1,0 +1,500 @@
+{
+  "case_id": "case-024",
+  "model": "gemini-3.8-flash",
+  "wall_s": 47.4,
+  "error": null,
+  "diagnosis": {
+    "root_component": "retriever",
+    "category": "config_change",
+    "cause_ref": "change:config-change-9766",
+    "confidence": 0.95,
+    "summary": "Priya upgraded the embedding model via a config change, which caused retrieval failures across multiple queries because query embeddings no longer match the indexed document embeddings, resulting in 0 chunks retrieved.",
+    "evidence": [
+      {
+        "type": "change",
+        "ref": "change:config-change-9766",
+        "claim": "The embedding model was changed shortly before the quality drop alert.",
+        "attribute": null,
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "trace",
+        "ref": "span:177b2113984be4448b62dc1a3aabc1e6/e7bd17060fecd50e",
+        "claim": "Retrieval step returned 0 document chunks above the threshold.",
+        "attribute": "retrieval.result_count",
+        "value": 0,
+        "quote": null,
+        "supports": null
+      }
+    ],
+    "ruled_out": [],
+    "suggested_fix": "Revert the embedding_model configuration change back to sentence-transformers/all-MiniLM-L6-v2.",
+    "fix_patch": {
+      "kind": "set_config",
+      "key": "embedding_model",
+      "value": "sentence-transformers/all-MiniLM-L6-v2"
+    },
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 3,
+    "failures": []
+  },
+  "fix": {
+    "ref": "replay:094e0ee57101",
+    "patch": {
+      "kind": "set_config",
+      "key": "embedding_model",
+      "value": "sentence-transformers/all-MiniLM-L6-v2"
+    },
+    "target_component": "retriever",
+    "matches_correction": true,
+    "votes": [
+      true,
+      true,
+      true
+    ],
+    "judge": "code",
+    "control_ref": "replay:63257d5e75ec",
+    "control_matches_correction": true,
+    "proves_fix": false,
+    "cost_usd": 0.000282
+  },
+  "gate": {
+    "passed": true,
+    "reason": "2 evidence types (change, trace) support retriever",
+    "hypothesis": "retriever",
+    "supporting_types": [
+      "change",
+      "trace"
+    ],
+    "replay_ref": null,
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "retriever",
+      "category": "retrieval_failure",
+      "rationale": "An embedding model upgrade changed the query embeddings without re-indexing the knowledge base chunks or causing mismatch, leading to 0 chunks retrieved across multiple canaries.",
+      "score": 0.85
+    },
+    {
+      "root_component": "config",
+      "category": "config_change",
+      "rationale": "The recent config change modifying the embedding model directly preceded the drop in retrieval accuracy and 0 returned chunks.",
+      "score": 0.75
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "The indexed documents may not have been re-indexed with embeddings compatible with the newly configured embedding model.",
+      "score": 0.4
+    }
+  ],
+  "tool_calls_used": 15,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 36,
+  "refs_not_in_pool": [],
+  "llm_calls": 15,
+  "input_tokens": 96143,
+  "output_tokens": 882,
+  "thinking_tokens": 0,
+  "cost_usd": 0.076553,
+  "investigator_cost_usd": 0.075416,
+  "replay_cost_usd": 0.001137,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-07e52957"
+      },
+      "result_chars": 2447,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T01:37:10.380542+00:00",
+        "end": "2026-11-01T01:37:10.380542+00:00"
+      },
+      "result_chars": 312,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2761,
+      "output_tokens": 215,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002877,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"retriever\",\n   \"category\": \"retrieval_failure\",\n   \"rationale\": \"An embedding model upgrade changed the query embeddings without re-indexing the knowledge base chunks or causing mismatch, leading to 0 chunks retrieved across multiple canaries.\",\n   \"score\": 0.85\n  },\n  {\n   \"root_component\": \"config\",\n   \"category\": \"config_change\",\n   \"rationale\": \"The recent config change modifying the embedding model directly preceded the drop in retrieval accuracy"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4024,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003078,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "search_logs",
+      "args": {
+        "query": "embedding"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4078,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003115,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2494,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4977,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003789,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2581,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6139,
+      "output_tokens": 31,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00472,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "canary-dce0fa21-q002"
+      },
+      "result_chars": 157,
+      "error": "no trace for conversation 'canary-dce0fa21-q002'",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6242,
+      "output_tokens": 27,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004783,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-07e52957"
+      },
+      "result_chars": 2447,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7189,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005459,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "search_logs",
+      "args": {
+        "query": "embedding_model"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7244,
+      "output_tokens": 17,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005497,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "search_logs",
+      "args": {
+        "query": "priya"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7298,
+      "output_tokens": 17,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005537,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "search_logs",
+      "args": {
+        "component": "retriever"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7352,
+      "output_tokens": 21,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005593,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "loyalty-tiers"
+      },
+      "result_chars": 334,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7505,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005689,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "search_logs",
+      "args": {
+        "query": "config"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7558,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005736,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "search_logs",
+      "args": {
+        "query": "sentence-transformers"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7613,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005879,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 14,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-11-01T00:25:00+00:00",
+        "limit": 20
+      },
+      "result_chars": 5081,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 9905,
+      "output_tokens": 64,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007669,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 15,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-07e52957",
+        "patch": {
+          "key": "embedding_model",
+          "kind": "set_config",
+          "value": "sentence-transformers/all-MiniLM-L6-v2"
+        }
+      },
+      "result_chars": 827,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6258,
+      "output_tokens": 347,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005995,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"retriever\",\n \"category\": \"config_change\",\n \"cause_ref\": \"change:config-change-9766\",\n \"confidence\": 0.95,\n \"summary\": \"Priya upgraded the embedding model via a config change, which caused retrieval failures across multiple queries because query embeddings no longer match the indexed document embeddings, resulting in 0 chunks retrieved.\",\n \"evidence\": [\n  {\n   \"type\": \"change\",\n   \"ref\": \"change:config-change-9766\",\n   \"claim\": \"The embedding model was changed shortly before"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "2 evidence types (change, trace) support retriever",
+      "hypothesis": "retriever",
+      "supporting_types": [
+        "change",
+        "trace"
+      ],
+      "replay_ref": null,
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

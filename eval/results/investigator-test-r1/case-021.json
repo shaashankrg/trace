@@ -1,0 +1,485 @@
+{
+  "case_id": "case-021",
+  "model": "gemini-3.8-flash",
+  "wall_s": 56.3,
+  "error": null,
+  "diagnosis": {
+    "root_component": "guardrail",
+    "category": "guardrail_error",
+    "cause_ref": "change:config-change-5178",
+    "confidence": 0.99,
+    "summary": "A configuration change added 'refund' to guardrail_blocked_topics, causing the guardrail to erroneously block user inquiries regarding refunds and return policies.",
+    "evidence": [
+      {
+        "type": "trace",
+        "ref": "span:300af58243e4db43e772c61f644f3d6a/df694142a76df566",
+        "claim": "The guardrail blocked the query matching the 'refund' rule",
+        "attribute": "guardrail.decision",
+        "value": "block",
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "change",
+        "ref": "change:config-change-5178",
+        "claim": "Alice modified guardrail_blocked_topics to add a blocked topic ('refund')",
+        "attribute": null,
+        "value": null,
+        "quote": null,
+        "supports": null
+      },
+      {
+        "type": "log",
+        "ref": "log:d498c9eb-ac0f-473e-9789-fe2de95d9fa6",
+        "claim": "The guardrail blocked incoming valid queries under the 'refund' rule",
+        "attribute": null,
+        "value": null,
+        "quote": "guardrail blocked question (rule=refund)",
+        "supports": null
+      },
+      {
+        "type": "replay",
+        "ref": "replay:295de235ca5f",
+        "claim": "Removing 'refund' from guardrail_blocked_topics successfully fixed the answers across failing samples",
+        "attribute": "matches_correction",
+        "value": true,
+        "quote": null,
+        "supports": null
+      }
+    ],
+    "ruled_out": [],
+    "suggested_fix": "Remove 'refund' from the guardrail_blocked_topics configuration list so legitimate customer questions about returns and refunds are not blocked.",
+    "fix_patch": {
+      "kind": "set_config",
+      "key": "guardrail_blocked_topics",
+      "value": "[\"lawsuit\", \"legal advice\", \"medical advice\", \"weapon\", \"firearm\", \"social security number\", \"hack\"]"
+    },
+    "fix_patch_error": "",
+    "abstained": false,
+    "top_candidate": null,
+    "top_candidates": [],
+    "missing_evidence": ""
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 5,
+    "failures": []
+  },
+  "fix": {
+    "ref": "replay:54515e332348",
+    "patch": {
+      "kind": "set_config",
+      "key": "guardrail_blocked_topics",
+      "value": "[\"lawsuit\", \"legal advice\", \"medical advice\", \"weapon\", \"firearm\", \"social security number\", \"hack\"]"
+    },
+    "target_component": "guardrail",
+    "matches_correction": true,
+    "votes": [
+      true,
+      true,
+      true
+    ],
+    "judge": "code",
+    "control_ref": "replay:cbb44b5934e4",
+    "control_matches_correction": false,
+    "proves_fix": true,
+    "cost_usd": 0.000297
+  },
+  "gate": {
+    "passed": true,
+    "reason": "3 evidence types (change, log, trace) and replay replay:295de235ca5f support guardrail",
+    "hypothesis": "guardrail",
+    "supporting_types": [
+      "change",
+      "log",
+      "trace"
+    ],
+    "replay_ref": "replay:295de235ca5f",
+    "unresolved": [],
+    "irrelevant": []
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "guardrail",
+      "category": "guardrail_error",
+      "rationale": "A guardrail configuration update blocked the topic 'refund', causing the assistant to refuse valid customer questions about refunds and return policies.",
+      "score": 0.95
+    },
+    {
+      "root_component": "config",
+      "category": "config_change",
+      "rationale": "The guardrail_blocked_topics configuration was modified right before the quality drop, erroneously adding 'refund' to the blocked list.",
+      "score": 0.85
+    },
+    {
+      "root_component": "prompt",
+      "category": "prompt_edit",
+      "rationale": "The system prompt may have been modified to instruct the model to decline queries related to refunds.",
+      "score": 0.1
+    }
+  ],
+  "tool_calls_used": 12,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 20,
+  "refs_not_in_pool": [],
+  "llm_calls": 13,
+  "input_tokens": 86843,
+  "output_tokens": 1871,
+  "thinking_tokens": 0,
+  "cost_usd": 0.072753,
+  "investigator_cost_usd": 0.072145,
+  "replay_cost_usd": 0.000608,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-e60ea1b3"
+      },
+      "result_chars": 1328,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T01:31:11.323865+00:00",
+        "end": "2026-11-01T01:31:11.323865+00:00"
+      },
+      "result_chars": 313,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2578,
+      "output_tokens": 209,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002717,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"guardrail\",\n   \"category\": \"guardrail_error\",\n   \"rationale\": \"A guardrail configuration update blocked the topic 'refund', causing the assistant to refuse valid customer questions about refunds and return policies.\",\n   \"score\": 0.95\n  },\n  {\n   \"root_component\": \"config\",\n   \"category\": \"config_change\",\n   \"rationale\": \"The guardrail_blocked_topics configuration was modified right before the quality drop, erroneously adding 'refund' to the blocked l"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3838,
+      "output_tokens": 40,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003028,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-31T00:00:00+00:00"
+      },
+      "result_chars": 313,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4004,
+      "output_tokens": 47,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003179,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-10-31T23:00:00+00:00",
+        "query": "guardrail"
+      },
+      "result_chars": 3377,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5496,
+      "output_tokens": 51,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004313,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-10-31T20:00:00+00:00",
+        "query": "guardrail_blocked_topics"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5585,
+      "output_tokens": 53,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004387,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-10-31T20:00:00+00:00",
+        "query": "config-change-5178"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5675,
+      "output_tokens": 47,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004432,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-10-31T23:30:00+00:00",
+        "query": "guardrail"
+      },
+      "result_chars": 3377,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7166,
+      "output_tokens": 33,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005498,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "canary-09e8b764-q001"
+      },
+      "result_chars": 157,
+      "error": "no trace for conversation 'canary-09e8b764-q001'",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7273,
+      "output_tokens": 26,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005552,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-e60ea1b3"
+      },
+      "result_chars": 1328,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7787,
+      "output_tokens": 84,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006155,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-e60ea1b3",
+        "patch": {
+          "value": [
+            "lawsuit",
+            "legal advice",
+            "medical advice",
+            "weapon",
+            "firearm",
+            "social security number",
+            "hack"
+          ],
+          "kind": "set_config",
+          "key": "guardrail_blocked_topics"
+        }
+      },
+      "result_chars": 961,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 8179,
+      "output_tokens": 82,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006442,
+      "tool_calls": [
+        "query_metrics"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "query_metrics",
+      "args": {
+        "start": "2026-10-31T20:00:00+00:00",
+        "metric": "kestrel_canary_accuracy",
+        "end": "2026-11-01T02:00:00+00:00"
+      },
+      "result_chars": 9254,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 11860,
+      "output_tokens": 91,
+      "thinking_tokens": 0,
+      "cost_usd": 0.009236,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {
+          "key": "guardrail_blocked_topics",
+          "kind": "set_config",
+          "value": [
+            "lawsuit",
+            "legal advice",
+            "medical advice",
+            "weapon",
+            "firearm",
+            "social security number",
+            "hack"
+          ]
+        },
+        "conversation_id": "canary-09e8b764-q001"
+      },
+      "result_chars": 119,
+      "error": "no recorded conversation 'canary-09e8b764-q001'",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 12021,
+      "output_tokens": 579,
+      "thinking_tokens": 0,
+      "cost_usd": 0.011187,
+      "tool_calls": [],
+      "text": "### Root Cause Summary\n\n- **Root Component**: `guardrail` (or configured via `guardrail_blocked_topics`)\n- **Category**: `guardrail_error` (or `config_change`)\n\n### Findings & Evidence\n\n1. **Trace Attributes**:\n   - The trace for `conv-e60ea1b3` (span `span:300af58243e4db43e772c61f644f3d6a/df694142a76df566`) shows that the guardrail blocked the conversation with `guardrail.decision=block` and `guardrail.matched_rule=refund`.\n   - The root span (`span:300af58243e4db43e772c61f644f3d6a/139415770a44"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5381,
+      "output_tokens": 529,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006019,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"guardrail\",\n \"category\": \"guardrail_error\",\n \"cause_ref\": \"change:config-change-5178\",\n \"confidence\": 0.99,\n \"summary\": \"A configuration change added 'refund' to guardrail_blocked_topics, causing the guardrail to erroneously block user inquiries regarding refunds and return policies.\",\n \"evidence\": [\n  {\n   \"type\": \"trace\",\n   \"ref\": \"span:300af58243e4db43e772c61f644f3d6a/df694142a76df566\",\n   \"claim\": \"The guardrail blocked the query matching the 'refund' rule\",\n   \"attrib"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": true,
+      "reason": "3 evidence types (change, log, trace) and replay replay:295de235ca5f support guardrail",
+      "hypothesis": "guardrail",
+      "supporting_types": [
+        "change",
+        "log",
+        "trace"
+      ],
+      "replay_ref": "replay:295de235ca5f",
+      "unresolved": [],
+      "irrelevant": []
+    },
+    {
+      "kind": "end",
+      "node": "conclude"
+    }
+  ]
+}

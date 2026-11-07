@@ -1,0 +1,12 @@
+group,key,n,top1,category,cause
+overall,all,23,0.43478260869565216,0.30434782608695654,0.043478260869565216
+decoy,with decoy,10,0.5,0.3,0.0
+decoy,without decoy,13,0.38461538461538464,0.3076923076923077,0.07692307692307693
+fault_type,chunking_regression,1,0.0,0.0,0.0
+fault_type,embedding_mismatch,2,0.5,0.5,0.0
+fault_type,guardrail_misfire,4,1.0,1.0,0.0
+fault_type,missing_document,1,1.0,1.0,1.0
+fault_type,prompt_regression,1,0.0,0.0,0.0
+fault_type,silent_tool_failure,6,0.0,0.0,0.0
+fault_type,stale_tool_data,5,0.2,0.2,0.0
+fault_type,threshold_too_strict,3,1.0,0.0,0.0

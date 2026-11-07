@@ -1,0 +1,480 @@
+{
+  "case_id": "case-042",
+  "model": "gemini-3.8-flash",
+  "wall_s": 78.8,
+  "error": null,
+  "diagnosis": {
+    "root_component": null,
+    "category": null,
+    "cause_ref": null,
+    "confidence": 0.0,
+    "summary": "evidence not sufficient after 1 draft(s): only 0 evidence types relevant to config, no replay that fixes the answer by patching it; not relevant to config: change:config-change-8961, span:18aabbc6fcc7be04de8d31dc3e3c603c/8e8e718114109bc8",
+    "evidence": [],
+    "ruled_out": [],
+    "suggested_fix": "",
+    "fix_patch": null,
+    "fix_patch_error": "",
+    "abstained": true,
+    "top_candidate": {
+      "root_component": "config",
+      "category": "config_change"
+    },
+    "top_candidates": [
+      {
+        "root_component": "config",
+        "category": "config_change"
+      },
+      {
+        "root_component": "retriever",
+        "category": "retrieval_failure"
+      }
+    ],
+    "missing_evidence": "only 0 evidence types relevant to config, no replay that fixes the answer by patching it; not relevant to config: change:config-change-8961, span:18aabbc6fcc7be04de8d31dc3e3c603c/8e8e718114109bc8"
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 0,
+    "failures": []
+  },
+  "fix": null,
+  "gate": {
+    "passed": false,
+    "reason": "only 0 evidence types relevant to config, no replay that fixes the answer by patching it; not relevant to config: change:config-change-8961, span:18aabbc6fcc7be04de8d31dc3e3c603c/8e8e718114109bc8",
+    "hypothesis": "config",
+    "supporting_types": [],
+    "replay_ref": null,
+    "unresolved": [],
+    "irrelevant": [
+      "change:config-change-8961",
+      "span:18aabbc6fcc7be04de8d31dc3e3c603c/8e8e718114109bc8"
+    ]
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "config",
+      "category": "config_change",
+      "rationale": "The recent change to config:chunk_size altered knowledge base re-chunking, causing chunks to lose critical context or split key information across chunks.",
+      "score": 0.8
+    },
+    {
+      "root_component": "retriever",
+      "category": "retrieval_failure",
+      "rationale": "Re-chunking the knowledge base reduced embedding match quality or resulted in missing key chunks needed to answer policy and timing questions.",
+      "score": 0.7
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "doc_update",
+      "rationale": "Underlying knowledge base documents or their indexed versions may have been modified or improperly re-indexed during the re-chunking update.",
+      "score": 0.4
+    },
+    {
+      "root_component": "retriever",
+      "category": "config_change",
+      "rationale": "Retrieval similarity threshold or top_k settings may now be filtering out necessary chunks following the chunk size change.",
+      "score": 0.3
+    }
+  ],
+  "tool_calls_used": 15,
+  "replays_used": 0,
+  "replay_judges": [],
+  "evidence_pool_size": 19,
+  "refs_not_in_pool": [],
+  "llm_calls": 15,
+  "input_tokens": 75247,
+  "output_tokens": 1150,
+  "thinking_tokens": 0,
+  "cost_usd": 0.060748,
+  "investigator_cost_usd": 0.060748,
+  "replay_cost_usd": 0,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-09280997"
+      },
+      "result_chars": 2514,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T01:56:55.409620+00:00",
+        "end": "2026-11-01T01:56:55.409620+00:00"
+      },
+      "result_chars": 309,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2225,
+      "output_tokens": 289,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002753,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"config\",\n      \"category\": \"config_change\",\n      \"rationale\": \"The recent change to config:chunk_size altered knowledge base re-chunking, causing chunks to lose critical context or split key information across chunks.\",\n      \"score\": 0.8\n    },\n    {\n      \"root_component\": \"retriever\",\n      \"category\": \"retrieval_failure\",\n      \"rationale\": \"Re-chunking the knowledge base reduced embedding match quality or resulted in missing key chunks nee"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3531,
+      "output_tokens": 35,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002779,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-11-01T00:00:00Z"
+      },
+      "result_chars": 309,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3693,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002837,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "search_logs",
+      "args": {
+        "query": "chunk_size"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3749,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002872,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "config"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3803,
+      "output_tokens": 27,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002953,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-09280997"
+      },
+      "result_chars": 2514,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4741,
+      "output_tokens": 63,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003792,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:18aabbc6fcc7be04de8d31dc3e3c603c/6b5e5272825aeb4b"
+      },
+      "result_chars": 342,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4958,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003793,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "price-matching"
+      },
+      "result_chars": 880,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5258,
+      "output_tokens": 19,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004015,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "search_logs",
+      "args": {
+        "query": "8961"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5314,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004042,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "search_logs",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2581,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6473,
+      "output_tokens": 60,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00508,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "search_logs",
+      "args": {
+        "start": "2026-11-01T01:15:00Z",
+        "end": "2026-11-01T01:20:00Z"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6570,
+      "output_tokens": 31,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005044,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "canary-322fc4eb-q002"
+      },
+      "result_chars": 157,
+      "error": "no trace for conversation 'canary-322fc4eb-q002'",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6673,
+      "output_tokens": 40,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005155,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-01T00:00:00Z",
+        "limit": 10
+      },
+      "result_chars": 550,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6922,
+      "output_tokens": 51,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005383,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 14,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {
+          "key": "chunk_size",
+          "value": 500,
+          "kind": "set_config"
+        },
+        "conversation_id": "conv-09280997"
+      },
+      "result_chars": 154,
+      "error": "patch rejected: chunk_size=500 is not a value the change log or the trace shows chunk_size holding",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7044,
+      "output_tokens": 50,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00547,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 15,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {
+          "key": "chunk_size",
+          "value": 60,
+          "kind": "set_config"
+        },
+        "conversation_id": "conv-09280997"
+      },
+      "result_chars": 124,
+      "error": "patch rejected: the snapshot has no chunk_size=60 chunking",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4293,
+      "output_tokens": 416,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00478,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"config\",\n \"category\": \"config_change\",\n \"cause_ref\": \"change:config-change-8961\",\n \"confidence\": 0.95,\n \"summary\": \"A configuration change to config:chunk_size from ops-bot (change:config-change-8961) re-chunked the knowledge base to chunk_size=300, fragmenting context across chunks and causing retrieval to miss key sentences needed to answer customer questions.\",\n \"evidence\": [\n  {\n   \"type\": \"change\",\n   \"ref\": \"change:config-change-8961\",\n   \"claim\": \"The knowledge base "
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": false,
+      "reason": "only 0 evidence types relevant to config, no replay that fixes the answer by patching it; not relevant to config: change:config-change-8961, span:18aabbc6fcc7be04de8d31dc3e3c603c/8e8e718114109bc8",
+      "hypothesis": "config",
+      "supporting_types": [],
+      "replay_ref": null,
+      "unresolved": [],
+      "irrelevant": [
+        "change:config-change-8961",
+        "span:18aabbc6fcc7be04de8d31dc3e3c603c/8e8e718114109bc8"
+      ]
+    },
+    {
+      "kind": "end",
+      "node": "abstain"
+    }
+  ]
+}

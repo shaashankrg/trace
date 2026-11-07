@@ -1,0 +1,480 @@
+{
+  "case_id": "case-037",
+  "model": "gemini-3.8-flash",
+  "wall_s": 68.4,
+  "error": null,
+  "diagnosis": {
+    "root_component": null,
+    "category": null,
+    "cause_ref": null,
+    "confidence": 0.0,
+    "summary": "evidence not sufficient after 1 draft(s): only 1 evidence type (trace) relevant to tool:check_inventory, no replay that fixes the answer by patching it; not relevant to tool:check_inventory: log:675e8366-ecde-4137-8070-cd8c44b4efd9",
+    "evidence": [],
+    "ruled_out": [],
+    "suggested_fix": "",
+    "fix_patch": null,
+    "fix_patch_error": "",
+    "abstained": true,
+    "top_candidate": {
+      "root_component": "tool:check_inventory",
+      "category": "stale_data"
+    },
+    "top_candidates": [
+      {
+        "root_component": "tool:check_inventory",
+        "category": "stale_data"
+      },
+      {
+        "root_component": "model",
+        "category": "model_change"
+      }
+    ],
+    "missing_evidence": "only 1 evidence type (trace) relevant to tool:check_inventory, no replay that fixes the answer by patching it; not relevant to tool:check_inventory: log:675e8366-ecde-4137-8070-cd8c44b4efd9"
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 0,
+    "failures": []
+  },
+  "fix": null,
+  "gate": {
+    "passed": false,
+    "reason": "only 1 evidence type (trace) relevant to tool:check_inventory, no replay that fixes the answer by patching it; not relevant to tool:check_inventory: log:675e8366-ecde-4137-8070-cd8c44b4efd9",
+    "hypothesis": "tool:check_inventory",
+    "supporting_types": [
+      "trace"
+    ],
+    "replay_ref": null,
+    "unresolved": [],
+    "irrelevant": [
+      "log:675e8366-ecde-4137-8070-cd8c44b4efd9"
+    ]
+  },
+  "rounds": 1,
+  "candidates": [
+    {
+      "root_component": "tool:check_inventory",
+      "category": "stale_data",
+      "rationale": "The check_inventory tool returned 0 stock or cached outdated inventory data for product P-020 instead of the actual 17 units available.",
+      "score": 0.6
+    },
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model received the correct inventory result of 17 units from tool.check_inventory but hallucinated or misread the value as 0.",
+      "score": 0.25
+    },
+    {
+      "root_component": "tool:check_inventory",
+      "category": "tool_outage",
+      "rationale": "The check_inventory tool may have experienced an internal error or failed lookup for product P-020, defaulting to a zero count.",
+      "score": 0.15
+    }
+  ],
+  "tool_calls_used": 15,
+  "replays_used": 2,
+  "replay_judges": [
+    "code",
+    "code"
+  ],
+  "evidence_pool_size": 31,
+  "refs_not_in_pool": [],
+  "llm_calls": 15,
+  "input_tokens": 79104,
+  "output_tokens": 1087,
+  "thinking_tokens": 0,
+  "cost_usd": 0.064635,
+  "investigator_cost_usd": 0.063406,
+  "replay_cost_usd": 0.001229,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-3849c1d3"
+      },
+      "result_chars": 3572,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T01:50:23.166603+00:00",
+        "end": "2026-11-01T01:50:23.166603+00:00"
+      },
+      "result_chars": 50,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 2093,
+      "output_tokens": 237,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002459,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"tool:check_inventory\",\n   \"category\": \"stale_data\",\n   \"rationale\": \"The check_inventory tool returned 0 stock or cached outdated inventory data for product P-020 instead of the actual 17 units available.\",\n   \"score\": 0.6\n  },\n  {\n   \"root_component\": \"model\",\n   \"category\": \"model_change\",\n   \"rationale\": \"The model received the correct inventory result of 17 units from tool.check_inventory but hallucinated or misread the value as 0.\",\n   \"score\": 0"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3380,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00261,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "search_logs",
+      "args": {
+        "query": "P-020"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3438,
+      "output_tokens": 20,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002654,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "search_logs",
+      "args": {
+        "component": "tool.check_inventory"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3496,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002682,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "search_logs",
+      "args": {
+        "query": "inventory"
+      },
+      "result_chars": 1101,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4000,
+      "output_tokens": 27,
+      "thinking_tokens": 0,
+      "cost_usd": 0.003101,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-3849c1d3"
+      },
+      "result_chars": 3572,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5390,
+      "output_tokens": 51,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004234,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {
+          "tool": "check_inventory",
+          "bypass_cache": null,
+          "kind": "bypass_cache"
+        },
+        "conversation_id": "conv-3849c1d3"
+      },
+      "result_chars": 120,
+      "error": "patch rejected: bypass_cache does not take bypass_cache",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5493,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004288,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-3849c1d3",
+        "patch": {
+          "tool": "check_inventory",
+          "kind": "bypass_cache"
+        }
+      },
+      "result_chars": 759,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5785,
+      "output_tokens": 48,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004519,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "1b6c2c3462b9fa7f08441d21f1a1d2c2"
+      },
+      "result_chars": 152,
+      "error": "no trace '1b6c2c3462b9fa7f08441d21f1a1d2c2'",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5920,
+      "output_tokens": 46,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004613,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-3849c1d3",
+        "patch": {
+          "kind": "rerun_tool",
+          "tool": "check_inventory"
+        }
+      },
+      "result_chars": 729,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6206,
+      "output_tokens": 66,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004902,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:3c7dab4d539587f325a8e55c2ce877ee/6c5b292e037f12cb"
+      },
+      "result_chars": 576,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6483,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00493,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "search_logs",
+      "args": {
+        "query": "check_inventory"
+      },
+      "result_chars": 1101,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6988,
+      "output_tokens": 18,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005308,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "search_logs",
+      "args": {
+        "query": "P-0"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7043,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005339,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 14,
+      "tool": "search_logs",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2602,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 8200,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006206,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 15,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 10
+      },
+      "result_chars": 2483,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5189,
+      "output_tokens": 445,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005561,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"tool:check_inventory\",\n \"category\": \"stale_data\",\n \"cause_ref\": null,\n \"confidence\": 0.85,\n \"summary\": \"The assistant called tool.check_inventory for product P-020, which returned out of stock (0 units) instead of the actual stock of 17 units, likely due to stale or incorrect inventory data in the tool's underlying data source.\",\n \"evidence\": [\n  {\n   \"type\": \"trace\",\n   \"ref\": \"span:3c7dab4d539587f325a8e55c2ce877ee/542632e3175e7f8c\",\n   \"claim\": \"The tool.check_inventory s"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": false,
+      "reason": "only 1 evidence type (trace) relevant to tool:check_inventory, no replay that fixes the answer by patching it; not relevant to tool:check_inventory: log:675e8366-ecde-4137-8070-cd8c44b4efd9",
+      "hypothesis": "tool:check_inventory",
+      "supporting_types": [
+        "trace"
+      ],
+      "replay_ref": null,
+      "unresolved": [],
+      "irrelevant": [
+        "log:675e8366-ecde-4137-8070-cd8c44b4efd9"
+      ]
+    },
+    {
+      "kind": "end",
+      "node": "abstain"
+    }
+  ]
+}

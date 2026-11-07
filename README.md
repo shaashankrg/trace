@@ -1,14 +1,188 @@
 # Tracewise
 
-The Kestrel support assistant (RAG over policy docs with Claude), instrumented end to end with OpenTelemetry.
+An agent that investigates why an AI support assistant gave a wrong answer. It pulls the conversation's trace,
+checks what was retrieved, what the tools returned and what changed recently, then **proves** its diagnosis by
+replaying the conversation with the suspected cause patched. Every ref it cites is checked against the real data
+stores, so a diagnosis that cites something that is not there is scored as wrong. When the evidence is not there,
+it abstains instead of guessing.
+
+It is graded, not demoed: faults are injected on purpose into a working assistant, so the true root cause of each
+case is known, and all numbers below come from a **locked held-out split** the prompt was never tuned on.
+
+## Results
+
+28 held-out cases, `gemini-3.8-flash`, one run (`eval/results/test_runs.log`). 23 of the 28 are cases where the
+injected fault was confirmed to have made the answer wrong; the table scores those.
+
+| method | n | top-1 | top-3 | category | hallucinated evidence | fix success (replay) | abstained | $/case | s/case |
+|---|---|---|---|---|---|---|---|---|---|
+| **investigator** | 23 | **52%** | **96%** | 52% | **0%** | **83%** | 48% | $0.078 | 65 |
+| B2: same model, no tools | 23 | 43% | 43% | 30% | 0% | 0% | 0% | $0.005 | — |
+| B1: blame the ERROR span | 23 | 0% | 0% | 0% | 0% | 0% | 0% | — | — |
+
+- **top-1 / top-3** — the true root component ranked first / in the top three. B1 and B2 produce a single answer,
+  so their top-3 is their top-1.
+- **hallucinated evidence** — diagnoses citing a span, chunk, log line or version that does not exist or does not
+  match, checked by `eval/verifier.py` against the raw stores. These score as **wrong** even when the component is
+  right. Zero across all three methods.
+- **fix success** — the diagnosis's own suggested patch, replayed fresh, produces the correct answer *and* targets
+  the true root component. B1 and B2 suggest no patch, so they cannot score here.
+- **abstained** — refused to name a component for lack of evidence. Abstentions count as no answer in top-1.
+
+**What the numbers say.** B1 scores 0%: almost none of these faults leave an error span, which is the whole point —
+a swallowed tool timeout is an OK span and a stale document retrieves fine. B2 is the baseline that matters, and it
+is a strong one: the same model, handed the transcript, the retrieved chunk text and the change list, gets 43%. The
+investigator's advantage is not that it answers more often — it answers *less* often — but that **when it answers
+it is right 12 out of 12**, cites nothing it cannot support, and proves 83% of its fixes by replay. B2 cannot
+distinguish a confident guess from a supported one, and its 43% comes with no way to tell which 43%.
+
+**The honest weakness: it abstains on half the cases.** Every abstention — all 14 across the 28 recorded cases,
+11 of them in the scored 23 — hit the 15-tool-call ceiling, and on 8 of those 11 its top candidate was the correct
+component. It had the right idea and ran out of budget before finding a second independent signal, so the binding
+constraint is the step budget, not the reasoning or the verification gate. Raising the budget is the obvious next experiment, and deliberately *not* run here: the split
+has been opened once and tuning against what it showed would turn a held-out result into a dev result.
+
+Decoy resistance is reported in `eval/results/investigator-test-r1/comparison.md` but is not meaningful at this
+sample size — 19 of the 23 cases carry a decoy, so the no-decoy baseline is 4 cases and the ratio swings wildly
+(B2 scores *above* 100%, i.e. better with a decoy than without, which is noise, not robustness).
+
+Full tables: `eval/results/investigator-test-r1/` (`summary.md`, `comparison.md`, per-case JSON with transcripts,
+tokens, cost and wall time).
+
+## A worked example
+
+**case-023**, held out, a silent tool failure with a decoy. B2 blamed the model on this case.
+
+The customer asks: *"I'm customer C-0003. Today is 2026-10-12. Can I still return the Cirrus Down Jacket from
+order O-1003 for a refund?"*
+
+The assistant answers: *"I couldn't find any orders associated with customer ID C-0003, so I am unable to verify
+the delivery date... Answer: No"* — and the reviewer corrects it: order O-1003 was delivered 2 days ago, inside
+the 14-day window, so the answer is yes.
+
+Nothing in the trace is marked as an error. The `lookup_order` span has status OK; it simply returned nothing.
+
+The investigation, 14 tool calls in 52 seconds for $0.11:
+
+1. `search_logs` on the tool component, then `recent_changes`, then `get_trace` — it goes upstream rather than
+   blaming the model for the wrong answer.
+2. It finds the tool span **returned 0 results while taking 5.4 ms**, and a log line saying `lookup_order timed out
+   after 1ms and returned an empty result`. That is two independent evidence types (a span and a log) pointing at
+   the same component.
+3. `replay_conversation` re-runs the conversation with one patch — re-run `lookup_order` — and the answer comes
+   back with order O-1003 found, matching the reviewer's correction. The unpatched control run still fails, so the
+   replay *proves* the fix rather than coinciding with it.
+
+Its diagnosis: `tool:lookup_order` / `tool_outage`, confidence 0.99 — *"the lookup_order tool timed out because the
+configured timeout was set to 1ms, resulting in empty order lookup results."*
+
+**And it ruled out the decoy.** A document update (`change:doc-update-1047`) sits in the change log shortly before
+the failure, looking guilty. The agent dismissed it: *"doc updates occurred weeks prior and holiday-returns is not
+the source of the empty order lookup result."*
+
+The evidence verifier then re-checked all three cited refs against the raw snapshot and replay log, and the fix
+patch was replayed once more from scratch: `matches_correction: true`, `proves_fix: true`, target
+`tool:lookup_order`. Diagnosis accepted.
+
+
+## How the benchmark works
+
+A fault is injected into a healthy assistant, the failing conversation is recorded, and the fault is reverted. The
+recorded snapshot — trace, logs, chunks, config, change log, store data — is what the investigator is run against
+later, so results reproduce without re-injecting.
+
+### The anti-cheating rule
+
+The investigator cannot see the fault injector, its labels, or anything marking a version as the correct one. In
+real life there is no file telling you what broke. Concretely:
+
+- `document_history` returns every version with timestamps and indexed-chunk counts, and **no "current" flag**. The
+  agent reasons from dates and the change log.
+- `recent_changes` returns real changes **and decoys in the same format**, unlabelled. A decoy is a genuine but
+  innocent change written shortly before the failure: a typo fix in the prompt, an unrelated document published, a
+  config change to an unrelated setting.
+- `replay_conversation` applies only patches built from what the agent can legitimately see — a document version
+  from history, a prompt version, a config value present in the change log or on the trace. **The component a patch
+  targets is fixed by the patch kind in code, never chosen by the agent**, so a replay cannot "fix" the answer by
+  changing something unrelated and taking credit for it.
+- Ground truth lives only in the evaluator: the `eval` schema, which the `tools` role the MCP server connects as
+  cannot read.
+
+### Two signals, or one plus a proven fix
+
+`agent/verify.py` is plain code, not a model call. It accepts a diagnosis only when every cited ref came from a
+tool during that investigation, and the evidence *relevant to the named component* covers two distinct types, or
+one type plus a replay that fixed the answer by patching that component. Retrieved playbooks and past incidents
+never count as evidence, only as hints. This is what keeps hallucinated evidence at 0% and precision at 100%, and
+it is also what drives the 48% abstention rate — the two are the same mechanism.
+
+### Splits
+
+`train` (17 cases) is for tuning prompts. `dev` (5) was read during development and is never reported as held out.
+`test` (28 locked) contains **every** case of two fault types the prompt never met during tuning — `embedding_mismatch`
+and `guardrail_misfire` — so it measures generalization rather than recognition.
+
+Two locks guard it. `eval/test_split.lock` pins the case ids and a hash of their JSON. `eval/frozen_prompt.sha`
+pins the prompt **and the configuration that decides how it is used** (model, tool and replay budgets, escalation
+threshold, output cap), because retuning a step budget changes the agent as much as a prompt edit would. A test run
+refuses to start unless both still match, and names what moved if they do not. `eval/results/test_runs.log` records
+every test-split run — the honest count of how many times the split has been looked at.
+
+## Known limits
+
+Stated plainly, because they bound what the numbers mean.
+
+- **The assistant is synthetic.** Kestrel Outfitters is a fictional store with ~48 short policy documents and three
+  store tools. Realistic in shape, not in scale or messiness.
+- **The faults are injected, one at a time.** Real incidents arrive tangled, partially observed, and sometimes
+  several at once. Every case here has exactly one true cause.
+- **One domain, one architecture.** Retrieval plus tool calls plus a prompt. Nothing here shows the agent
+  generalizing to a different system.
+- **The benchmark is small.** 23 scored held-out cases means one case moves top-1 by about 4 points. Treat small
+  gaps between methods as noise, and the decoy split as uninformative.
+- **It abstains on half the held-out cases**, all of them at the tool-call ceiling. Useful precision, limited
+  coverage.
+- **Two fault types produce no cases.** `context_overflow` (a larger `top_k` only ever added recall) and
+  `model_downgrade` (no available smaller model failed silently) keep their implementations and tests but could not
+  be made to break an answer repeatably. A fault that cannot make an answer wrong is not a test case.
+- **`search_playbooks` and `similar_incidents` are stubs.** Playbook and incident-memory retrieval, and the
+  retrieval-lift experiment, are not built; the verifier already refuses to count them as evidence.
+- **The assistant's model is not deterministic**, even at temperature 0, so each replay takes three samples and the
+  majority counts, and every patched replay is compared against an unpatched control.
+
+## Reproducing the results
+
+```bash
+python -m eval.b2 --split test                 # baseline B2 over the locked split
+python -m eval.baselines b1                    # baseline B1 over the recordings
+python -m eval.replay_case --agent investigator --split test   # refuses unless both locks match
+python -m eval.score --compare \
+    investigator=eval/results/investigator-test-r1/diagnoses.jsonl \
+    b1=eval/diagnoses/b1_test.jsonl \
+    b2=eval/diagnoses/b2_test.jsonl --split test
+```
+
+## How it is built
 
 ```text
-POST /chat ──► retrieve (pgvector top-k) ──► llm.chat (Claude)
-      │ spans (OTLP gRPC :4317)
-      ▼
-otel-collector ──► Jaeger (UI :16686)
-                                   logs ──► OpenSearch (:9200, kestrel-logs-*)
+   Kestrel support assistant (FastAPI): guardrail -> retrieve (pgvector) -> llm.chat -> tool.* -> llm.chat
+     every step an OpenTelemetry span
+        |                    |                 |
+     traces               logs             metrics            Fault injector ---> change log
+        v                    v                 v                                  (+ decoys)
+     Jaeger            OpenSearch         Prometheus
+        \__________________ | _________________/
+                            v
+              MCP tool server (10 tools, compact output, typed refs)
+                            v
+        LangGraph investigator: triage -> hypothesize -> investigate
+                            -> draft -> verify (code) -> conclude | abstain
+                            v
+     Evaluator: evidence verifier + replay checker + scorer   (ground truth lives here only)
 ```
+
+Python - LangGraph - Gemini / Claude - MCP - OpenTelemetry - Jaeger - OpenSearch - Postgres + pgvector - Prometheus - Docker Compose
+
 
 ## Run it
 
@@ -85,22 +259,18 @@ and up to 5 `failing_samples` (traces for up to 10 of them are snapshotted). A q
 only when one patch fixes at least **2 of 3** sampled failing questions — one lucky fix is not evidence of a broad
 cause (`replay.run_quality_replay`).
 
-### Splits
+### Split and lock commands
+
+See [Splits](#splits) above for what the splits are and why they are locked.
 
 ```bash
-python -m eval.splits --show            # split sizes, test ids, prompt hashes, test-run count
+python -m eval.splits --show            # split sizes, test ids, hashes, test-run count
 python -m eval.splits --write-lock      # pin the test split (once)
 python -m eval.splits --check           # verify the lock against the cases on disk
-python -m eval.splits --freeze-prompt   # pin the investigator prompt after tuning on train
+python -m eval.splits --freeze-prompt   # pin the prompt + config after tuning on train
 python -m eval.replay_case --split train
-python -m eval.replay_case --split test # refuses unless the lock matches and the prompt is frozen
+python -m eval.replay_case --split test # refuses unless both locks still match
 ```
-
-`train` is for tuning. `dev` is the Day 3 cases that were read during Day 5-7 development, reported separately and
-never as a held-out result. `test` is generated on Day 8 with new questions and holds **every** case of the two
-held-out fault types, so it measures generalization to failures the prompt never met. `eval/test_split.lock` pins
-the test case ids and a hash of their JSON; `eval/results/test_runs.log` gets a line per test-split run (time, git
-commit, prompt hash, run id), which is the honest record of how many times the split was looked at.
 
 ## Investigator tools (MCP)
 

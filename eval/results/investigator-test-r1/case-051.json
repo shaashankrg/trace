@@ -1,0 +1,527 @@
+{
+  "case_id": "case-051",
+  "model": "gemini-3.8-flash",
+  "wall_s": 77.9,
+  "error": null,
+  "diagnosis": {
+    "root_component": null,
+    "category": null,
+    "cause_ref": null,
+    "confidence": 0.0,
+    "summary": "evidence not sufficient after 2 draft(s): only 0 evidence types relevant to config, no replay that fixes the answer by patching it; not relevant to config: span:d9c9b99e1fef436e139aa23a3f881624/7e214a22972d2631, span:d9c9b99e1fef436e139aa23a3f881624/628fa03186ddbd9a",
+    "evidence": [],
+    "ruled_out": [],
+    "suggested_fix": "",
+    "fix_patch": null,
+    "fix_patch_error": "",
+    "abstained": true,
+    "top_candidate": {
+      "root_component": "config",
+      "category": "config_change"
+    },
+    "top_candidates": [
+      {
+        "root_component": "config",
+        "category": "config_change"
+      },
+      {
+        "root_component": "model",
+        "category": "model_change"
+      }
+    ],
+    "missing_evidence": "only 0 evidence types relevant to config, no replay that fixes the answer by patching it; not relevant to config: span:d9c9b99e1fef436e139aa23a3f881624/7e214a22972d2631, span:d9c9b99e1fef436e139aa23a3f881624/628fa03186ddbd9a"
+  },
+  "verification": {
+    "hallucinated": false,
+    "checked": 0,
+    "failures": []
+  },
+  "fix": null,
+  "gate": {
+    "passed": false,
+    "reason": "only 0 evidence types relevant to config, no replay that fixes the answer by patching it; not relevant to config: span:d9c9b99e1fef436e139aa23a3f881624/7e214a22972d2631, span:d9c9b99e1fef436e139aa23a3f881624/628fa03186ddbd9a",
+    "hypothesis": "config",
+    "supporting_types": [],
+    "replay_ref": null,
+    "unresolved": [],
+    "irrelevant": [
+      "span:d9c9b99e1fef436e139aa23a3f881624/7e214a22972d2631",
+      "span:d9c9b99e1fef436e139aa23a3f881624/628fa03186ddbd9a"
+    ]
+  },
+  "rounds": 2,
+  "candidates": [
+    {
+      "root_component": "model",
+      "category": "model_change",
+      "rationale": "The model retrieved the relevant chunks including rentals@v1#0 and rentals@v1#2 but failed to extract the $100 deposit amount during the original run, while a non-patched replay with standard generation answered correctly.",
+      "score": 0.85
+    },
+    {
+      "root_component": "knowledge_base",
+      "category": "retrieval_failure",
+      "rationale": "Retrieved chunks with chunk size 40 (rentals@v1#2/c40, etc.) are no longer found in the store and rentals@v1 only has 2 indexed chunks under the current indexing setup, indicating an inconsistent chunking or indexing state.",
+      "score": 0.55
+    },
+    {
+      "root_component": "config",
+      "category": "config_change",
+      "rationale": "The chunk_size config setting of 40 may have fragmented the rental policy text across small chunks, obscuring the deposit details from the model.",
+      "score": 0.4
+    },
+    {
+      "root_component": "retriever",
+      "category": "retrieval_failure",
+      "rationale": "The retriever returned four small c40 chunks instead of full document context, which may have led to incomplete context delivery to the LLM.",
+      "score": 0.25
+    }
+  ],
+  "tool_calls_used": 15,
+  "replays_used": 1,
+  "replay_judges": [
+    "code"
+  ],
+  "evidence_pool_size": 41,
+  "refs_not_in_pool": [],
+  "llm_calls": 18,
+  "input_tokens": 127203,
+  "output_tokens": 2426,
+  "thinking_tokens": 0,
+  "cost_usd": 0.104714,
+  "investigator_cost_usd": 0.104499,
+  "replay_cost_usd": 0.000215,
+  "transcript": [
+    {
+      "kind": "tool",
+      "n": 1,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-d115668c"
+      },
+      "result_chars": 2651,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "tool",
+      "n": 2,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T02:12:25.280088+00:00",
+        "end": "2026-11-01T02:12:25.280088+00:00"
+      },
+      "result_chars": 50,
+      "error": null,
+      "node": "triage"
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 1954,
+      "output_tokens": 332,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00271,
+      "tool_calls": [],
+      "text": "{\n \"candidates\": [\n  {\n   \"root_component\": \"retriever\",\n   \"category\": \"retrieval_failure\",\n   \"rationale\": \"The retriever returned 4 chunks from rentals@v1 (#2, #0, #7, #5) under chunk_size 40, but missed the chunk detailing the specific $100 deposit amount due to top_k, threshold, or chunk boundary issues.\",\n   \"score\": 0.45\n  },\n  {\n   \"root_component\": \"knowledge_base\",\n   \"category\": \"doc_update\",\n   \"rationale\": \"The indexed document rentals@v1 may be an outdated version or missing the $1"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3306,
+      "output_tokens": 66,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002727,
+      "tool_calls": [
+        "get_retrieved_chunks"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 3,
+      "tool": "get_retrieved_chunks",
+      "args": {
+        "span_ref": "span:d9c9b99e1fef436e139aa23a3f881624/628fa03186ddbd9a"
+      },
+      "result_chars": 436,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3560,
+      "output_tokens": 19,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002741,
+      "tool_calls": [
+        "document_history"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 4,
+      "tool": "document_history",
+      "args": {
+        "doc_id": "rentals"
+      },
+      "result_chars": 315,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 3706,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.002836,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 5,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 30
+      },
+      "result_chars": 7231,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6255,
+      "output_tokens": 16,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004751,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 6,
+      "tool": "search_logs",
+      "args": {
+        "query": "chunk"
+      },
+      "result_chars": 307,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6417,
+      "output_tokens": 15,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004869,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 7,
+      "tool": "search_logs",
+      "args": {
+        "query": ""
+      },
+      "result_chars": 307,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 6578,
+      "output_tokens": 27,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005035,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 8,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "conv-d115668c"
+      },
+      "result_chars": 2651,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7623,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005886,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 9,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-01T00:00:00+00:00",
+        "limit": 30
+      },
+      "result_chars": 293,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 7786,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.006008,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 10,
+      "tool": "recent_changes",
+      "args": {
+        "limit": 30,
+        "start": "2026-01-01T00:00:00+00:00"
+      },
+      "result_chars": 7231,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10364,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007942,
+      "tool_calls": [
+        "recent_changes"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 11,
+      "tool": "recent_changes",
+      "args": {
+        "start": "2026-10-25T00:00:00+00:00",
+        "limit": 30
+      },
+      "result_chars": 50,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10444,
+      "output_tokens": 30,
+      "thinking_tokens": 0,
+      "cost_usd": 0.007945,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 12,
+      "tool": "replay_conversation",
+      "args": {
+        "patch": {},
+        "conversation_id": "conv-d115668c"
+      },
+      "result_chars": 435,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10648,
+      "output_tokens": 45,
+      "thinking_tokens": 0,
+      "cost_usd": 0.008155,
+      "tool_calls": [
+        "get_trace"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 13,
+      "tool": "get_trace",
+      "args": {
+        "conversation_id": "9d40daec5d7c287cbf6c34d04f8a34ec"
+      },
+      "result_chars": 152,
+      "error": "no trace '9d40daec5d7c287cbf6c34d04f8a34ec'",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10777,
+      "output_tokens": 17,
+      "thinking_tokens": 0,
+      "cost_usd": 0.008146,
+      "tool_calls": [
+        "search_logs"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 14,
+      "tool": "search_logs",
+      "args": {
+        "query": "rentals"
+      },
+      "result_chars": 55,
+      "error": null,
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 10831,
+      "output_tokens": 349,
+      "thinking_tokens": 0,
+      "cost_usd": 0.009432,
+      "tool_calls": [],
+      "text": "### Root Cause Analysis\n\n- **Root Component**: `retriever`\n- **Category**: `retrieval_failure`\n\n### Details\nIn the original conversation `conv-d115668c` (trace `span:d9c9b99e1fef436e139aa23a3f881624/628fa03186ddbd9a`), retrieval partitioned the document using a non-standard 40-character chunking configuration (`config.chunk_size=40`), returning chunks `rentals@v1#2/c40`, `rentals@v1#0/c40`, `rentals@v1#7/c40`, and `rentals@v1#5/c40`. Because of the chunk boundary splitting at 40 characters, chun"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5376,
+      "output_tokens": 501,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005911,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"retriever\",\n \"category\": \"retrieval_failure\",\n \"cause_ref\": null,\n \"confidence\": 0.95,\n \"summary\": \"During the conversation, document chunking was performed with a 40-character chunk size (config.chunk_size=40), causing chunks to be split poorly across boundaries. As a result, the specific deposit amount ($100) was excluded from the retrieved chunks, leading the LLM to report that the deposit amount was not stated.\",\n \"evidence\": [\n  {\n   \"type\": \"trace\",\n   \"ref\": \"span:d9"
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": false,
+      "reason": "only 1 evidence type (trace) relevant to retriever, no replay that fixes the answer by patching it; not relevant to retriever: doc:rentals@v1",
+      "hypothesis": "retriever",
+      "supporting_types": [
+        "trace"
+      ],
+      "replay_ref": null,
+      "unresolved": [],
+      "irrelevant": [
+        "doc:rentals@v1"
+      ]
+    },
+    {
+      "kind": "llm",
+      "node": "hypothesize",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 4663,
+      "output_tokens": 353,
+      "thinking_tokens": 0,
+      "cost_usd": 0.004821,
+      "tool_calls": [],
+      "text": "{\n  \"candidates\": [\n    {\n      \"root_component\": \"model\",\n      \"category\": \"model_change\",\n      \"rationale\": \"The model retrieved the relevant chunks including rentals@v1#0 and rentals@v1#2 but failed to extract the $100 deposit amount during the original run, while a non-patched replay with standard generation answered correctly.\",\n      \"score\": 0.85\n    },\n    {\n      \"root_component\": \"knowledge_base\",\n      \"category\": \"retrieval_failure\",\n      \"rationale\": \"Retrieved chunks with chunk "
+    },
+    {
+      "kind": "llm",
+      "node": "investigate",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 11492,
+      "output_tokens": 50,
+      "thinking_tokens": 0,
+      "cost_usd": 0.008807,
+      "tool_calls": [
+        "replay_conversation"
+      ],
+      "text": ""
+    },
+    {
+      "kind": "tool",
+      "n": 15,
+      "tool": "replay_conversation",
+      "args": {
+        "conversation_id": "conv-d115668c",
+        "patch": {
+          "kind": "set_config",
+          "value": 40,
+          "key": "chunk_size"
+        }
+      },
+      "result_chars": 124,
+      "error": "patch rejected: the snapshot has no chunk_size=40 chunking",
+      "node": "investigate"
+    },
+    {
+      "kind": "llm",
+      "node": "draft",
+      "model": "gemini-3.8-flash",
+      "input_tokens": 5423,
+      "output_tokens": 456,
+      "thinking_tokens": 0,
+      "cost_usd": 0.005777,
+      "tool_calls": [],
+      "text": "{\n \"root_component\": \"config\",\n \"category\": \"config_change\",\n \"cause_ref\": null,\n \"confidence\": 0.95,\n \"summary\": \"The root span was configured with an unusually small chunk_size (config.chunk_size=40), leading to fragmented document chunking during retrieval where the chunk stating that rentals require a deposit was separated from the chunk containing the specific $100 amount.\",\n \"evidence\": [\n  {\n   \"type\": \"trace\",\n   \"ref\": \"span:d9c9b99e1fef436e139aa23a3f881624/7e214a22972d2631\",\n   \"claim\""
+    },
+    {
+      "kind": "gate",
+      "node": "verify",
+      "passed": false,
+      "reason": "only 0 evidence types relevant to config, no replay that fixes the answer by patching it; not relevant to config: span:d9c9b99e1fef436e139aa23a3f881624/7e214a22972d2631, span:d9c9b99e1fef436e139aa23a3f881624/628fa03186ddbd9a",
+      "hypothesis": "config",
+      "supporting_types": [],
+      "replay_ref": null,
+      "unresolved": [],
+      "irrelevant": [
+        "span:d9c9b99e1fef436e139aa23a3f881624/7e214a22972d2631",
+        "span:d9c9b99e1fef436e139aa23a3f881624/628fa03186ddbd9a"
+      ]
+    },
+    {
+      "kind": "end",
+      "node": "abstain"
+    }
+  ]
+}
