@@ -357,9 +357,19 @@ def main() -> int:
         print(f"{s:>6}: {len(ids):3} cases")
     print()
     print("test ids:", ", ".join(split_ids("test", cases)))
+    # Print like against like: the frozen value covers the prompt AND the config, so showing it
+    # next to the prompt-only hash reads as a mismatch when nothing is wrong.
     fp = frozen_prompt()
-    print(f"\nprompt on disk: {prompt_hash()[:16]}")
-    print(f"frozen prompt : {fp[:16] if fp else '(not frozen)'}")
+    print(f"\nprompt+config on disk: {freeze_hash()[:16]}  (prompt alone {prompt_hash()[:12]})")
+    if fp is None:
+        print("frozen               : (not frozen; python -m eval.splits --freeze-prompt)")
+    else:
+        state = "matches" if fp == freeze_hash() else "DIFFERS from disk"
+        print(f"frozen               : {fp[:16]}  ({state})")
+        frozen_cfg, now = frozen_config(), agent_config()
+        for k in sorted(frozen_cfg):
+            if frozen_cfg[k] != now.get(k):
+                print(f"  drift: {k}: frozen {frozen_cfg[k]!r}, now {now.get(k)!r}")
     print(f"test-split runs: {test_run_count()}")
     return 0
 
