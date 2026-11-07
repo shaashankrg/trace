@@ -10,3 +10,5 @@ eval/replays/
 gt_tmp.json
 eval/results/llm_cache/
 eval/results/spend.json
+
+eval/diagnoses/b2_dev.jsonl
