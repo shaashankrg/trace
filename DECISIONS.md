@@ -2,6 +2,39 @@
 
 Each one: what we chose, what we didn't, and why. Written in my own words.
 
+## The four that matter most
+
+The rest of this file is the full day-by-day record. These four are the decisions the whole
+project rests on.
+
+**Verification in code, not the model, over asking the LLM to judge its own evidence.**
+An LLM grading its own diagnosis can be talked into anything. A plain-code gate that resolves every
+cited ref against the real store and requires two independent signals cannot. This is the single
+reason hallucinated evidence stays at 0% - and it is also what causes the 48% abstention rate. The
+same mechanism that refuses to bluff refuses to over-claim. I kept both rather than trade precision
+for coverage.
+
+**Replay as proof over trusting the agent's reasoning.**
+Reasoning explains; it does not prove. Re-running the conversation with exactly one patch and
+watching the answer correct is an experiment: change one thing, observe the outcome. It is why a
+diagnosis can be *confirmed* rather than merely argued. The patch's target component is fixed in
+code, not chosen by the agent, so a replay cannot "fix" the answer by changing something unrelated
+and taking credit.
+
+**A no-tools baseline over only beating a dumb heuristic.**
+Beating "blame the error span" proves almost nothing. The baseline that matters is the same model,
+no tools, reading the transcript - because if it scores as well as the full agent, the investigation
+added nothing. It gets 43%; the agent is right on every case it answers and proves its fixes. That
+gap is the entire justification for the traces, the tools and the replay.
+
+**Freezing config with the prompt over freezing the prompt alone.**
+A test split is only held out if the agent that meets it is frozen too. Retuning a tool-call budget
+changes behaviour as much as editing the prompt, so the lock pins the prompt *and* the model,
+budgets and thresholds. A test run refuses to start unless both still match. Without this,
+"held out" is a claim, not a fact.
+
+---
+
 ## Day 1
 
 1. **OpenTelemetry Collector between app and Jaeger, not exporting straight to Jaeger**, because…
