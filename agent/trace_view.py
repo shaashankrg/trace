@@ -17,6 +17,7 @@ graph, so a run with the view on reaches the same diagnosis as a run without it.
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import sys
 
@@ -29,6 +30,14 @@ EVIDENCE_SHOWN = 3        # per tool call; the rest are counted, not listed
 
 
 def _w(limit: int = 96) -> int:
+    """The terminal's width, capped. TRACEWISE_VIEW_WIDTH overrides it, which is what lets a wide
+    capture keep lines that would otherwise be truncated to fit a default console."""
+    override = os.environ.get("TRACEWISE_VIEW_WIDTH")
+    if override:
+        try:
+            return max(int(override), 40)
+        except ValueError:
+            pass
     return min(shutil.get_terminal_size((limit, 24)).columns, limit)
 
 

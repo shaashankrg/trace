@@ -254,7 +254,8 @@ python -m eval.replay_case --cases case-002 case-007 --run-id try
 arguments the agent chose, the typed evidence built from each reply, and the gate's verdict. It reads the state the
 graph already streams and never writes back, so a run watched this way reaches the same diagnosis as one that is
 not; an observer that raises is swallowed rather than failing the investigation. It forces one case at a time,
-since two investigations printing at once interleave.
+since two investigations printing at once interleave. `TRACEWISE_VIEW_WIDTH` overrides the output width (default:
+the terminal, capped at 96), which is how the README's screenshots were captured without truncated lines.
 
 After each investigation the evaluator runs the evidence verifier (`eval/verifier.py`), which reads the raw
 snapshot files and replay log, never the tools: an invented ref, a quote not in the text, a wrong attribute value

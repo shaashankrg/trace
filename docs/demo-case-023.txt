@@ -1,58 +1,58 @@
-day budget: $2.4117 of $3.00 over 418 call(s)
-demo-record: --verbose runs one case at a time (concurrency 2 ignored)
--- ALERT  case-023  (flagged_conversation) ------------------------------------------------------
-  asked     I'm customer C-0003. Today is 2026-10-12. Can I still return the Cirrus Down Jack...
-  answered  I'm sorry, but I couldn't find any orders associated with customer ID C-0003, so ...
+day budget: $2.4321 of $3.00 over 420 call(s)
+demo-wide: --verbose runs one case at a time (concurrency 2 ignored)
+-- ALERT  case-023  (flagged_conversation) ------------------------------------------------------------------------------------------
+  asked     I'm customer C-0003. Today is 2026-10-12. Can I still return the Cirrus Down Jacket from order O-1003 for a refund?
+  answered  I'm sorry, but I couldn't find any orders associated with customer ID C-0003, so I am unable to verify the delivery d...
   truth     Order O-1003 was delivered 2 days ago, inside the 14-day window. The answer is yes.
 
--- TRIAGE ---------------------------------------------------------------------------------------
+-- TRIAGE ---------------------------------------------------------------------------------------------------------------------------
   Trace bb7cb21aa9d09eb10cddcd4edbb47e42 (6 spans):
-  - POST /chat [ok, 1192.9ms] config.top_k=4, config.similarity_threshold=0.3, config.promp...
-  - guardrail [ok, 0.0ms] guardrail.decision=allow, guardrail.matched_rule= ref=span:bb7cb2...
-  - retrieve [ok, 23.3ms] retrieval.result_count=4, retrieval.top_k=4, retrieval.threshold=...
-  - llm.chat [ok, 549.4ms] prompt.version=v2, gen_ai.request.model=gemini-3.5-flash-lite re...
-  - tool.lookup_order [ok, 8.6ms] tool.result_count=0, tool.latency_ms=5.4 ref=span:bb7cb21...
-  - llm.chat [ok, 566.9ms] prompt.version=v2, gen_ai.request.model=gemini-3.5-flash-lite re...
+  - POST /chat [ok, 1192.9ms] config.top_k=4, config.similarity_threshold=0.3, config.prompt_version=v2, config.model=gemini-3....
+  - guardrail [ok, 0.0ms] guardrail.decision=allow, guardrail.matched_rule= ref=span:bb7cb21aa9d09eb10cddcd4edbb47e42/80047d316...
+  - retrieve [ok, 23.3ms] retrieval.result_count=4, retrieval.top_k=4, retrieval.threshold=0.3, retrieval.chunk_ids=['refund-po...
+  - llm.chat [ok, 549.4ms] prompt.version=v2, gen_ai.request.model=gemini-3.5-flash-lite ref=span:bb7cb21aa9d09eb10cddcd4edbb47...
+  - tool.lookup_order [ok, 8.6ms] tool.result_count=0, tool.latency_ms=5.4 ref=span:bb7cb21aa9d09eb10cddcd4edbb47e42/4adb3234ad...
+  - llm.chat [ok, 566.9ms] prompt.version=v2, gen_ai.request.model=gemini-3.5-flash-lite ref=span:bb7cb21aa9d09eb10cddcd4edbb47...
   Changes in the 7 days before the alert: 0 (showing 0, newest first):
   => no span reports an error (6 spans, all OK) - nothing here looks broken
 
   -> get_trace()
      3684 chars
-  -> recent_changes(start=2026-10-25T01:35:23.544156+00:00, end=2026-11-01T01:3...)
+  -> recent_changes(start=2026-10-25T01:35:23.544156+00:00, end=2026-11-01T01:35:23.544156+00:00)
      50 chars
      [span] span:bb7cb21aa9d09eb10cddcd4edbb47e42/80aef...
-            span POST /chat status=ok 1192.9ms: config.top_k=4, config.similarity_threshold=...
+            span POST /chat status=ok 1192.9ms: config.top_k=4, config.similarity_threshold=0.3, config.prompt_version=v2, confi...
      [span] span:bb7cb21aa9d09eb10cddcd4edbb47e42/80047...
             span guardrail status=ok 0.0ms: guardrail.decision=allow, guardrail.matched_rule=
      [span] span:bb7cb21aa9d09eb10cddcd4edbb47e42/98cd9...
-            span retrieve status=ok 23.3ms: retrieval.result_count=4, retrieval.top_k=4, ret...
+            span retrieve status=ok 23.3ms: retrieval.result_count=4, retrieval.top_k=4, retrieval.threshold=0.3, retrieval.chun...
      ... 3 more item(s) from this call
--- HYPOTHESIZE ----------------------------------------------------------------------------------
-  1. config                 0.85  Runtime config shows config.tool_timeout_ms=1 while tool....
-  2. tool:lookup_order      0.60  The lookup_order tool returned 0 results for customer C-0...
-  3. tool:lookup_order      0.30  The order store was missing record O-1003 or customer C-0...
-  4. model                  0.15  The model called lookup_order with incorrect parameters o...
+-- HYPOTHESIZE ----------------------------------------------------------------------------------------------------------------------
+  1. config                 0.85  Runtime config shows config.tool_timeout_ms=1 while tool.lookup_order took 5.4ms, causing the...
+  2. tool:lookup_order      0.60  The lookup_order tool returned 0 results for customer C-0003 and order O-1003 due to an inter...
+  3. tool:lookup_order      0.30  The order store was missing record O-1003 or customer C-0003, leading to zero records returned.
+  4. model                  0.15  The model called lookup_order with incorrect parameters or failed to parse the question corre...
 
--- INVESTIGATE ----------------------------------------------------------------------------------
+-- INVESTIGATE ----------------------------------------------------------------------------------------------------------------------
   -> search_logs(query=timeout)
      55 chars
   -> search_logs(query=lookup_order)
      4718 chars
      [log] log:82138850-fecc-4892-899d-f5a2f5ba6506
-            2026-11-01T01:34:58.632+00:00 WARN tool.lookup_order: lookup_order timed out aft...
+            2026-11-01T01:34:58.632+00:00 WARN tool.lookup_order: lookup_order timed out after 1ms; returning empty result
      [log] log:1884d4cb-9ef4-43bb-8697-59c6c3e5bb87
-            2026-11-01T01:34:59.204+00:00 INFO chat: chat answered (chunks=4, tools=lookup_o...
+            2026-11-01T01:34:59.204+00:00 INFO chat: chat answered (chunks=4, tools=lookup_order, stop_reason=end_turn)
      [log] log:c1235025-af6c-42c3-ac1f-6161b2219b5b
-            2026-11-01T01:35:00.752+00:00 WARN tool.lookup_order: lookup_order timed out aft...
+            2026-11-01T01:35:00.752+00:00 WARN tool.lookup_order: lookup_order timed out after 1ms; returning empty result
      ... 15 more item(s) from this call
   -> recent_changes()
      7231 chars
      [change] change:doc-update-1047
-            doc_update on doc:holiday-returns at 2026-10-01T09:00:00+00:00 by ben: Publish h...
+            doc_update on doc:holiday-returns at 2026-10-01T09:00:00+00:00 by ben: Publish holiday-returns@v1
      [change] change:doc-update-1046
-            doc_update on doc:returns-process at 2026-09-01T09:00:00+00:00 by ops-bot: Publi...
+            doc_update on doc:returns-process at 2026-09-01T09:00:00+00:00 by ops-bot: Publish returns-process@v2
      [change] change:doc-update-1045
-            doc_update on doc:refund-policy at 2026-09-01T09:00:00+00:00 by ops-bot: Publish...
+            doc_update on doc:refund-policy at 2026-09-01T09:00:00+00:00 by ops-bot: Publish refund-policy@v2
      ... 27 more item(s) from this call
   -> search_logs(query=config)
      55 chars
@@ -63,58 +63,59 @@ demo-record: --verbose runs one case at a time (concurrency 2 ignored)
   -> search_logs(query=timed out)
      1629 chars
      [log] log:9ce4c0f4-a62e-496f-8036-13c07b5ac4a7
-            2026-11-01T01:35:00.998+00:00 WARN tool.check_inventory: check_inventory timed o...
+            2026-11-01T01:35:00.998+00:00 WARN tool.check_inventory: check_inventory timed out after 1ms; returning empty result
   -> search_logs(start=2026-11-01T01:30:00Z, limit=20)
      5196 chars
      [log] log:1294d013-2680-4713-acec-03573185d865
-            2026-11-01T01:34:58.141+00:00 INFO chat: chat answered (chunks=4, tools=none, st...
+            2026-11-01T01:34:58.141+00:00 INFO chat: chat answered (chunks=4, tools=none, stop_reason=end_turn)
      [log] log:aa5dffad-a4d1-497a-935e-f1ac96586fe0
-            2026-11-01T01:34:58.276+00:00 INFO chat: chat answered (chunks=4, tools=none, st...
+            2026-11-01T01:34:58.276+00:00 INFO chat: chat answered (chunks=4, tools=none, stop_reason=end_turn)
      [log] log:ae937f9d-2c24-4a3a-a196-3a1e2a28db76
-            2026-11-01T01:34:58.303+00:00 INFO chat: chat answered (chunks=1, tools=none, st...
+            2026-11-01T01:34:58.303+00:00 INFO chat: chat answered (chunks=1, tools=none, stop_reason=end_turn)
      ... 8 more item(s) from this call
-  -> search_logs(start=2026-11-01T01:34:00.000+00:00, limit=20, end=2026-11-...)
+  -> search_logs(start=2026-11-01T01:34:00.000+00:00, limit=20, end=2026-11-01T01:34:58.500+00:00)
      1057 chars
-  -> replay_conversation(patch={"key": "tool_timeout_ms", "kind": "set_config", "val...)
-     refused: patch rejected: tool_timeout_ms=5000 is not a value the change log or the trac...
+  -> replay_conversation(patch={"key": "tool_timeout_ms", "kind": "set_config", "value": 5000})
+     refused: patch rejected: tool_timeout_ms=5000 is not a value the change log or the trace shows tool_timeout_ms holding
   -> replay_conversation(patch={"kind": "rerun_tool", "tool": "lookup_order"})
-     1386 chars
-     [replay] replay:8d345f54ccc2
-            replay with {"kind": "rerun_tool", "tool": "lookup_order"} (targets tool:lookup_...
--- VERIFY  (plain code, no model call) ----------------------------------------------------------
+     1388 chars
+     [replay] replay:ef7308b53bba
+            replay with {"kind": "rerun_tool", "tool": "lookup_order"} (targets tool:lookup_order): matches_correction=True vote...
+-- VERIFY  (plain code, no model call) ----------------------------------------------------------------------------------------------
   claim     tool:lookup_order / tool_outage
   verdict   ACCEPTED
-  because   2 evidence types (log, trace) and replay replay:8d345f54ccc2 support tool:lookup_...
+  because   2 evidence types (log, trace) and replay replay:ef7308b53bba support tool:lookup_order
 
--- DIAGNOSIS ------------------------------------------------------------------------------------
-  tool:lookup_order / tool_outage   confidence 0.98
-  The lookup_order tool timed out and returned an empty result, causing the assistant to fa...
+-- DIAGNOSIS ------------------------------------------------------------------------------------------------------------------------
+  tool:lookup_order / tool_outage   confidence 0.95
+  The lookup_order tool invocation timed out after 1ms due to a very tight tool timeout configuration or transient latency, ret...
     cites [span] span:bb7cb21aa9d09eb10cddcd4edbb47e42/4adb3...
     cites [log] log:82138850-fecc-4892-899d-f5a2f5ba6506
-    cites [replay] replay:8d345f54ccc2
-  fix       Increase the tool timeout configuration or resolve the latency/timeout issue affe...
+    cites [replay] replay:ef7308b53bba
+    ruled out Publish holiday-returns@v1: The holiday returns policy document was published a month prior and correctly retriev...
+  fix       Rerun the tool lookup_order or increase the tool timeout threshold so lookup_order does not time out prematurely.
 
--- EVALUATOR  (independent of the agent) --------------------------------------------------------
-  evidence  all 3 cited refs resolve in the raw stores
+-- EVALUATOR  (independent of the agent) --------------------------------------------------------------------------------------------
+  evidence  all 4 cited refs resolve in the raw stores
   fix       replayed on tool:lookup_order: answer matches the correction, control fails -> proves_fix=True
-  budget    13 tool calls, 1 replays, 1 draft(s), $0.0990
-------------------------------------------------------------------------------------------------
-  case-023: tool:lookup_order / tool_outage fix=ok  tools=13 replays=1 rounds=1 $0.0990 45.9s
-spend so far: $5.6083 of $8.00
+  budget    13 tool calls, 1 replays, 1 draft(s), $0.0985
+------------------------------------------------------------------------------------------------------------------------------------
+  case-023: tool:lookup_order / tool_outage fix=ok  tools=13 replays=1 rounds=1 $0.0985 48.7s
+spend so far: $5.6310 of $8.00
 
-wrote C:\Users\shash\trace\eval\results\demo-record\summary.md
-# demo-record: investigator vs. investigator-day5-v2 vs. B1
+wrote C:\Users\shash\trace\eval\results\demo-wide\summary.md
+# demo-wide: investigator vs. investigator-day5-v2 vs. B1
 
-Investigator model `gemini-3.8-flash`, 1 cases, total cost $0.0990 ($0.0990 per case, replays included), mean wall time 46s. B1 makes no model calls.
+Investigator model `gemini-3.8-flash`, 1 cases, total cost $0.0985 ($0.0985 per case, replays included), mean wall time 49s. B1 makes no model calls.
 
 Top-1, category and cause count an abstention as no answer and a hallucinated diagnosis (any citation the verifier rejects) as wrong.
 
 | method | cases | n | top-1 | category | cause | precision when answered | abstain rate | abstention value | hallucinated evidence | fix success | judge fallback | cost |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| investigator | valid | 1 | 100% | 100% | 0% | 100% | 0% | n/a | 0% | 100% | 0% | $0.0990 |
+| investigator | valid | 1 | 100% | 100% | 0% | 100% | 0% | n/a | 0% | 100% | 0% | $0.0985 |
 | investigator-day5-v2 | valid | 1 | 0% | 0% | 0% | n/a | 0% | n/a | n/a | n/a | n/a | $0.0000 |
 | B1 | valid | 1 | 0% | 0% | 0% | 0% | 0% | n/a | 0% | 0% | n/a | $0.0000 |
-| investigator | all recorded | 1 | 100% | 100% | 0% | 100% | 0% | n/a | 0% | 100% | 0% | $0.0990 |
+| investigator | all recorded | 1 | 100% | 100% | 0% | 100% | 0% | n/a | 0% | 100% | 0% | $0.0985 |
 | investigator-day5-v2 | all recorded | 1 | 0% | 0% | 0% | n/a | 0% | n/a | n/a | n/a | n/a | $0.0000 |
 | B1 | all recorded | 1 | 0% | 0% | 0% | 0% | 0% | n/a | 0% | 0% | n/a | $0.0000 |
 

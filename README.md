@@ -35,36 +35,43 @@ left un-tuned on purpose: the split was opened once, and tuning on it would make
 
 ## See one investigation
 
+One real, held-out run. The bot says a customer has no orders; the order exists and is inside the
+return window, so the answer should be yes.
+
+**Nothing looks broken — every span reports OK.** The error-span heuristic has nothing to go on,
+and the no-tools baseline blamed the model. But look at `tool.lookup_order`: status `ok`, and
+`result_count=0`.
+
+![All spans report OK](docs/shot-1-no-error.png)
+
+**Tracewise goes upstream and finds two independent signals** at the same component: the lookup
+returned 0 results, and the logs show it timed out after 1ms and returned empty.
+
+![The tool returned nothing after a timeout](docs/shot-2-evidence.png)
+
+**Then it proves the cause.** Its first replay patch is *refused* for citing a value the history
+never showed — the anti-cheating rule working in real time — and it recovers with a legitimate
+patch that re-runs the tool. The answer comes back correct while an unpatched control still fails,
+so the replay proves the fix rather than coinciding with it.
+
+![A patch is refused, then a valid one proves the fix](docs/shot-3-proof.png)
+
+It also **ruled out the decoy**: an unrelated document change sitting in the log shortly before the
+failure, dismissed as *"published a month prior and correctly retrieved"* rather than blamed for
+the coincidence.
+
+Diagnosis: `tool:lookup_order`, timeout misconfigured — the same case the no-tools baseline called
+a model hallucination.
+
+*Unedited; the raw terminal output is in [`docs/demo-case-023.txt`](docs/demo-case-023.txt), and
+every line above is from that one run. Full run as a GIF (18s):*
+
+<details>
+<summary>watch the whole investigation</summary>
+
 ![Tracewise investigating a held-out silent tool failure](docs/demo.gif)
 
-*One real, unedited run. The bot says a customer has no orders; the order exists. Every span reports
-OK, so the error-span heuristic has nothing and the no-tools baseline blamed the model. Tracewise
-finds the tool call that returned nothing, confirms the timeout in the logs, has one replay patch
-**refused** for citing a value the history never showed, then proves the cause with a legitimate one.*
-
-## A worked example
-
-The readable version of the run above — a silent tool failure, held out.
-
-**The bot says it can't find the customer's order, so it refuses the return.** The order exists and
-is inside the window, so the answer should be yes. **Nothing in the trace is marked as an error:**
-the lookup span is status OK; it just returned nothing.
-
-1. Tracewise goes **upstream** instead of blaming the model — pulls the trace, logs, recent changes.
-2. It finds **two independent signals** at the same component: the tool span returned 0 results, and
-   a log line shows the lookup timed out and returned empty.
-3. Its first **replay patch is refused** for citing a value the change log never shows. It recovers
-   with a legitimate patch; the answer comes back correct and an unpatched control still fails — so
-   the replay *proves* the fix.
-4. It **rules out the decoy** — an unrelated document change sitting in the log just before the
-   failure — instead of blaming the coincidence.
-
-Diagnosis: `tool:lookup_order`, timeout misconfigured. Evidence verified, fix confirmed by replay —
-the same case the no-tools baseline called a hallucination.
-
-Steps 1–3 are the run in the GIF. Step 4 is from the scored run this case's numbers come from
-(`eval/results/investigator-test-r1/case-023.json`): the agent isn't deterministic and writes a
-`ruled_out` entry about half the time, and the recorded run didn't.
+</details>
 
 ## What makes the result trustworthy
 
